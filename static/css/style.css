@@ -1,0 +1,94 @@
+* {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;           /* Non-prefixed version, currently*/
+    font-family: sans-serif;
+}
+
+.FilesContainer {
+    display: flex;
+}
+.oneFileInFilesContainer {
+    display: flex;
+    margin: 1vmin;
+    padding: 1vmin;
+}
+.oneFileInFilesContainerPicked {
+    background: red;
+}
+.addFileButton {
+    margin: 1vmin;
+    padding: 1vmin;
+}
+.inlineBlock {
+    display: flex;
+}
+.nonDisplay {
+    display: none;
+}
+
+.frame{
+    width: 100%;
+    height: 85vmin;
+}
+
+@media (max-width: 1000px){
+    .btn {
+        padding: 5vmin;
+    }
+    select {
+        padding: 3vmin;
+    }
+}
+.fileSettingsContainer {
+    width: 44%;
+    display: flex;
+    flex-direction: column;
+}
+.fileViewContainer {
+    width: 55%;
+    background: #c2c2c2;
+    display: flex;
+    height: 85vh;
+}
+.list {
+    display: inline-block;
+    background: white;
+    margin: 1vh;
+    transition: 0.5s;
+}
+.imgKarta {
+    display: inline-block;
+    position: absolute;
+    transition: 0.5s;
+}
+.settingsContainer {
+    display: none;
+}
+.optionsContainer {
+    display: flex;
+    flex-direction: column;
+}
+.settingSelect {
+    width: 75%;
+}
+.thisOptionContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.sizeOptionContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.countContainer {
+    display: flex;
+}
+.priceContainer {
+    display: flex;
+}

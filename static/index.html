@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <title>Calc</title>
+</head>
+<body>
+<header>
+    <div class="logo"></div>
+
+</header>
+<div class="download progress">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+</div>
+
+
+<div class="mainContainer nonDisplay">
+    <div class="FilesContainer">
+        <button class="btn btn-primary btn-lg" id="addFileButton">
+            +
+        </button>
+    </div>
+
+<!--    <label for="exampleColorInput" class="form-label">представление представляеться представительски</label>-->
+<!--    <input type="color" class="form-control form-control-color" id="exampleColorInput" value="#563d7c" title="Choose your color">-->
+<!--    <input type="range" class="form-range" id="customRange1">-->
+
+    <div class="settingsContainer">
+        <div class="fileSettingsContainer">
+            <div class="presetContainer">
+                <button class="btn btn-secondary" id="document">Документ</button>
+                <button class="btn btn-secondary" id="presentation">Презентація</button>
+                <button class="btn btn-secondary" id="poster">Плакат</button>
+                <button class="btn btn-secondary" id="card">Листівка</button>
+                <button class="btn btn-secondary" id="visitCard">Візітівка</button>
+                <button class="btn btn-secondary" id="sticker">Наліпки</button>
+                <button class="btn btn-secondary" id="tags">Бірки</button>
+                <button class="btn btn-secondary" id="brochure">Брошура</button>
+                <button class="btn btn-secondary" id="note">Блокнот</button>
+                <button class="btn btn-secondary" id="calendar">Календарь</button>
+            </div>
+            <div class="presetName">
+
+            </div>
+
+            <div class="optionsContainer">
+                <div class="thisOptionContainer">Формат
+                    <select name="format" id="formatSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+                        <option value="A4">A4</option>
+                        <option value="A3">A3</option>
+                        <option value="A6">A6</option>
+                        <option value="A5">A5</option>
+                        <option value="Свій розмір">Свій розмір</option>
+                        <option value="50x90">50x90</option>
+                        <option value="50x90">50x90</option>
+                    </select>
+                </div>
+
+                <div class="thisOptionContainer">Сторони
+                    <select name="sides" id="sidesSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+                        <option value="Односторонній">Односторонній</option>
+                        <option value="Двосторонній">Двосторонній</option>
+                    </select>
+                </div>
+
+                <div class="thisOptionContainer">Кольоровість
+                    <select name="color" id="colorSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+                        <option value="Чорно-білий">Чорно-білий</option>
+                        <option value="Кольоровий">Кольоровий</option>
+                    </select>
+                </div>
+
+                <div class="thisOptionContainer">Папір
+                    <select name="destiny" id="destinySelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+
+                    </select>
+                </div>
+
+                <div class="thisOptionContainer">Обкладинка
+                    <select name="cower" id="cowerSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+
+                    </select>
+                </div>
+
+                <div class="thisOptionContainer">Зшивання
+                    <select name="binding" id="bindingSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+
+                    </select>
+                </div>
+
+                <div class="thisOptionContainer">Ламінація
+                    <select name="lamination" id="laminationSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+
+                    </select>
+                </div>
+
+                <div class="thisOptionContainer">Скруглення кутів
+                    <select name="roundCorner" id="roundCornerSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+
+                    </select>
+                </div>
+
+                <div class="thisOptionContainer">Порізка
+                    <select name="cutting" id="cuttingSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+
+                    </select>
+                </div>
+
+                <div class="sizeOptionContainer">
+                    <div>Широта <input type="number" class="small" id="sizeX"> mm</div>
+                    <div>Висота <input type="number" class="small" id="sizeY"> mm</div>
+                </div>
+
+                <div class="countContainer">
+                    <div>Кількість сторінок: </div>
+                    <input type="number" id="countInt">
+                </div>
+
+                <div class="priceContainer">
+                    <div>Ціна: </div>
+                    <div class="price"></div>
+                </div>
+
+            </div>
+        </div>
+        <div class="fileViewContainer">
+            <div class="list">
+
+            </div>
+            <div class="">
+                <img src="img/karta.png" alt="" class="imgKarta">
+            </div>
+
+
+<!--            <iframe src="https://docs.google.com/gview?url=https://docs.google.com/document/d/1BdUtCOPYRiwX3BrhzCPqWYsLNb9QfXeT/edit?usp=sharing&ouid=105760114650040771432&rtpof=true&sd=true" frameborder="0">-->
+<!--            </iframe>-->
+
+        </div>
+
+
+<!--        <form action="/upload" enctype="multipart/form-data" method="post" id="formmm">-->
+<!--            <div class="form-group">-->
+<!--                <input type="file" class="form-control-file" name="uploaded_file">-->
+<!--&lt;!&ndash;                <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">&ndash;&gt;-->
+<!--                <input type="submit" value="upload" class="btn btn-default" id="btnsubmit">-->
+<!--            </div>-->
+<!--        </form>-->
+
+<!--        <iframe src="" frameborder="0" id="iframe"></iframe>-->
+    </div>
+</div>
+</div>
+
+<footer>
+    <input type="file" id="imgInp"/>
+    <button id="upload" class="btn">Відправити</button>
+    <img id="blah" src="#" alt="" />
+    <div id="status"></div>
+    <progress id="progressbar" value="0" max="100"></progress>
+
+<!--    <iframe src="" frameborder="2" class="frame" id="iframe"></iframe>-->
+</footer>
+
+<script src="js/jquery-3.6.1.min.js"></script>
+<script src="js/cardRender.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js"></script>
+<script src="js/fileClass.js"></script>
+<script src="js/ifsForThisTabl.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
