@@ -213,6 +213,7 @@ let form = document.querySelector("#formmm")
 let progressbar = document.querySelector("#progressbar")
 
 upload.addEventListener("click", function () {
+    document.querySelector(".download").classList.remove("nonDisplay")
     document.querySelector("#status").innerText = ""
     let config = {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -229,11 +230,11 @@ upload.addEventListener("click", function () {
             .then(e => {
                 console.log(e);
                 console.log(e.data);
-                let rrr = new Buffer()
-                rrr.isBuffer(e.data)
-                let file = reader.readAsText(e.data)
-                // let uri = URL.createObjectURL(e.data)
                 document.querySelector("#status").innerText = e.statusText
+                thisFile.url = e.data
+                thisFile._count = e.data.count
+                thisFile.renderSettings()
+                document.querySelector(".download").classList.add("nonDisplay")
                 // imgInp.value = ""
             })
     }

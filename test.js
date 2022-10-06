@@ -1,20 +1,5 @@
-// const libre = require('libreoffice-convert');
-// const path = require('path');
-// const fs = require('fs');
-// const converter = require('docx-pdf');
-//
-// converter('test.docx', 'output.pdf', function(err, result) {
-//     if (err) {
-//         console.log("Converting Doc to PDF  failed", err);
-//     }
-//     console.log("Converting Doc to PDF succesfull", result);
-// });
-
-// 'use strict';
-
 const path = require('path');
 const fs = require('fs').promises;
-
 const libre = require('libreoffice-convert');
 libre.convertAsync = require('util').promisify(libre.convert);
 

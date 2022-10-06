@@ -65,6 +65,9 @@
     position: absolute;
     transition: 0.5s;
 }
+.imgInServer {
+    transition: 0.5s;
+}
 .settingsContainer {
     display: none;
 }

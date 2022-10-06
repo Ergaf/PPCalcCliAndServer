@@ -11,8 +11,10 @@ class file {
     lamination;
     roundCorner;
     cutting;
+    realCount;
     x;
     y;
+    url;
     constructor (name) {
         this._name = name;
         this._id = new Date();
@@ -86,12 +88,14 @@ class file {
 
     renderSettings() {
         let priceCalc = 0;
+        this.realCount = this._count
         destinySelect.innerHTML = ""
         if(getDestinyInData() !== undefined){
             this.destinyAppend()
             priceCalc = getDestinyPrice(this._count)*this._count;
             if(this.format === "Свій розмір"){
                 let sss = Math.ceil(this._count / getHowInASheet())
+                this.realCount = sss
                 priceCalc = getDestinyPrice(sss)*sss;
             }
         }
@@ -110,6 +114,7 @@ class file {
         roundCornerSelect.value = this.roundCorner
         cuttingSelect.value = this.cutting
         presetName.innerText = this.type
+        realCount.innerText = this.realCount
         countInt.value = this._count
         if(this.format !== "Свій розмір"){
             this.getSize()
@@ -117,6 +122,18 @@ class file {
         sizeX.value = this.x
         sizeY.value = this.y
         renderListAndCard()
+        if(thisFile.url){
+            if(thisFile.url.ext === "none"){
+                imgInServer.setAttribute("src", "/getImg/"+thisFile.url.url)
+            }
+            else {
+                imgInServer.setAttribute("src", "/getImg/"+thisFile.url.url+thisFile.url.pag+thisFile.url.ext)
+            }
+            pagenation.innerText = `${thisFile.url.pag+1}/${thisFile.url.count}`
+        }
+        else {
+            imgInServer.setAttribute("src", "")
+        }
     }
 
     destinyAppend() {

@@ -114,8 +114,13 @@
                 </div>
 
                 <div class="countContainer">
-                    <div>Кількість сторінок: </div>
+                    <div>Кількість : </div>
                     <input type="number" id="countInt">
+                </div>
+
+                <div class="countContainer">
+                    <div>Кількість затраченного матеріалу(листів): </div>
+                    <div id="realCount"></div>
                 </div>
 
                 <div class="priceContainer">
@@ -126,17 +131,14 @@
             </div>
         </div>
         <div class="fileViewContainer">
+            <div class="btn" id="prev">prev</div>
             <div class="list">
-
+                <img src="" alt="" class="imgInServer">
             </div>
+            <div class="btn" id="next">next</div>
             <div class="">
                 <img src="img/karta.png" alt="" class="imgKarta">
             </div>
-
-
-<!--            <iframe src="https://docs.google.com/gview?url=https://docs.google.com/document/d/1BdUtCOPYRiwX3BrhzCPqWYsLNb9QfXeT/edit?usp=sharing&ouid=105760114650040771432&rtpof=true&sd=true" frameborder="0">-->
-<!--            </iframe>-->
-
         </div>
 
 
@@ -154,6 +156,10 @@
 </div>
 
 <footer>
+    <div class="pagin" style="float: right; margin-right: 35vw">
+        <div id="pagenation" class="pagenation"></div>
+    </div>
+
     <input type="file" id="imgInp"/>
     <button id="upload" class="btn">Відправити</button>
     <img id="blah" src="#" alt="" />

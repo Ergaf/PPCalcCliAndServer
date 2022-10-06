@@ -23,23 +23,23 @@ http.createServer((req, res) => {
 //-------------------------------------------------------------------------
 
 //send res-----------------------------------------------------------------
-function sendRes(url, contentType, res) {
-    let file = path.join(__dirname+"/static/", url)
-    fs.readFile(file, (err, content) => {
-        if(err){
-            res.writeHead(404)
-            res.write("file not found")
-            res.end();
-            console.log("file not found "+file);
-        }
-        else {
-            res.writeHead(200, {"Content-Type": contentType})
-            res.write(content)
-            res.end();
-            console.log("sucess! "+file);
-        }
-    })
-}
+// function sendRes(url, contentType, res) {
+//     let file = path.join(__dirname+"/static/", url)
+//     fs.readFile(file, (err, content) => {
+//         if(err){
+//             res.writeHead(404)
+//             res.write("file not found")
+//             res.end();
+//             console.log("file not found "+file);
+//         }
+//         else {
+//             res.writeHead(200, {"Content-Type": contentType})
+//             res.write(content)
+//             res.end();
+//             console.log("sucess! "+file);
+//         }
+//     })
+// }
 
 //content type-------------------------------------------------------------
 function getContentType(url) {
