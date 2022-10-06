@@ -50,14 +50,14 @@ function renderListAndCard() {
 prev.addEventListener("click", function () {
     if(thisFile.url.pag > 0){
         thisFile.url.pag--
-        imgInServer.setAttribute("src", "/getImg/"+thisFile.url.url+thisFile.url.pag+thisFile.url.ext)
+        imgInServer.setAttribute("src", thisFile.url.url+thisFile.url.readdir[thisFile.url.pag])
     }
     pagenation.innerText = `${thisFile.url.pag+1}/${thisFile.url.count}`
 })
 next.addEventListener("click", function () {
     if(thisFile.url.pag < thisFile.url.count-1){
         thisFile.url.pag++
-        imgInServer.setAttribute("src", "/getImg/"+thisFile.url.url+thisFile.url.pag+thisFile.url.ext)
+        imgInServer.setAttribute("src", thisFile.url.url+thisFile.url.readdir[thisFile.url.pag])
     }
     pagenation.innerText = `${thisFile.url.pag+1}/${thisFile.url.count}`
 })

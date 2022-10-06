@@ -1,13 +1,41 @@
-
+const upload = document.querySelector("#upload")
+const addFileButton = document.querySelector("#addFileButton");
 const allFiles = []
 let thisFile;
 
-const addFileButton = document.querySelector("#addFileButton");
 addFileButton.addEventListener("click", function () {
-    let file1 = new file("Замовлення")
+    let file1 = new file("Без файлу")
     allFiles.push(file1)
     file1.createFileContainer()
 })
+upload.addEventListener("click", function () {
+    uploadFile()
+})
+
+function uploadFile() {
+    if(imgInp.files[0]){
+        document.querySelector(".download").classList.remove("nonDisplay")
+        let config = {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            response_type: "arraybuffer",
+            onUploadProgress(progressEvent) {
+                const progress = progressEvent.loaded / progressEvent.total * 100
+                progressbar.value = progress
+            }
+        };
+        let fd = new FormData();
+        fd.append('file', imgInp.files[0], imgInp.files[0].name)
+        axios.post("/upload", fd, config)
+            .then(e => {
+                thisFile._name = imgInp.files[0].name
+                console.log(e.data);
+                thisFile.url = e.data
+                thisFile._count = e.data.count
+                thisFile.renderSettings()
+                document.querySelector(".download").classList.add("nonDisplay")
+            })
+    }
+}
 
 let presetName = document.querySelector(".presetName")
 let price = document.querySelector(".price")
@@ -24,7 +52,6 @@ let cuttingSelect = document.querySelector("#cuttingSelect")
 let countInt = document.querySelector("#countInt")
 let sizeX = document.querySelector("#sizeX")
 let sizeY = document.querySelector("#sizeY")
-
 let prices;
 fetch('https://script.googleusercontent.com/macros/echo?user_content_key=wLSQSatR6bZv9i8U5VtiOsa7GMSDGnnZijrnGFZE1_jwd1QJkdBz8Sl8ITa_TvVjVpf_ByOh6IcFuOZ7evsUSo_9NYtdFJYTm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnDbwAl7CMxVAiYx-XcQGm2-pK98VFRlg2L1Bgi9-N5lGP8ipd0KGqDVV0UksueULwVpami56uyJ4IxkRYgJm5B_wls8-MAHEtdz9Jw9Md8uu&lib=MKqsPpMpIdvM_NE9JC918gzq7P1CHZY8E')
     .then(response => response.json())
@@ -54,6 +81,22 @@ fetch('https://script.googleusercontent.com/macros/echo?user_content_key=wLSQSat
         document.querySelector(".mainContainer").classList.remove("nonDisplay")
         document.querySelector(".download").classList.add("nonDisplay")
     })
+
+
+fetch("/orders")
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        json.orders.forEach(o => {
+            let file1 = new file(o._name)
+            allFiles.push(file1)
+            file1.url = o.url
+            file1.createFileContainer()
+        })
+
+
+    })
+
 
 let optContainer = document.querySelector(".optionsContainer")
 document.querySelector("#document").addEventListener("click", function () {
@@ -207,38 +250,10 @@ sizeY.addEventListener("change", function () {
 })
 
 let imgInp = document.querySelector("#imgInp")
-let upload = document.querySelector("#upload")
 let iframe = document.querySelector("#iframe")
 let form = document.querySelector("#formmm")
 let progressbar = document.querySelector("#progressbar")
 
-upload.addEventListener("click", function () {
-    document.querySelector(".download").classList.remove("nonDisplay")
-    document.querySelector("#status").innerText = ""
-    let config = {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        response_type: "arraybuffer",
-        onUploadProgress(progressEvent) {
-            const progress = progressEvent.loaded / progressEvent.total * 100
-            progressbar.value = progress
-        }
-    };
-    if(imgInp.files[0]){
-        let fd = new FormData();
-        fd.append('file', imgInp.files[0], imgInp.files[0].name)
-        axios.post("/upload", fd, config)
-            .then(e => {
-                console.log(e);
-                console.log(e.data);
-                document.querySelector("#status").innerText = e.statusText
-                thisFile.url = e.data
-                thisFile._count = e.data.count
-                thisFile.renderSettings()
-                document.querySelector(".download").classList.add("nonDisplay")
-                // imgInp.value = ""
-            })
-    }
-})
 function renderr(uri){
     let list = document.querySelector(".list")
     let imgG = document.createElement("img")
@@ -246,7 +261,6 @@ function renderr(uri){
     imgG.setAttribute("src", uri)
     list.appendChild(imgG)
 }
-
 
 async function postData(url, data) {
     // Default options are marked with *

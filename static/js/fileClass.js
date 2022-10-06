@@ -41,10 +41,8 @@ class file {
 
         let cancelButton = document.createElement('div');
         cancelButton.onmousedown = this.deleteThis.bind( this);
-        cancelButton.classList.add('btn');
-        cancelButton.classList.add('btn-outline-danger');
-        cancelButton.classList.add('btn-sm');
-        cancelButton.innerText = " X"
+        cancelButton.classList.add('btn-close');
+        // cancelButton.innerText = " X"
         Item.appendChild(cancelButton);
     }
 
@@ -55,6 +53,8 @@ class file {
                     e.removePick()
                 }
             })
+
+            // console.log(this);
 
             this.container.classList.remove("btn-outline-dark")
             this.container.classList.add("btn-dark")
@@ -84,6 +84,16 @@ class file {
         if(allFiles.length < 1){
             document.querySelector(".settingsContainer").style.display = "none"
         }
+
+
+        let config = {
+            headers: { 'Content-Type': 'application/json' }
+        };
+        axios.delete("/orders", JSON.stringify({id: this._id}), config)
+            .then(response => response.json())
+            .then(json => {
+                console.log(json);
+            })
     }
 
     renderSettings() {
@@ -103,7 +113,7 @@ class file {
         if(getBindingInData() !== []){
             this.bindingAppend()
         }
-        price.innerText = priceCalc
+        price.value = priceCalc
         formatSelect.value = this.format
         sidesSelect.value = this.sides
         colorSelect.value = this.color
@@ -114,7 +124,7 @@ class file {
         roundCornerSelect.value = this.roundCorner
         cuttingSelect.value = this.cutting
         presetName.innerText = this.type
-        realCount.innerText = this.realCount
+        realCount.value = this.realCount
         countInt.value = this._count
         if(this.format !== "Свій розмір"){
             this.getSize()
@@ -122,12 +132,13 @@ class file {
         sizeX.value = this.x
         sizeY.value = this.y
         renderListAndCard()
+        this.nameContainer.innerText = this._name
         if(thisFile.url){
-            if(thisFile.url.ext === "none"){
-                imgInServer.setAttribute("src", "/getImg/"+thisFile.url.url)
+            if(thisFile.url.ext === 1){
+                imgInServer.setAttribute("src", thisFile.url.url);
             }
             else {
-                imgInServer.setAttribute("src", "/getImg/"+thisFile.url.url+thisFile.url.pag+thisFile.url.ext)
+                imgInServer.setAttribute("src", thisFile.url.url+thisFile.url.readdir[thisFile.url.pag])
             }
             pagenation.innerText = `${thisFile.url.pag+1}/${thisFile.url.count}`
         }

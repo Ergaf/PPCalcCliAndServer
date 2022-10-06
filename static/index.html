@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
     <meta charset="UTF-8">
     <title>Calc</title>
 </head>
@@ -46,8 +46,9 @@
             </div>
 
             <div class="optionsContainer">
-                <div class="thisOptionContainer">Формат
-                    <select name="format" id="formatSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+                <div class="input-group">
+                    <span class="input-group-text">Формат</span>
+                    <select name="format" id="formatSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
                         <option value="A4">A4</option>
                         <option value="A3">A3</option>
                         <option value="A6">A6</option>
@@ -58,74 +59,96 @@
                     </select>
                 </div>
 
-                <div class="thisOptionContainer">Сторони
-                    <select name="sides" id="sidesSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+                <div class="input-group">
+                    <span class="input-group-text">Сторони</span>
+                    <select name="sides" id="sidesSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
                         <option value="Односторонній">Односторонній</option>
                         <option value="Двосторонній">Двосторонній</option>
                     </select>
                 </div>
 
-                <div class="thisOptionContainer">Кольоровість
-                    <select name="color" id="colorSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+                <div class="input-group">
+                    <span class="input-group-text">Кольоровість</span>
+                    <select name="color" id="colorSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
                         <option value="Чорно-білий">Чорно-білий</option>
                         <option value="Кольоровий">Кольоровий</option>
                     </select>
                 </div>
 
-                <div class="thisOptionContainer">Папір
-                    <select name="destiny" id="destinySelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+                <div class="input-group">
+                    <span class="input-group-text">Папір</span>
+                    <select name="destiny" id="destinySelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
 
                     </select>
                 </div>
 
-                <div class="thisOptionContainer">Обкладинка
-                    <select name="cower" id="cowerSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+                <div class="input-group">
+                    <span class="input-group-text">Обкладинка</span>
+                    <select name="cower" id="cowerSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
 
                     </select>
                 </div>
 
-                <div class="thisOptionContainer">Зшивання
-                    <select name="binding" id="bindingSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+                <div class="input-group">
+                    <span class="input-group-text">Зшивання</span>
+                    <select name="binding" id="bindingSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
 
                     </select>
                 </div>
 
-                <div class="thisOptionContainer">Ламінація
-                    <select name="lamination" id="laminationSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+                <div class="input-group">
+                    <span class="input-group-text">Ламінація</span>
+                    <select name="lamination" id="laminationSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
 
                     </select>
                 </div>
 
-                <div class="thisOptionContainer">Скруглення кутів
-                    <select name="roundCorner" id="roundCornerSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+                <div class="input-group">
+                    <span class="input-group-text">Скруглення кутів</span>
+                    <select name="roundCorner" id="roundCornerSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
 
                     </select>
                 </div>
 
-                <div class="thisOptionContainer">Порізка
-                    <select name="cutting" id="cuttingSelect" class="settingSelect"> <!--Supplement an id here instead of using 'name'-->
+                <div class="input-group">
+                    <span class="input-group-text">Порізка</span>
+                    <select name="cutting" id="cuttingSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
 
                     </select>
                 </div>
 
-                <div class="sizeOptionContainer">
-                    <div>Широта <input type="number" class="small" id="sizeX"> mm</div>
-                    <div>Висота <input type="number" class="small" id="sizeY"> mm</div>
+                <div class="input-group">
+                    <span class="input-group-text">Широта</span>
+                    <input type="number" class="form-control" id="sizeX">
+                    <span class="input-group-text">мм</span>
+                    <span class="input-group-text">Висота</span>
+                    <input type="number" class="form-control" id="sizeY">
+                    <span class="input-group-text">мм</span>
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-text">Кількість</span>
+                    <input type="number" id="countInt" class="form-control">
                 </div>
 
                 <div class="countContainer">
-                    <div>Кількість : </div>
-                    <input type="number" id="countInt">
+                    <span class="input-group-text">Кількість затраченного матеріалу(листів):</span>
+                    <input type="number" class="form-control" id="realCount" disabled>
+                    <span class="input-group-text">шт.</span>
+
+                    <span class="input-group-text">Ціна:</span>
+                    <input type="number" class="form-control price" disabled>
+                    <span class="input-group-text">грн.</span>
                 </div>
 
-                <div class="countContainer">
-                    <div>Кількість затраченного матеріалу(листів): </div>
-                    <div id="realCount"></div>
-                </div>
-
-                <div class="priceContainer">
-                    <div>Ціна: </div>
-                    <div class="price"></div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <input type="file" class="form-control" id="imgInp" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                        <button class="btn btn-outline-secondary" type="button" id="upload">Завантажити</button>
+                    </div>
+                    <div>
+                        <progress id="progressbar" value="0" max="100" style="width: 100%"></progress>
+                    </div>
                 </div>
 
             </div>
@@ -160,17 +183,30 @@
         <div id="pagenation" class="pagenation"></div>
     </div>
 
-    <input type="file" id="imgInp"/>
-    <button id="upload" class="btn">Відправити</button>
-    <img id="blah" src="#" alt="" />
-    <div id="status"></div>
-    <progress id="progressbar" value="0" max="100"></progress>
-
 <!--    <iframe src="" frameborder="2" class="frame" id="iframe"></iframe>-->
 </footer>
 
+
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Відміна</button>
+                <button type="button" class="btn btn-primary" id="addOrder" data-bs-dismiss="modal">Додати в замовлення</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="js/jquery-3.6.1.min.js"></script>
+<script src="js/bootstrap.bundle.js"></script>
+<script src="js/modals.js"></script>
 <script src="js/cardRender.js"></script>
+<script src="js/utf8.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js"></script>
