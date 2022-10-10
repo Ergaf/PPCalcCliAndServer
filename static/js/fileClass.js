@@ -12,13 +12,15 @@ class file {
     roundCorner;
     cutting;
     realCount;
+    orient;
     x;
     y;
     url;
-    constructor (name) {
+    constructor (name, id) {
         this._name = name;
-        this._id = new Date();
+        this._id = id;
         this._count = 1
+        this.orient = false
     }
     createFileContainer() {
         //create item and bind this object to this DOM element // query filesContainer
@@ -29,7 +31,6 @@ class file {
         Item.classList.add('btn');
         Item.classList.add('btn-outline-dark');
         Item.classList.add('align-items-center');
-        // Item.classList.add('bg-light');
         Item.style.cssText = "display: flex; padding: 1vmin; transition: 0.5s;"
         filesAllContainer.appendChild(Item);
         Item.onmousedown = this.pick.bind( this);
@@ -42,7 +43,6 @@ class file {
         let cancelButton = document.createElement('div');
         cancelButton.onmousedown = this.deleteThis.bind( this);
         cancelButton.classList.add('btn-close');
-        // cancelButton.innerText = " X"
         Item.appendChild(cancelButton);
     }
 
@@ -72,28 +72,37 @@ class file {
         this.container.classList.add("btn-outline-dark")
     }
     deleteThis() {
-        if(thisFile === this){
-            document.querySelector(".settingsContainer").style.display = "none"
-        }
-        for (let i = 0; i < allFiles.length; i++){
-            if(allFiles[i]._id === this._id){
-                allFiles[i].container.remove()
-                allFiles.splice(i, 1)
+        // if(thisFile === this){
+        //     document.querySelector(".settingsContainer").style.display = "none"
+        // }
+        // for (let i = 0; i < allFiles.length; i++){
+        //     if(allFiles[i]._id === this._id){
+        //         allFiles[i].container.remove()
+        //         allFiles.splice(i, 1)
+        //     }
+        // }
+        // if(allFiles.length < 1){
+        //     document.querySelector(".settingsContainer").style.display = "none"
+        // }
+
+        sendData("/orders", "DELETE", JSON.stringify({id: this._id})).then(e => {
+            console.log(e);
+            console.log(this._id);
+            if(e.toString() === this._id.toString()){
+                if(thisFile === this){
+                    document.querySelector(".settingsContainer").style.display = "none"
+                }
+                for (let i = 0; i < allFiles.length; i++){
+                    if(allFiles[i]._id === this._id){
+                        allFiles[i].container.remove()
+                        allFiles.splice(i, 1)
+                    }
+                }
+                if(allFiles.length < 1){
+                    document.querySelector(".settingsContainer").style.display = "none"
+                }
             }
-        }
-        if(allFiles.length < 1){
-            document.querySelector(".settingsContainer").style.display = "none"
-        }
-
-
-        let config = {
-            headers: { 'Content-Type': 'application/json' }
-        };
-        axios.delete("/orders", JSON.stringify({id: this._id}), config)
-            .then(response => response.json())
-            .then(json => {
-                console.log(json);
-            })
+        })
     }
 
     renderSettings() {
@@ -135,10 +144,10 @@ class file {
         this.nameContainer.innerText = this._name
         if(thisFile.url){
             if(thisFile.url.ext === 1){
-                imgInServer.setAttribute("src", thisFile.url.url);
+                imgInServer.setAttribute("src", "/files/"+thisFile.url.url);
             }
             else {
-                imgInServer.setAttribute("src", thisFile.url.url+thisFile.url.readdir[thisFile.url.pag])
+                imgInServer.setAttribute("src", "/files/"+thisFile.url.url+thisFile.url.readdir[thisFile.url.pag])
             }
             pagenation.innerText = `${thisFile.url.pag+1}/${thisFile.url.count}`
         }

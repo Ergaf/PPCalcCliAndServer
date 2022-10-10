@@ -7,11 +7,13 @@ const bodyParser = require('body-parser');
 const redis = require('redis');
 const client = redis.createClient();
 const fs = require('fs');
+const fse = require('fs-extra')
 const busboy = require('connect-busboy');
 const FormData = require('form-data');
 const mime = require('mime');
 const pdf2img = require('pdf-img-convert');
 const  { Poppler }  =  require ( "node-poppler" ) ;
+const rimraf = require('rimraf');
 
 
 const fsp = require('fs').promises;
@@ -24,11 +26,12 @@ const cookieStore = []
 
 app.use(busboy());
 app.use(cookieParser('govnobliat'));
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname + "/static"));
 app.use((req, res, next) => {
-    console.log(req.cookies);
-    console.log(cookieStore);
+    console.log(req.cookies.to);
+    // console.log(cookieStore);
     if(!sessionHave(req)){
         let cookieId = Date.now().toString()
         res.cookie('to', cookieId)
@@ -37,10 +40,10 @@ app.use((req, res, next) => {
             orders: []
         }
         cookieStore.push(user)
+        res.send(cookieId)
     }
     next();
 })
-app.use(express.static(__dirname + "/static"));
 
 app.post("/upload", function (req, res) {
     let fstream;
@@ -57,7 +60,8 @@ app.post("/upload", function (req, res) {
         } catch (err) {
             console.error(err)
         }
-        let folder1 = __dirname + `/files/${req.cookies.to}/${filenameToNorm}`
+        let idForFile = Date.now().toString()
+        let folder1 = __dirname + `/files/${req.cookies.to}/${idForFile}`
         try {
             if (!fs.existsSync(folder1)){
                 fs.mkdirSync(folder1)
@@ -66,49 +70,86 @@ app.post("/upload", function (req, res) {
             console.error(err)
         }
 
-        let filePath = path.join(__dirname + `/files/${req.cookies.to}/${filenameToNorm}/${filenameToNorm}`);
+        let filePath = path.join(__dirname + `/files/${req.cookies.to}/${idForFile}/${filenameToNorm}`);
         fstream = fs.createWriteStream(filePath);
         file.pipe(fstream);
         fstream.on('close', function () {
-            processing(filePath, req.cookies.to, filenameToNorm, res)
+            processing(filePath, req.cookies.to, filenameToNorm, res, idForFile)
         });
     });
 });
 
-app.get("*", function (req, res) {
+app.get("/files*", function (req, res) {
     let urll = req.url;
     console.log(urll);
-    if(urll === "/orders"){
-        if(req.cookies.to){
-            cookieStore.forEach(e => {
-                if(e.cookie === req.cookies.to){
-                    res.send(JSON.stringify(e))
-                }
-            })
-        }
-    }
-    else {
-        sendRes(urll, getContentType(urll), res)
-    }
+    sendRes(urll, getContentType(urll), res)
 });
-app.listen(port)
-app.delete("/orders", function (req, res) {
-    console.log(req.body);
+app.get("/orders", function (req, res) {
     if(req.cookies.to){
-        cookieStore.forEach(c => {
-            if(c.cookie === req.cookies.to){
-                for (let i = 0; i < c.orders.length; i++){
-                    // if(c.orders[i]._id === req.cookies.to){
-                    //     cookieStore.splice(i, 1)
-                    // }
-                }
+        cookieStore.forEach(e => {
+            if(e.cookie === req.cookies.to){
+                res.send(JSON.stringify(e))
             }
         })
     }
 });
+app.listen(port)
+app.delete("/orders", function (req, res) {
+    let body = [];
+    req.on('error', (err) => {
+        console.error(err);
+    }).on('data', (chunk) => {
+        body.push(chunk);
+    }).on('end', () => {
+        body = Buffer.concat(body).toString();
+        body = JSON.parse(body)
+        if(req.cookies.to){
+            cookieStore.forEach(c => {
+                if(c.cookie === req.cookies.to){
+                    for (let i = 0; i < c.orders.length; i++){
+                        if(c.orders[i].id === body.id){
+                            fse.remove(__dirname + `/files/${c.cookie}/${body.id}`, err => {
+                                if(err){
+                                    return console.error(err)
+                                }
+                                // c.orders.splice(i, 1)
+                                console.log('done');
+                                res.send(body.id);
+                            });
+                        }
+                    }
+                }
+            })
+        }
+
+    })
+});
+// app.post("/orders", function (req, res) {
+//     let body = [];
+//     req.on('error', (err) => {
+//         console.error(err);
+//     }).on('data', (chunk) => {
+//         body.push(chunk);
+//     }).on('end', () => {
+//         body = Buffer.concat(body).toString();
+//         body = JSON.parse(body)
+//         if(body.do === "createNew"){
+//             cookieStore.forEach(e => {
+//                 if(e.cookie === req.cookies.to){
+//                     let fileN = {
+//                         name: "Без файлу",
+//                         id: Date.now().toString()
+//                     }
+//                     e.orders.push(fileN)
+//                     res.send(fileN)
+//                 }
+//             })
+//         }
+//     })
+// });
 
 function sendRes(url, contentType, res) {
-    let file = path.join(__dirname+"/files/", url)
+    let file = path.join(__dirname+ url)
     fs.readFile(file, (err, content) => {
         if(err){
             res.writeHead(404)
@@ -137,38 +178,57 @@ function sessionHave (req) {
     return have;
 }
 
-function processing(filePath, cookies, filenameToNorm, res){
+async function processing(filePath, cookies, filenameToNorm, res, id){
     console.log(mime.getType(filePath));
-    if(mime.getType(filePath) === "image/jpeg"){
+    if(mime.getType(filePath) === "image/jpeg" || mime.getType(filePath) === "image/x-png"){
+        let folder = __dirname + `/files/${cookies}/${id}/toUrl`
+        try {
+            if (!fs.existsSync(folder)){
+                await fs.mkdirSync(folder)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+        fs.createReadStream(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`)
+            .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/toUrl/file`));
+
         let ress =
-            { url: `${cookies}/${filenameToNorm}/${filenameToNorm}`,
+            { url: `${cookies}/${id}/toUrl/file`,
                 count: 1,
                 ext: 1,
                 pag: 0
             }
-        res.send(JSON.stringify(ress))
         cookieStore.forEach(e => {
             if(e.cookie === cookies){
-                e.orders.push({
-                    _name : filenameToNorm,
+                let order = {
+                    id: Date.now().toString(),
+                    name : filenameToNorm,
                     url: ress
-                })
+                }
+                e.orders.push(order)
+                res.send(order)
             }
         })
     }
     if(mime.getType(filePath) === "application/pdf"){
-        toPng(filePath, cookies, filenameToNorm, res)
+        toPng(filePath, cookies, filenameToNorm, res, id)
     }
     if(mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
-        docToPdf(filePath, cookies, filenameToNorm, res)
+        docToPdf(filePath, cookies, filenameToNorm, res, id)
     }
     if(mime.getType(filePath) === "application/msword"){
-        docToPdf(filePath, cookies, filenameToNorm, res)
+        docToPdf(filePath, cookies, filenameToNorm, res, id)
+    }
+    if(mime.getType(filePath) === "application/powerpoint"){
+        docToPdf(filePath, cookies, filenameToNorm, res, id)
+    }
+    if(mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.presentationml.presentation"){
+        docToPdf(filePath, cookies, filenameToNorm, res, id)
     }
 }
 
-async function docToPdf(inputPath, cookies, filenameToNorm, res) {
-    let folder = __dirname + `/files/${cookies}/${filenameToNorm}/pdf`
+async function docToPdf(inputPath, cookies, filenameToNorm, res, id) {
+    let folder = __dirname + `/files/${cookies}/${id}/pdf`
     try {
         if (!fs.existsSync(folder)){
             await fs.mkdirSync(folder)
@@ -179,8 +239,7 @@ async function docToPdf(inputPath, cookies, filenameToNorm, res) {
 
 
     const ext = '.pdf'
-    // const inputPath = path.join(__dirname, '/111.pptx');
-    const outputPath = __dirname + `/files/${cookies}/${filenameToNorm}/pdf/${filenameToNorm}.pdf`;
+    const outputPath = __dirname + `/files/${cookies}/${id}/pdf/${filenameToNorm}.pdf`;
 
     // Read file
     const docxBuf = await fsp.readFile(inputPath);
@@ -193,11 +252,11 @@ async function docToPdf(inputPath, cookies, filenameToNorm, res) {
 
     console.log("sucess in pdf!!!"+filenameToNorm);
 
-    await toPng(outputPath, cookies, filenameToNorm, res)
+    await toPng(outputPath, cookies, filenameToNorm, res, id)
 }
 
-async function toPng(outputPath, cookies, filenameToNorm, res) {
-    let folder = __dirname + `/files/${cookies}/${filenameToNorm}/png`
+async function toPng(outputPath, cookies, filenameToNorm, res, id) {
+    let folder = __dirname + `/files/${cookies}/${id}/png`
     try {
         if (!fs.existsSync(folder)){
             fs.mkdirSync(folder)
@@ -214,12 +273,12 @@ async function toPng(outputPath, cookies, filenameToNorm, res) {
         lastPageToConvert: -1,
         pngFile: true,
     };
-    const outputFile = __dirname + `/files/${cookies}/${filenameToNorm}/png/file`;
+    const outputFile = __dirname + `/files/${cookies}/${id}/png/file`;
 
     const resz = await poppler.pdfToCairo(file, outputFile, options);
     console.log(resz);
 
-    let readdir = fs.readdirSync(__dirname + `/files/${cookies}/${filenameToNorm}/png`)
+    let readdir = fs.readdirSync(__dirname + `/files/${cookies}/${id}/png`)
     console.log(readdir);
 
     let pag = "1";
@@ -230,21 +289,23 @@ async function toPng(outputPath, cookies, filenameToNorm, res) {
         pag = "001";
     }
 
-    let ress =
-            { url: `${cookies}/${filenameToNorm}/png/`,
-                count: readdir.length,
-                pag: 0,
-                readdir: readdir,
-                ext: 2
-            }
-        res.send(JSON.stringify(ress))
+    let ress = {
+        url: `${cookies}/${id}/png/`,
+        count: readdir.length,
+        pag: 0,
+        readdir: readdir,
+        ext: 2
+    }
 
     cookieStore.forEach(e => {
         if(e.cookie === cookies){
-            e.orders.push({
-                _name : filenameToNorm,
+            let order = {
+                id: Date.now().toString(),
+                name : filenameToNorm,
                 url: ress
-            })
+            }
+            e.orders.push(order)
+            res.send(order)
         }
     })
 
@@ -260,8 +321,10 @@ function getContentType(url) {
             return "text/javascript"
         case ".json":
             return "application/json"
-        case ".jpg":
+        case ".jpeg":
             return "image/jpeg"
+        case ".png":
+            return "image/png"
         default:
             return "application/octate-stream"
     }

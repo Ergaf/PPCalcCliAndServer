@@ -55,10 +55,13 @@
     height: 85vh;
 }
 .list {
-    display: inline-block;
+    display: flex;
     background: white;
     margin: 1vh;
     transition: 0.5s;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
 }
 .imgKarta {
     display: inline-block;

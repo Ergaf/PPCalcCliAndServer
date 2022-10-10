@@ -17,6 +17,7 @@
     "docxtemplater": "^3.31.3",
     "express": "^4.18.1",
     "express-fileupload": "^1.4.0",
+    "fs-extra": "^10.1.0",
     "googleapis": "^107.0.0",
     "graphicsmagick": "^0.0.1",
     "libreoffice-convert": "^1.4.1",
@@ -26,6 +27,7 @@
     "pizzip": "^3.1.3",
     "process": "^0.11.10",
     "redis": "^4.3.1",
+    "rimraf": "^3.0.2",
     "utf8": "^3.0.0"
   },
   "devDependencies": {

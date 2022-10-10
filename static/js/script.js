@@ -1,12 +1,28 @@
 const upload = document.querySelector("#upload")
 const addFileButton = document.querySelector("#addFileButton");
+const list = document.querySelector(".list");
+const orient = document.querySelector("#orient");
 const allFiles = []
 let thisFile;
 
+orient.addEventListener("click", function () {
+    console.log(thisFile);
+    thisFile.orient = !thisFile.orient
+    thisFile.renderSettings()
+})
+
 addFileButton.addEventListener("click", function () {
-    let file1 = new file("Без файлу")
-    allFiles.push(file1)
-    file1.createFileContainer()
+    // let data = {
+    //     do: "createNew"
+    // }
+    // sendData("/orders", "POST", JSON.stringify(data))
+    //     .then(e => {
+    //         console.log(e);
+    //         let file1 = new file(e.name)
+    //         file1._id = e.id
+    //         allFiles.push(file1)
+    //         file1.createFileContainer()
+    //     })
 })
 upload.addEventListener("click", function () {
     uploadFile()
@@ -27,11 +43,19 @@ function uploadFile() {
         fd.append('file', imgInp.files[0], imgInp.files[0].name)
         axios.post("/upload", fd, config)
             .then(e => {
-                thisFile._name = imgInp.files[0].name
-                console.log(e.data);
-                thisFile.url = e.data
-                thisFile._count = e.data.count
-                thisFile.renderSettings()
+                console.log(e);
+                let file1 = new file(e.data.name)
+                file1._id = e.data.id
+                file1.url = e.data.url
+                allFiles.push(file1)
+                file1.createFileContainer()
+                file1.pick({target: file1.container})
+
+                // thisFile._name = imgInp.files[0].name
+                // console.log(e.data);
+                // thisFile.url = e.data
+                // thisFile._count = e.data.count
+                // thisFile.renderSettings()
                 document.querySelector(".download").classList.add("nonDisplay")
             })
     }
@@ -88,15 +112,15 @@ fetch("/orders")
     .then(json => {
         console.log(json);
         json.orders.forEach(o => {
-            let file1 = new file(o._name)
-            allFiles.push(file1)
+            let file1 = new file(o.name)
+            file1._id = o.id
             file1.url = o.url
+            allFiles.push(file1)
             file1.createFileContainer()
         })
 
 
     })
-
 
 let optContainer = document.querySelector(".optionsContainer")
 document.querySelector("#document").addEventListener("click", function () {
@@ -262,17 +286,17 @@ function renderr(uri){
     list.appendChild(imgG)
 }
 
-async function postData(url, data) {
+async function sendData(url, method, data) {
     // Default options are marked with *
     const response = await fetch(url, {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        method: method, // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {
-            // 'Content-Type': 'application/json'
+            'Content-Type': 'application/json'
             // 'Content-Type': 'application/octate-stream'
-            'Content-Type': 'multipart/form-data'
+            // 'Content-Type': 'multipart/form-data'
             // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         redirect: 'follow', // manual, *follow, error

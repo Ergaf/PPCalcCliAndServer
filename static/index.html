@@ -3,6 +3,7 @@
 <head>
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
+    <meta name="http-equiv" content="Content-type: text/html; charset=UTF-8">
     <meta charset="UTF-8">
     <title>Calc</title>
 </head>
@@ -18,7 +19,7 @@
 
 <div class="mainContainer nonDisplay">
     <div class="FilesContainer">
-        <button class="btn btn-primary btn-lg" id="addFileButton">
+        <button class="btn btn-primary btn-lg" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
             +
         </button>
     </div>
@@ -57,6 +58,16 @@
                         <option value="50x90">50x90</option>
                         <option value="50x90">50x90</option>
                     </select>
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-text">Широта</span>
+                    <input type="number" class="form-control" id="sizeX">
+                    <span class="input-group-text">мм</span>
+                    <button class="btn" id="orient">Оріент</button>
+                    <span class="input-group-text">Висота</span>
+                    <input type="number" class="form-control" id="sizeY">
+                    <span class="input-group-text">мм</span>
                 </div>
 
                 <div class="input-group">
@@ -118,15 +129,6 @@
                 </div>
 
                 <div class="input-group">
-                    <span class="input-group-text">Широта</span>
-                    <input type="number" class="form-control" id="sizeX">
-                    <span class="input-group-text">мм</span>
-                    <span class="input-group-text">Висота</span>
-                    <input type="number" class="form-control" id="sizeY">
-                    <span class="input-group-text">мм</span>
-                </div>
-
-                <div class="input-group">
                     <span class="input-group-text">Кількість</span>
                     <input type="number" id="countInt" class="form-control">
                 </div>
@@ -139,16 +141,6 @@
                     <span class="input-group-text">Ціна:</span>
                     <input type="number" class="form-control price" disabled>
                     <span class="input-group-text">грн.</span>
-                </div>
-
-                <div class="modal-body">
-                    <div class="input-group">
-                        <input type="file" class="form-control" id="imgInp" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-                        <button class="btn btn-outline-secondary" type="button" id="upload">Завантажити</button>
-                    </div>
-                    <div>
-                        <progress id="progressbar" value="0" max="100" style="width: 100%"></progress>
-                    </div>
                 </div>
 
             </div>
@@ -186,32 +178,39 @@
 <!--    <iframe src="" frameborder="2" class="frame" id="iframe"></iframe>-->
 </footer>
 
-
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Виберіть файл</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <input type="file" class="form-control" id="imgInp" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                </div>
+                <div>
+                    <progress id="progressbar" value="0" max="100" style="width: 100%"></progress>
+                </div>
+            </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Відміна</button>
-                <button type="button" class="btn btn-primary" id="addOrder" data-bs-dismiss="modal">Додати в замовлення</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
+                <button type="button" id="upload" class="btn btn-primary" data-bs-dismiss="modal">Додати файл</button>
             </div>
         </div>
     </div>
 </div>
 
-<script src="js/jquery-3.6.1.min.js"></script>
-<script src="js/bootstrap.bundle.js"></script>
-<script src="js/modals.js"></script>
-<script src="js/cardRender.js"></script>
-<script src="js/utf8.js"></script>
+<script src="js/jquery-3.6.1.min.js" charset="utf-8"></script>
+<script src="js/bootstrap.bundle.js" charset="utf-8"></script>
+<script src="js/modals.js" charset="utf-8"></script>
+<script src="js/cardRender.js" charset="utf-8"></script>
+<script src="js/utf8.js" charset="utf-8"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js"></script>
-<script src="js/fileClass.js"></script>
-<script src="js/ifsForThisTabl.js"></script>
-<script src="js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js" charset="utf-8"></script>
+<script src="js/fileClass.js" charset="utf-8"></script>
+<script src="js/ifsForThisTabl.js" charset="utf-8"></script>
+<script src="js/script.js" charset="utf-8"></script>
 </body>
 </html>
