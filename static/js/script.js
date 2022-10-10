@@ -44,8 +44,7 @@ function uploadFile() {
         axios.post("/upload", fd, config)
             .then(e => {
                 console.log(e);
-                let file1 = new file(e.data.name)
-                file1._id = e.data.id
+                let file1 = new file(e.data.name, e.data.id)
                 file1.url = e.data.url
                 allFiles.push(file1)
                 file1.createFileContainer()
@@ -112,8 +111,7 @@ fetch("/orders")
     .then(json => {
         console.log(json);
         json.orders.forEach(o => {
-            let file1 = new file(o.name)
-            file1._id = o.id
+            let file1 = new file(o.name, o.id)
             file1.url = o.url
             allFiles.push(file1)
             file1.createFileContainer()

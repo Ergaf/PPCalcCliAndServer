@@ -36,23 +36,37 @@
 }
 
 @media (max-width: 1000px){
-    .btn {
-        padding: 5vmin;
+    .settingsContainer {
+        flex-direction: column;
     }
-    select {
-        padding: 3vmin;
+    .fileSettingsContainer{
+        width: 99%;
+    }
+    .fileViewContainer {
+        width: 99%;
     }
 }
+@media (min-width: 1000px){
+    .settingsContainer {
+        flex-direction: row;
+    }
+    .fileSettingsContainer{
+        width: 44%;
+    }
+    .fileViewContainer {
+        width: 55%;
+    }
+}
+
 .fileSettingsContainer {
-    width: 44%;
     display: flex;
     flex-direction: column;
 }
 .fileViewContainer {
-    width: 55%;
     background: #ececec;
     display: flex;
     height: 85vh;
+    overflow: hidden;
 }
 .list {
     display: flex;
@@ -64,7 +78,7 @@
     align-items: center;
 }
 .imgKarta {
-    display: inline-block;
+    /*display: inline-block;*/
     position: absolute;
     transition: 0.5s;
 }
