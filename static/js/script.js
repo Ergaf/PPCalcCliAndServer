@@ -1,4 +1,5 @@
 const upload = document.querySelector("#upload")
+const nonUpload = document.querySelector("#nonUpload")
 const addFileButton = document.querySelector("#addFileButton");
 const list = document.querySelector(".list");
 const orient = document.querySelector("#orient");
@@ -24,6 +25,17 @@ addFileButton.addEventListener("click", function () {
     //         file1.createFileContainer()
     //     })
 })
+nonUpload.addEventListener("click", function () {
+    axios.post("/orders")
+        .then(e => {
+            console.log(e);
+            let file1 = new file(e.data.name, e.data.id)
+            file1.format = e.data.format
+            allFiles.push(file1)
+            file1.createFileContainer()
+            file1.pick({target: file1.container})
+        })
+})
 upload.addEventListener("click", function () {
     uploadFile()
 })
@@ -46,6 +58,7 @@ function uploadFile() {
                 console.log(e);
                 let file1 = new file(e.data.name, e.data.id)
                 file1.url = e.data.url
+                file1.format = e.data.format
                 allFiles.push(file1)
                 file1.createFileContainer()
                 file1.pick({target: file1.container})
@@ -63,15 +76,47 @@ function uploadFile() {
 let presetName = document.querySelector(".presetName")
 let price = document.querySelector(".price")
 
-let formatSelect = document.querySelector("#formatSelect")
-let sidesSelect = document.querySelector("#sidesSelect")
-let colorSelect = document.querySelector("#colorSelect")
-let destinySelect = document.querySelector("#destinySelect")
-let cowerSelect = document.querySelector("#cowerSelect")
-let bindingSelect = document.querySelector("#bindingSelect")
-let laminationSelect = document.querySelector("#laminationSelect")
-let roundCornerSelect = document.querySelector("#roundCornerSelect")
-let cuttingSelect = document.querySelector("#cuttingSelect")
+const formatButtons = document.querySelector("#formatButtons");
+Array.prototype.slice.call(formatButtons.children).forEach(e => {
+    e.addEventListener("click", function () {
+        thisFile.format = e.innerText
+        thisFile.renderSettings()
+    })
+})
+let sidesButtons = document.querySelector("#sidesButtons")
+Array.prototype.slice.call(sidesButtons.children).forEach(e => {
+    e.addEventListener("click", function () {
+        thisFile.sides = e.getAttribute("toFile")
+        thisFile.renderSettings()
+    })
+})
+let colorButtons = document.querySelector("#colorButtons")
+Array.prototype.slice.call(colorButtons.children).forEach(e => {
+    e.addEventListener("click", function () {
+        thisFile.color = e.getAttribute("toFile")
+        thisFile.renderSettings()
+    })
+})
+let paperButtons = document.querySelector("#paperButtons")
+Array.prototype.slice.call(paperButtons.children).forEach(e => {
+    e.addEventListener("click", function () {
+        thisFile.paper = e.getAttribute("toFile")
+        thisFile.renderSettings()
+    })
+})
+let destinyButtons = document.querySelector("#destinyButtons")
+let laminationButtons = document.querySelector("#laminationButtons")
+let cowerButtons = document.querySelector("#cowerButtons")
+let frontLiningButtons = document.querySelector("#frontLiningButtons")
+let backLiningButtons = document.querySelector("#backLiningButtons")
+let backLiningText = document.querySelector("#backLiningText")
+let bindingButtons = document.querySelector("#bindingButtons")
+let bindingSelectButtons = document.querySelector("#bindingSelectButtons")
+let cuttingButtons = document.querySelector("#cuttingButtons")
+let roundCornerButtons = document.querySelector("#roundCornerButtons")
+let text = document.querySelector("#text")
+
+
 let countInt = document.querySelector("#countInt")
 let sizeX = document.querySelector("#sizeX")
 let sizeY = document.querySelector("#sizeY")
@@ -113,36 +158,35 @@ fetch("/orders")
         json.orders.forEach(o => {
             let file1 = new file(o.name, o.id)
             file1.url = o.url
+            file1.format = o.format
             allFiles.push(file1)
             file1.createFileContainer()
         })
-
-
     })
 
 let optContainer = document.querySelector(".optionsContainer")
 document.querySelector("#document").addEventListener("click", function () {
-    thisFile.type = "Документ"
+    thisFile.type = "ДОКУМЕНТ"
     thisFile.format = "A4"
-    thisFile.sides = "Односторонній"
-    thisFile.color = "Чорно-білий"
-    thisFile.destiny = "90 гр"
+    thisFile.sides = "one"
+    thisFile.color = "bw"
+    thisFile.destiny = "90 гр офісний"
     thisFile.renderSettings()
 
 })
 document.querySelector("#presentation").addEventListener("click", function () {
-    thisFile.type = "Презентація"
+    thisFile.type = "ПРЕЗЕНТАЦІЯ"
     thisFile.format = "A4"
-    thisFile.sides = "Односторонній"
-    thisFile.color = "Кольоровий"
+    thisFile.sides = "one"
+    thisFile.color = "colors"
     thisFile.destiny = "160 гр DNS"
     thisFile.renderSettings()
 })
 document.querySelector("#poster").addEventListener("click", function () {
     thisFile.type = "Постер"
     thisFile.format = "A3"
-    thisFile.sides = "Односторонній"
-    thisFile.color = "Кольоровий"
+    thisFile.sides = "one"
+    thisFile.color = "colors"
     thisFile.destiny = "160 гр DNS"
     thisFile.renderSettings()
 })
@@ -151,6 +195,7 @@ document.querySelector("#card").addEventListener("click", function () {
     thisFile.format = "A6"
     thisFile.sides = ""
     thisFile.color = ""
+    thisFile.destiny = undefined
     thisFile.renderSettings()
 })
 document.querySelector("#visitCard").addEventListener("click", function () {
@@ -158,6 +203,7 @@ document.querySelector("#visitCard").addEventListener("click", function () {
     thisFile.format = "A5"
     thisFile.sides = ""
     thisFile.color = ""
+    thisFile.destiny = undefined
     thisFile.renderSettings()
 })
 document.querySelector("#sticker").addEventListener("click", function () {
@@ -165,6 +211,7 @@ document.querySelector("#sticker").addEventListener("click", function () {
     thisFile.format = ""
     thisFile.sides = ""
     thisFile.color = ""
+    thisFile.destiny = undefined
     thisFile.renderSettings()
 })
 document.querySelector("#tags").addEventListener("click", function () {
@@ -172,6 +219,7 @@ document.querySelector("#tags").addEventListener("click", function () {
     thisFile.format = ""
     thisFile.sides = ""
     thisFile.color = ""
+    thisFile.destiny = undefined
     thisFile.renderSettings()
 })
 document.querySelector("#brochure").addEventListener("click", function () {
@@ -179,6 +227,7 @@ document.querySelector("#brochure").addEventListener("click", function () {
     thisFile.format = ""
     thisFile.sides = ""
     thisFile.color = ""
+    thisFile.destiny = undefined
     thisFile.renderSettings()
 })
 document.querySelector("#note").addEventListener("click", function () {
@@ -186,6 +235,7 @@ document.querySelector("#note").addEventListener("click", function () {
     thisFile.format = ""
     thisFile.sides = ""
     thisFile.color = ""
+    thisFile.destiny = undefined
     thisFile.renderSettings()
 })
 document.querySelector("#calendar").addEventListener("click", function () {
@@ -193,55 +243,9 @@ document.querySelector("#calendar").addEventListener("click", function () {
     thisFile.format = ""
     thisFile.sides = ""
     thisFile.color = ""
+    thisFile.destiny = undefined
     thisFile.renderSettings()
 })
-
-formatSelect.addEventListener("change", function () {
-    thisFile.type = "Змінено користувачем"
-    thisFile.format = formatSelect.value
-    thisFile.renderSettings()
-})
-sidesSelect.addEventListener("change", function () {
-    thisFile.type = "Змінено користувачем"
-    thisFile.sides = sidesSelect.value
-    thisFile.renderSettings()
-})
-colorSelect.addEventListener("change", function () {
-    thisFile.type = "Змінено користувачем"
-    thisFile.color = colorSelect.value
-    thisFile.renderSettings()
-})
-destinySelect.addEventListener("change", function () {
-    thisFile.type = "Змінено користувачем"
-    thisFile.destiny = destinySelect.value
-    thisFile.renderSettings()
-})
-cowerSelect.addEventListener("change", function () {
-    thisFile.type = "Змінено користувачем"
-    thisFile.cower = cowerSelect.value
-    thisFile.renderSettings()
-})
-bindingSelect.addEventListener("change", function () {
-    thisFile.type = "Змінено користувачем"
-    thisFile.binding = bindingSelect.value
-    thisFile.renderSettings()
-})
-laminationSelect.addEventListener("change", function () {
-    thisFile.type = "Змінено користувачем"
-    thisFile.lamination = laminationSelect.value
-    thisFile.renderSettings()
-})
-roundCornerSelect.addEventListener("change", function () {
-    thisFile.type = "Змінено користувачем"
-    thisFile.roundCorner = roundCornerSelect.value
-    thisFile.renderSettings()
-})
-cuttingSelect.addEventListener("change", function () {
-    thisFile.type = "Змінено користувачем"
-    thisFile.cutting = cuttingSelect.value
-    thisFile.renderSettings()
-})
-
 
 countInt.addEventListener("change", function () {
     thisFile._count = countInt.value
@@ -305,3 +309,18 @@ async function sendData(url, method, data) {
     await console.log(response);
     return await response.json(); // parses JSON response into native JavaScript objects
 }
+
+let customButton = document.querySelector("#custom")
+let presetsButton = document.querySelector("#presets")
+let presetContainer = document.querySelector("#presetContainer")
+
+customButton.addEventListener("click", function () {
+    customButton.classList.add("btnm-act")
+    presetsButton.classList.remove("btnm-act")
+    presetContainer.classList.add("nonDisplay")
+})
+presetsButton.addEventListener("click", function () {
+    presetsButton.classList.add("btnm-act")
+    customButton.classList.remove("btnm-act")
+    presetContainer.classList.remove("nonDisplay")
+})

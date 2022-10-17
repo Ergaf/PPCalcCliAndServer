@@ -3,6 +3,7 @@
 <head>
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
     <meta name="http-equiv" content="Content-type: text/html; charset=UTF-8">
     <meta charset="UTF-8">
     <title>Calc</title>
@@ -19,7 +20,7 @@
 
 <div class="mainContainer nonDisplay">
     <div class="FilesContainer">
-        <button class="btn btn-primary btn-lg" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button class="btnm" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
             +
         </button>
     </div>
@@ -30,105 +31,72 @@
 
     <div class="settingsContainer">
         <div class="fileSettingsContainer">
-            <div class="presetContainer">
-                <button class="btn btn-secondary" id="document">Документ</button>
-                <button class="btn btn-secondary" id="presentation">Презентація</button>
-                <button class="btn btn-secondary" id="poster">Плакат</button>
-                <button class="btn btn-secondary" id="card">Листівка</button>
-                <button class="btn btn-secondary" id="visitCard">Візітівка</button>
-                <button class="btn btn-secondary" id="sticker">Наліпки</button>
-                <button class="btn btn-secondary" id="tags">Бірки</button>
-                <button class="btn btn-secondary" id="brochure">Брошура</button>
-                <button class="btn btn-secondary" id="note">Блокнот</button>
-                <button class="btn btn-secondary" id="calendar">Календарь</button>
+            <div class="d-flex justify-content-center">
+                <button class="btnm btnm-act" id="custom">СВІЙ ВИБІР</button>
+                <button class="btnm" id="presets">ВИБІР ІЗ ШАБЛОНІВ</button>
             </div>
-            <div class="presetName">
-
+            <div class="presetContainer nonDisplay" id="presetContainer">
+                <button class="btnm" id="document">ДОКУМЕНТ</button>
+                <button class="btnm" id="presentation">ПРЕЗЕНТАЦІЯ</button>
+                <button class="btnm" id="poster">ПЛАКАТ</button>
+                <button class="btnm" id="card">ЛИСТІВКА</button>
+                <button class="btnm" id="visitCard">ВІЗІТІВКА</button>
+                <button class="btnm" id="sticker">НАЛІПКА</button>
+                <button class="btnm" id="tags">БІРКИ</button>
+                <button class="btnm" id="brochure">БРОШУРА</button>
+                <button class="btnm" id="note">БЛОКНОТ</button>
+                <button class="btnm" id="calendar">КАЛЕНДАРЬ</button>
             </div>
 
             <div class="optionsContainer">
-                <div class="input-group">
-                    <span class="input-group-text">Формат</span>
-                    <select name="format" id="formatSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
-                        <option value="A4">A4</option>
-                        <option value="A3">A3</option>
-                        <option value="A6">A6</option>
-                        <option value="A5">A5</option>
-                        <option value="Свій розмір">Свій розмір</option>
-                        <option value="50x90">50x90</option>
-                        <option value="50x90">50x90</option>
-                    </select>
+
+                <div class="d-flex justify-content-center settingElem" id="formatButtons">
+                    <div class="btnm">A7</div>
+                    <div class="btnm">A6</div>
+                    <div class="btnm">A5</div>
+                    <div class="btnm">A4</div>
+                    <div class="btnm">A3</div>
+                    <div class="btnm">Свій розмір</div>
                 </div>
 
                 <div class="input-group">
-                    <span class="input-group-text">Широта</span>
                     <input type="number" class="form-control" id="sizeX">
-                    <span class="input-group-text">мм</span>
+                    <span class="input-group-text btn">мм</span>
                     <button class="btn input-group-text" id="orient">
                         <img src="img/orient.png" class="img-fluid" style="height: 20px" alt="">
                     </button>
-                    <span class="input-group-text">Висота</span>
                     <input type="number" class="form-control" id="sizeY">
-                    <span class="input-group-text">мм</span>
+                    <span class="input-group-text btn">мм</span>
                 </div>
 
-                <div class="input-group">
-                    <span class="input-group-text">Сторони</span>
-                    <select name="sides" id="sidesSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
-                        <option value="Односторонній">Односторонній</option>
-                        <option value="Двосторонній">Двосторонній</option>
-                    </select>
+                <div class="d-flex justify-content-center settingElem" id="colorButtons">
+                    <div class="btnm" toFile="bw">Чорно-білий друк</div>
+                    <div class="btnm" toFile="colors">Кольоровий друк</div>
                 </div>
 
-                <div class="input-group">
-                    <span class="input-group-text">Кольоровість</span>
-                    <select name="color" id="colorSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
-                        <option value="Чорно-білий">Чорно-білий</option>
-                        <option value="Кольоровий">Кольоровий</option>
-                    </select>
+                <div class="d-flex justify-content-center settingElem" id="sidesButtons">
+                    <div class="btnm" toFile="one">з одніеї сторони</div>
+                    <div class="btnm" toFile="two">з обох сторін</div>
                 </div>
 
-                <div class="input-group">
-                    <span class="input-group-text">Папір</span>
-                    <select name="destiny" id="destinySelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
-
-                    </select>
+                <div class="d-flex justify-content-center settingElem" id="paperButtons">
+                    <div class="btnm" toFile="на папері">на папері</div>
+                    <div class="btnm" toFile="на самоклейці">на самоклейці</div>
+                    <div class="btnm" toFile="на Xerox Transparencies ®">на Xerox Transparencies ®</div>
                 </div>
 
-                <div class="input-group">
-                    <span class="input-group-text">Обкладинка</span>
-                    <select name="cower" id="cowerSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
+                <div class="d-flex justify-content-center settingElem" id="destinyButtons"></div>
+                <div class="d-flex justify-content-center settingElem" id="laminationButtons"></div>
+                <div class="d-flex justify-content-center settingElem" id="bindingButtons"></div>
+                <div class="d-flex justify-content-center settingElem" id="bindingSelectButtons"></div>
+                <div class="d-flex justify-content-center settingElem" id="cowerButtons"></div>
+                <div class="d-flex justify-content-center settingElem" id="frontLiningButtons"></div>
+                <div class="d-flex justify-content-center settingElem" id="backLiningText">з задньою подкладкою</div>
+                <div class="d-flex justify-content-center settingElem" id="backLiningButtons"></div>
+                <div class="d-flex justify-content-center settingElem" id="cuttingButtons"></div>
+                <div class="d-flex justify-content-center settingElem" id="roundCornerButtons"></div>
 
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-text">Зшивання</span>
-                    <select name="binding" id="bindingSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
-
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-text">Ламінація</span>
-                    <select name="lamination" id="laminationSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
-
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-text">Скруглення кутів</span>
-                    <select name="roundCorner" id="roundCornerSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
-
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-text">Порізка</span>
-                    <select name="cutting" id="cuttingSelect" class="form-select settingSelect"> <!--Supplement an id here instead of using 'name'-->
-
-                    </select>
-                </div>
+                <div class="d-flex justify-content-center settingElem" id="text"></div>
 
                 <div class="input-group">
                     <span class="input-group-text">Кількість</span>
@@ -148,11 +116,9 @@
             </div>
         </div>
         <div class="fileViewContainer">
-            <div class="btn" id="prev">p</div>
             <div class="list">
                 <img src="" alt="" class="imgInServer">
             </div>
-            <div class="btn" id="next">n</div>
             <div class="">
                 <img src="img/karta.png" alt="" class="imgKarta">
             </div>
@@ -173,8 +139,12 @@
 </div>
 
 <footer>
-    <div class="pagin" style="float: right; margin-right: 35vw">
-        <div id="pagenation" class="pagenation"></div>
+    <div class="pagenation">
+        <div class="btn btn-info btnViewControl" id="prev"><</div>
+        <div>
+            <div id="pagenation"></div>
+        </div>
+        <div class="btn btn-info btnViewControl btnViewControlNext" id="next">></div>
     </div>
 
 <!--    <iframe src="" frameborder="2" class="frame" id="iframe"></iframe>-->
@@ -184,20 +154,21 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Виберіть файл</h1>
+                <div class="" id="exampleModalLabel">ДОДАТИ ФАЙЛ</div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="input-group">
                     <input type="file" class="form-control" id="imgInp" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                 </div>
-                <div>
-                    <progress id="progressbar" value="0" max="100" style="width: 100%"></progress>
-                </div>
+<!--                <div>-->
+<!--                    <progress id="progressbar" value="0" max="100" style="width: 100%"></progress>-->
+<!--                </div>-->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
-                <button type="button" id="upload" class="btn btn-primary" data-bs-dismiss="modal">Додати файл</button>
+<!--                <button type="button" class="btnm" data-bs-dismiss="modal">Назад</button>-->
+                <div type="button" id="nonUpload" class="btnm" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>
+                <div type="button" id="upload" class="btnm" data-bs-dismiss="modal">ПРОРАХУВАТИ</div>
             </div>
         </div>
     </div>

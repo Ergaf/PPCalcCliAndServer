@@ -30,14 +30,16 @@ function renderListAndCard() {
 
         if(coef < 1){
             etalonForRender = etalon*coef
-            width = width*coef
+            // width = width*coef
         }
 
         list1.style.width = width+"vh"
+        list1.style.minWidth = width+"vh"
         list1.style.height = etalonForRender+"vh"
+        list1.style.minHeight = etalonForRender+"vh"
         imgInServer.style.height = 100+"%"
 
-            let cardWidth = x/cardSizeW;
+        let cardWidth = x/cardSizeW;
 
         if(coef > 1){
             etalon = etalon/coef

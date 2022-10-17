@@ -1,50 +1,31 @@
-function getDestinyInData() {
-    if(thisFile.format === "A4" && thisFile.sides === "Односторонній" && thisFile.color ==="Чорно-білий"){
-        return prices[3].variants
-    }
-    if(thisFile.format === "A3" && thisFile.sides === "Односторонній" && thisFile.color ==="Чорно-білий"){
-        return prices[4].variants
-    }
-
-    if(thisFile.format === "A4" && thisFile.sides === "Односторонній" && thisFile.color ==="Кольоровий"){
-        return prices[5].variants
-    }
-    if(thisFile.format === "A4" && thisFile.sides === "Двосторонній" && thisFile.color ==="Кольоровий"){
-        return prices[6].variants
-    }
-    if(thisFile.format === "A3" && thisFile.sides === "Односторонній" && thisFile.color ==="Кольоровий"){
-        return prices[7].variants
-    }
-    if(thisFile.format === "A3" && thisFile.sides === "Двосторонній" && thisFile.color ==="Кольоровий"){
-        return prices[8].variants
-    }
-
-    if(thisFile.format === "Свій розмір" && thisFile.sides === "Односторонній" && thisFile.color ==="Кольоровий"){
-        return prices[7].variants
-    }
-    if(thisFile.format === "Свій розмір" && thisFile.sides === "Двосторонній" && thisFile.color ==="Кольоровий"){
-        return prices[8].variants
-    }
+function getVariantsFromNameInData(name) {
+    let paper = undefined
+    prices.forEach(e => {
+        if(e.name === name) {
+            paper = e.variants
+        }
+    })
+    return paper
 }
 
-function getBindingInData() {
-    let ret = [];
-    if(thisFile.format === "A4"){
-        prices[11].variants.forEach(e => {
-            if(thisFile._count >= e[2] && thisFile._count <= e[3]){
-                ret.push(e)
-            }
-        })
-    }
-    if(thisFile.format === "A3"){
-        prices[12].variants.forEach(e => {
-            if(thisFile._count >= e[2] && thisFile._count <= e[3]){
-                ret.push(e)
-            }
-        })
-    }
-    return ret;
-}
+// function getBindingInData() {
+//     let ret = [];
+//     if(thisFile.format === "A4"){
+//         prices[12].variants.forEach(e => {
+//             if(thisFile._count >= e[2] && thisFile._count <= e[3]){
+//                 ret.push(e)
+//             }
+//         })
+//     }
+//     if(thisFile.format === "A3"){
+//         prices[13].variants.forEach(e => {
+//             if(thisFile._count >= e[2] && thisFile._count <= e[3]){
+//                 ret.push(e)
+//             }
+//         })
+//     }
+//     return ret;
+// }
 
 function getDestinyPrice(count){
     if(count < 11){
@@ -118,6 +99,12 @@ function getSizes() {
             y: prices[0].variants[0][3]
         }
     }
+    if(thisFile.format === "A7"){
+        size = {
+            x: prices[0].variants[4][2],
+            y: prices[0].variants[4][3]
+        }
+    }
     return size
 }
 
@@ -137,4 +124,19 @@ function getHowInASheet() {
         forR = gg2
     }
     return forR
+}
+
+function getPaperTypeInData() {
+    let type = 0;
+    if(thisFile.destiny !== undefined){
+        prices[9].variants.forEach(e => {
+            if(e[0] === thisFile.destiny){
+                type = e[1]
+            }
+        })
+    }
+    else {
+        type = 0;
+    }
+    return type;
 }

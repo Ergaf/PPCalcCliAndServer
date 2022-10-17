@@ -84,6 +84,21 @@ app.get("/files*", function (req, res) {
     console.log(urll);
     sendRes(urll, getContentType(urll), res)
 });
+app.post("/orders", function (req, res) {
+    if(req.cookies.to){
+        cookieStore.forEach(e => {
+            if(e.cookie === req.cookies.to){
+                let order = {
+                    id: Date.now().toString(),
+                    name : "БЕЗ ФАЙЛУ",
+                    format: "A4"
+                }
+                e.orders.push(order)
+                res.send(JSON.stringify(order))
+            }
+        })
+    }
+});
 app.get("/orders", function (req, res) {
     if(req.cookies.to){
         cookieStore.forEach(e => {
@@ -96,39 +111,43 @@ app.get("/orders", function (req, res) {
 app.listen(port)
 app.delete("/orders", function (req, res) {
     let body = [];
-    req.on('error', (err) => {
-        console.error(err);
-    }).on('data', (chunk) => {
-        body.push(chunk);
-    }).on('end', () => {
-        body = Buffer.concat(body).toString();
-        body = JSON.parse(body)
-        if(req.cookies.to){
-            cookieStore.forEach(c => {
-                if(c.cookie === req.cookies.to){
-                    for (let i = 0; i < c.orders.length; i++){
-                        if(c.orders[i].id === body.id){
-                            try {
-                                filesDelete(__dirname + `/files/${c.cookie}/${c.orders[i].id}/`)
-                            } catch (e) {
-                                console.log(e);
-                                res.send(e)
+    try {
+        req.on('error', (err) => {
+            console.error(err);
+        }).on('data', (chunk) => {
+            body.push(chunk);
+        }).on('end', () => {
+            body = Buffer.concat(body).toString();
+            body = JSON.parse(body)
+            if(req.cookies.to){
+                cookieStore.forEach(c => {
+                    if(c.cookie === req.cookies.to){
+                        for (let i = 0; i < c.orders.length; i++){
+                            if(c.orders[i].id === body.id){
+                                try {
+                                    filesDelete(__dirname + `/files/${c.cookie}/${c.orders[i].id}/`)
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                                try {
+                                    c.orders.splice(i, 1)
+                                    console.log('done');
+                                    res.send(body.id);
+                                } catch (e) {
+                                    console.log(e);
+                                }
                             }
-                            try {
-                                c.orders.splice(i, 1)
-                            } catch (e) {
-                                console.log(e);
-                                res.send(e)
-                            }
-                            console.log('done');
-                            res.send(body.id);
                         }
                     }
-                }
-            })
-        }
+                })
+            }
 
-    })
+        })
+    }
+    catch (e) {
+        console.log(e);
+        res.send(e)
+    }
 });
 function filesDelete(y){
     let y1 = fs.readdirSync(y);
@@ -200,7 +219,11 @@ function sessionHave (req) {
 
 async function processing(filePath, cookies, filenameToNorm, res, id){
     console.log(mime.getType(filePath));
-    if(mime.getType(filePath) === "image/jpeg" || mime.getType(filePath) === "image/x-png" || mime.getType(filePath) === "image/png"){
+    if(
+        mime.getType(filePath) === "image/jpeg" ||
+        mime.getType(filePath) === "image/x-png" ||
+        mime.getType(filePath) === "image/png"
+    ){
         let folder = __dirname + `/files/${cookies}/${id}/toUrl`
         try {
             if (!fs.existsSync(folder)){
@@ -223,7 +246,8 @@ async function processing(filePath, cookies, filenameToNorm, res, id){
                 let order = {
                     id: id,
                     name : filenameToNorm,
-                    url: ress
+                    url: ress,
+                    format: "A4"
                 }
                 e.orders.push(order)
                 res.send(order)
@@ -308,7 +332,8 @@ async function toPng(outputPath, cookies, filenameToNorm, res, id) {
             let order = {
                 id: id,
                 name : filenameToNorm,
-                url: ress
+                url: ress,
+                format: "A4"
             }
             e.orders.push(order)
             res.send(order)
