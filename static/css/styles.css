@@ -129,7 +129,7 @@
     flex-direction: column;
 }
 .settingElem {
-    margin-top: 1vh;
+    margin-top: 0.5vh;
 }
 .settingSelect {
     width: 75%;

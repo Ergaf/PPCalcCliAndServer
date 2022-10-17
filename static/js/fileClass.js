@@ -11,9 +11,10 @@ class file {
     bindingSelect;
     lamination;
     roundCorner;
-    cutting;
     frontLining;
     backLining;
+    big;
+    holes;
     realCount;
     orient;
     x;
@@ -101,6 +102,9 @@ class file {
         //     }
         // }
         destinyButtons.innerHTML = ""
+        roundCornerButtons.innerHTML = ""
+        holesButtons.innerHTML = ""
+        bigButtons.innerHTML = ""
         if(getVariantsFromNameInData(thisFile.paper) !== undefined){
             getVariantsFromNameInData(thisFile.paper).forEach(e => {
                 let elem = document.createElement("div")
@@ -116,37 +120,79 @@ class file {
                 destinyButtons.appendChild(elem)
             })
         }
+        if(getVariantsFromNameInData("згиби") !== undefined){
+            if(this.big === undefined){
+                this.big = "без згинання"
+            }
+            getVariantsFromNameInData("згиби").forEach(e => {
+                let elem = document.createElement("div")
+                elem.innerText = e[0]
+                elem.classList.add("btnm")
+                elem.addEventListener("click", function () {
+                    thisFile.big = elem.innerText
+                    thisFile.renderSettings()
+                })
+                if(e[0] === thisFile.big){
+                    elem.classList.add("btnm-act")
+                }
+                bigButtons.appendChild(elem)
+            })
+        }
+        if(getVariantsFromNameInData("отвір") !== undefined){
+            if(this.holes === undefined){
+                this.holes = "без отворів"
+            }
+            getVariantsFromNameInData("отвір").forEach(e => {
+                let elem = document.createElement("div")
+                elem.innerText = e[0]
+                elem.classList.add("btnm")
+                elem.addEventListener("click", function () {
+                    thisFile.holes = elem.innerText
+                    thisFile.renderSettings()
+                })
+                if(e[0] === thisFile.holes){
+                    elem.classList.add("btnm-act")
+                }
+                holesButtons.appendChild(elem)
+            })
+        }
+        if(getVariantsFromNameInData("кути") !== undefined){
+            if(this.roundCorner === undefined){
+                this.roundCorner = "без обрізки кутів"
+            }
+            getVariantsFromNameInData("кути").forEach(e => {
+                let elem = document.createElement("div")
+                elem.innerText = e[0]
+                elem.classList.add("btnm")
+                elem.addEventListener("click", function () {
+                    thisFile.roundCorner = elem.innerText
+                    thisFile.renderSettings()
+                })
+                if(e[0] === thisFile.roundCorner){
+                    elem.classList.add("btnm-act")
+                }
+                roundCornerButtons.appendChild(elem)
+            })
+        }
         laminationButtons.innerHTML = ""
         bindingSelectButtons.innerHTML = ""
         bindingButtons.innerHTML = ""
         cowerButtons.innerHTML = ""
         frontLiningButtons.innerHTML = ""
         backLiningButtons.innerHTML = ""
+        backLiningText.innerText = ""
         // if(getBindingInData() !== []){
         //     this.bindingAppend()
         // }
         if(this.paper === "" || this.paper === undefined){
-            laminationButtons.classList.add("nonDisplay");
-            destinyButtons.classList.add("nonDisplay");
-            cowerButtons.classList.add("nonDisplay");
-            bindingButtons.classList.add("nonDisplay");
-            cuttingButtons.classList.add("nonDisplay");
-            roundCornerButtons.classList.add("nonDisplay");
-            backLiningText.classList.add("nonDisplay");
-            frontLiningButtons.classList.add("nonDisplay");
-            backLiningButtons.classList.add("nonDisplay");
             thisFile.bindingSelect = undefined
             thisFile.lamination = undefined
             thisFile.binding = undefined
             thisFile.cower = undefined
+            thisFile.frontLining = undefined
+            thisFile.backLining = undefined
         }
         if(this.paper === "на папері"){
-            destinyButtons.classList.remove("nonDisplay");
-            laminationButtons.classList.remove("nonDisplay");
-            cowerButtons.classList.remove("nonDisplay");
-            bindingButtons.classList.remove("nonDisplay");
-            cuttingButtons.classList.remove("nonDisplay");
-            roundCornerButtons.classList.remove("nonDisplay");
             if(getVariantsFromNameInData("ламінування") !== undefined){
                 if(this.lamination === undefined){
                     this.lamination = "без ламінації"
@@ -232,6 +278,7 @@ class file {
                         })
                     }
                     if(this.cower !== "без обкладинки"){
+                        backLiningText.innerText = "з задньою подкладкою"
                         if(this.frontLining === undefined){
                             this.frontLining = "з прозорою лицьовою підкладкою"
                         }
@@ -273,28 +320,20 @@ class file {
             }
         }
         if(this.paper === "на самоклейці"){
-            laminationButtons.classList.add("nonDisplay");
-            destinyButtons.classList.add("nonDisplay");
-            cowerButtons.classList.add("nonDisplay");
-            bindingButtons.classList.add("nonDisplay");
-            cuttingButtons.classList.add("nonDisplay");
-            roundCornerButtons.classList.add("nonDisplay");
             thisFile.bindingSelect = undefined
             thisFile.lamination = undefined
             thisFile.binding = undefined
             thisFile.cower = undefined
+            thisFile.frontLining = undefined
+            thisFile.backLining = undefined
         }
         if(this.paper === "на xerox transparencies"){
-            laminationButtons.classList.add("nonDisplay");
-            destinyButtons.classList.add("nonDisplay");
-            cowerButtons.classList.add("nonDisplay");
-            bindingButtons.classList.add("nonDisplay");
-            cuttingButtons.classList.add("nonDisplay");
-            roundCornerButtons.classList.add("nonDisplay");
             thisFile.bindingSelect = undefined
             thisFile.lamination = undefined
             thisFile.binding = undefined
             thisFile.cower = undefined
+            thisFile.frontLining = undefined
+            thisFile.backLining = undefined
         }
         price.value = priceCalc
         Array.prototype.slice.call(formatButtons.children).forEach(e => {
