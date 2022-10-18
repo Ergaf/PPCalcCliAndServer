@@ -38,11 +38,7 @@ class file {
         Item.style.cssText = "display: flex; transition: 0.5s;"
         filesAllContainer.appendChild(Item);
         Item.onmousedown = this.pick.bind( this);
-
-        let nameContainer = document.createElement('div');
-        nameContainer.innerHTML = this._name;
-        this.nameContainer = nameContainer;
-        Item.appendChild(nameContainer);
+        Item.innerHTML = this._name;
 
         let cancelButton = document.createElement('div');
         cancelButton.onmousedown = this.deleteThis.bind( this);
@@ -57,8 +53,6 @@ class file {
                     e.removePick()
                 }
             })
-            // console.log(this);
-            // this.container.classList.remove("btn-outline-dark")
             this.container.classList.add("btnm-act")
             thisFile = this
             this.renderSettings()
@@ -67,7 +61,6 @@ class file {
     }
     removePick() {
         this.container.classList.remove("btnm-act")
-        // this.container.classList.add("btn-outline-dark")
     }
     deleteThis() {
         sendData("/orders", "DELETE", JSON.stringify({id: this._id})).then(e => {
@@ -82,29 +75,42 @@ class file {
                         allFiles.splice(i, 1)
                     }
                 }
-                // if(allFiles.length < 1){
-                //     document.querySelector(".settingsContainer").style.display = "none"
-                // }
             }
         })
     }
 
     renderSettings() {
+        if(this.format !== "Свій розмір"){
+            this.getSize()
+        }
         let priceCalc = 0;
-        this.realCount = this._count
-        // if(getDestinyInData() !== undefined){
-        //     this.destinyAppend()
-        //     priceCalc = getDestinyPrice(this._count)*this._count;
-        //     if(this.format === "Свій розмір"){
-        //         let sss = Math.ceil(this._count / getHowInASheet())
-        //         this.realCount = sss
-        //         priceCalc = getDestinyPrice(sss)*sss;
-        //     }
-        // }
+        if(this.format === "A4" || this.format === "A3"){
+            console.log("if");
+            this.realCount = this._count
+
+            priceCalc = getPriceFromCount(thisFile.destiny)*this.realCount
+        }
+        else {
+            console.log("else");
+            let sss = Math.ceil(this._count / getHowInASheet())
+            this.realCount = sss
+
+            priceCalc = getPriceFromCount(thisFile.destiny)*sss;
+        }
+        price.value = priceCalc
+
         destinyButtons.innerHTML = ""
         roundCornerButtons.innerHTML = ""
         holesButtons.innerHTML = ""
         bigButtons.innerHTML = ""
+        laminationButtons.innerHTML = ""
+        bindingSelectButtons.innerHTML = ""
+        bindingButtons.innerHTML = ""
+        cowerButtons.innerHTML = ""
+        frontLiningButtons.innerHTML = ""
+        backLiningButtons.innerHTML = ""
+        backLiningText.innerText = ""
+
         if(getVariantsFromNameInData(thisFile.paper) !== undefined){
             getVariantsFromNameInData(thisFile.paper).forEach(e => {
                 let elem = document.createElement("div")
@@ -174,25 +180,8 @@ class file {
                 roundCornerButtons.appendChild(elem)
             })
         }
-        laminationButtons.innerHTML = ""
-        bindingSelectButtons.innerHTML = ""
-        bindingButtons.innerHTML = ""
-        cowerButtons.innerHTML = ""
-        frontLiningButtons.innerHTML = ""
-        backLiningButtons.innerHTML = ""
-        backLiningText.innerText = ""
-        // if(getBindingInData() !== []){
-        //     this.bindingAppend()
-        // }
-        if(this.paper === "" || this.paper === undefined){
-            thisFile.bindingSelect = undefined
-            thisFile.lamination = undefined
-            thisFile.binding = undefined
-            thisFile.cower = undefined
-            thisFile.frontLining = undefined
-            thisFile.backLining = undefined
-        }
         if(this.paper === "на папері"){
+            accordionOptions.classList.remove("d-none")
             if(getVariantsFromNameInData("ламінування") !== undefined){
                 if(this.lamination === undefined){
                     this.lamination = "без ламінації"
@@ -319,23 +308,18 @@ class file {
                 }
             }
         }
-        if(this.paper === "на самоклейці"){
-            thisFile.bindingSelect = undefined
+        else {
+            accordionOptions.classList.add("d-none")
             thisFile.lamination = undefined
+            thisFile.bindingSelect = undefined
             thisFile.binding = undefined
             thisFile.cower = undefined
             thisFile.frontLining = undefined
             thisFile.backLining = undefined
+            thisFile.big = undefined
+            thisFile.holes = undefined
+            thisFile.roundCorner = undefined
         }
-        if(this.paper === "на xerox transparencies"){
-            thisFile.bindingSelect = undefined
-            thisFile.lamination = undefined
-            thisFile.binding = undefined
-            thisFile.cower = undefined
-            thisFile.frontLining = undefined
-            thisFile.backLining = undefined
-        }
-        price.value = priceCalc
         Array.prototype.slice.call(formatButtons.children).forEach(e => {
             if(e.innerText === this.format){
                 e.classList.add("btnm-act")
@@ -377,7 +361,6 @@ class file {
         sizeX.value = this.x
         sizeY.value = this.y
         renderListAndCard()
-        this.nameContainer.innerText = this._name
         if(thisFile.url){
             if(thisFile.url.ext === 1){
                 imgInServer.setAttribute("src", "/files/"+thisFile.url.url);
@@ -403,8 +386,24 @@ class file {
             +this.lamination
             +", "
             +this.binding
-            +" "
+            +", "
             +this.bindingSelect
+            +", "
+            +this.cower
+            +", "
+            +this.frontLining
+            +", "
+            +", "
+            +", "
+            +this.backLining
+            +", "
+            +this.frontLining
+            +", "
+            +this.big
+            +", "
+            +this.holes
+            +", "
+            +this.roundCorner
     }
 
     // destinyAppend() {
@@ -416,13 +415,32 @@ class file {
     //     })
     // }
 
-    bindingAppend() {
-        getBindingInData().forEach(e => {
-            let opt = document.createElement("option")
-            opt.innerText = e[0]
-            opt.value = e[0]
-            // bindingSelect.appendChild(opt)
-        })
+    // bindingAppend() {
+    //     getBindingInData().forEach(e => {
+    //         let opt = document.createElement("option")
+    //         opt.innerText = e[0]
+    //         opt.value = e[0]
+    //         // bindingSelect.appendChild(opt)
+    //     })
+    // }
+
+    renderOptions(thisFilePaper, thisFileProp, renderIn){
+        if(getVariantsFromNameInData(thisFile.paper) !== undefined){
+            getVariantsFromNameInData(thisFile.paper).forEach(e => {
+                let elem = document.createElement("div")
+                elem.innerText = e[0]
+                elem.classList.add("btnm")
+                elem.addEventListener("click", function () {
+                    console.log(this[thisFileProp]);
+                    this[thisFileProp] = elem.innerText
+                    thisFile.renderSettings()
+                })
+                if(e[0] === this[thisFileProp]){
+                    elem.classList.add("btnm-act")
+                }
+                renderIn.appendChild(elem)
+            })
+        }
     }
 
     getSize() {

@@ -7,11 +7,13 @@
     user-select: none;           /* Non-prefixed version, currently*/
     font-family: Montserrat, sans-serif;
     font-weight: 700;
+    background: #fafafa;
 }
 .btnm {
     padding: 1vh;
     text-align: center;
-    background: white;
+    background: #ffffff;
+    color: #000000;
     border: none;
     border-bottom: #ffffff solid;
     border-top: #ffffff solid;

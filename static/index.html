@@ -31,7 +31,7 @@
 
     <div class="settingsContainer">
         <div class="fileSettingsContainer">
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center d-none">
                 <button class="btnm btnm-act" id="custom">СВІЙ ВИБІР</button>
                 <button class="btnm" id="presets">ВИБІР ІЗ ШАБЛОНІВ</button>
             </div>
@@ -81,17 +81,33 @@
                 </div>
                 <div class="d-flex justify-content-center settingElem" id="destinyButtons"></div>
 
-                <div class="d-flex justify-content-center settingElem" id="laminationButtons"></div>
-                <div class="d-flex justify-content-center settingElem" id="bindingButtons"></div>
-                <div class="d-flex justify-content-center settingElem" id="bindingSelectButtons"></div>
-                <div class="d-flex justify-content-center settingElem" id="cowerButtons"></div>
-                <div class="d-flex justify-content-center settingElem" id="frontLiningButtons"></div>
-                <div class="d-flex justify-content-center settingElem" id="backLiningText"></div>
-                <div class="d-flex justify-content-center settingElem" id="backLiningButtons"></div>
 
-                <div class="d-flex justify-content-center settingElem" id="bigButtons"></div>
-                <div class="d-flex justify-content-center settingElem" id="holesButtons"></div>
-                <div class="d-flex justify-content-center settingElem" id="roundCornerButtons"></div>
+
+
+                <div class="accordion" id="accordionOptions">
+                    <div class="accordion-item">
+                        <div class="d-flex justify-content-center" id="headingThree">
+                            <button class="btnm collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Додаткові опції
+                            </button>
+                        </div>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionOptions">
+                            <div class="accordion-body">
+                                <div class="d-flex justify-content-center settingElem" id="laminationButtons"></div>
+                                <div class="d-flex justify-content-center settingElem" id="bindingButtons"></div>
+                                <div class="d-flex justify-content-center settingElem" id="bindingSelectButtons"></div>
+                                <div class="d-flex justify-content-center settingElem" id="cowerButtons"></div>
+                                <div class="d-flex justify-content-center settingElem" id="frontLiningButtons"></div>
+                                <div class="d-flex justify-content-center settingElem" id="backLiningText"></div>
+                                <div class="d-flex justify-content-center settingElem" id="backLiningButtons"></div>
+
+                                <div class="d-flex justify-content-center settingElem" id="bigButtons"></div>
+                                <div class="d-flex justify-content-center settingElem" id="holesButtons"></div>
+                                <div class="d-flex justify-content-center settingElem" id="roundCornerButtons"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="d-flex justify-content-center settingElem" id="text"></div>
 

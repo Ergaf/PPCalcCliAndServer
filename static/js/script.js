@@ -62,12 +62,6 @@ function uploadFile() {
                 allFiles.push(file1)
                 file1.createFileContainer()
                 file1.pick({target: file1.container})
-
-                // thisFile._name = imgInp.files[0].name
-                // console.log(e.data);
-                // thisFile.url = e.data
-                // thisFile._count = e.data.count
-                // thisFile.renderSettings()
                 document.querySelector(".download").classList.add("nonDisplay")
             })
     }
@@ -116,6 +110,7 @@ let bigButtons = document.querySelector("#bigButtons")
 let holesButtons = document.querySelector("#holesButtons")
 let roundCornerButtons = document.querySelector("#roundCornerButtons")
 let text = document.querySelector("#text")
+let accordionOptions = document.querySelector("#accordionOptions")
 
 
 let countInt = document.querySelector("#countInt")
