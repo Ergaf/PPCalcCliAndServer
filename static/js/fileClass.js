@@ -85,16 +85,12 @@ class file {
         }
         let priceCalc = 0;
         if(this.format === "A4" || this.format === "A3"){
-            console.log("if");
             this.realCount = this._count
-
             priceCalc = getPriceFromCount(thisFile.destiny)*this.realCount
         }
         else {
-            console.log("else");
             let sss = Math.ceil(this._count / getHowInASheet())
             this.realCount = sss
-
             priceCalc = getPriceFromCount(thisFile.destiny)*sss;
         }
         price.value = priceCalc
