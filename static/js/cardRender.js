@@ -13,10 +13,12 @@ function renderListAndCard() {
     if(thisFile.x && thisFile.y){
         let x = thisFile.x;
         let y = thisFile.y;
-        if(thisFile.orient){
-            x = thisFile.y;
-            y = thisFile.x;
-        }
+        // if(thisFile.orient){
+        //     list1.style.transform = "rotate(90deg)"
+        // }
+        // else {
+        //     list1.style.transform = ""
+        // }
         list1.style.opacity = "1"
         cardForEtalon.style.opacity = "1"
         prev.style.opacity = "1"

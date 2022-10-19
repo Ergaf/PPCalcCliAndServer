@@ -83,15 +83,24 @@ class file {
         if(this.format !== "Свій розмір"){
             this.getSize()
         }
+        sizeX.value = this.x
+        sizeY.value = this.y
+
         let priceCalc = 0;
         if(this.format === "A4" || this.format === "A3"){
             this.realCount = this._count
-            priceCalc = getPriceFromCount(thisFile.destiny)*this.realCount
+            let t = getPriceFromCount(thisFile.destiny)
+            if(!isNaN(t) && t !== undefined){
+                priceCalc = t*this.realCount
+            }
         }
         else {
             let sss = Math.ceil(this._count / getHowInASheet())
             this.realCount = sss
-            priceCalc = getPriceFromCount(thisFile.destiny)*sss;
+            let t = getPriceFromCount(thisFile.destiny)
+            if(!isNaN(t) && t !== undefined){
+                priceCalc = getPriceFromCount(thisFile.destiny)*sss;
+            }
         }
         price.value = priceCalc
 
@@ -351,11 +360,6 @@ class file {
 
         realCount.value = this.realCount
         countInt.value = this._count
-        if(this.format !== "Свій розмір"){
-            this.getSize()
-        }
-        sizeX.value = this.x
-        sizeY.value = this.y
         renderListAndCard()
         if(thisFile.url){
             if(thisFile.url.ext === 1){
@@ -441,7 +445,13 @@ class file {
 
     getSize() {
         let sizes = getSizes()
-        this.x = sizes.x
-        this.y = sizes.y
+        if(!this.orient){
+            this.x = sizes.x
+            this.y = sizes.y
+        }
+        else {
+            this.x = sizes.y
+            this.y = sizes.x
+        }
     }
 }

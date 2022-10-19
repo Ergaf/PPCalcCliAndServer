@@ -7,7 +7,13 @@ const allFiles = []
 let thisFile;
 
 orient.addEventListener("click", function () {
-    console.log(thisFile);
+    if(thisFile.format === "Свій розмір"){
+        let iks = thisFile.x
+        let igrik = thisFile.y
+        thisFile.x = igrik
+        thisFile.y = iks
+        thisFile.orient = false
+    }
     thisFile.orient = !thisFile.orient
     thisFile.renderSettings()
 })
@@ -161,6 +167,98 @@ fetch("/orders")
     })
 
 let optContainer = document.querySelector(".optionsContainer")
+
+countInt.addEventListener("change", function () {
+    thisFile._count = countInt.value
+    thisFile.renderSettings()
+})
+
+sizeX.addEventListener("change", function () {
+    if(sizeX.value < 45){
+        sizeX.value = 45
+    }
+    if(sizeX.value > 310){
+        if(sizeY.value > 310){
+            sizeY.value = 310
+        }
+        if(sizeX.value > 440){
+            sizeX.value = 440
+        }
+    }
+    thisFile.x = sizeX.value
+    thisFile.y = sizeY.value
+    thisFile.format = "Свій розмір"
+    // thisFile.renderSettings()
+    renderListAndCard()
+})
+sizeY.addEventListener("change", function () {
+    if(sizeY.value < 45){
+        sizeY.value = 45
+    }
+    if(sizeY.value > 310){
+        if(sizeX.value > 310){
+            sizeX.value = 310
+        }
+        if(sizeY.value > 440){
+            sizeY.value = 440
+        }
+    }
+    thisFile.y = sizeY.value
+    thisFile.x = sizeX.value
+    thisFile.format = "Свій розмір"
+    // thisFile.renderSettings()
+    renderListAndCard()
+})
+
+let imgInp = document.querySelector("#imgInp")
+let iframe = document.querySelector("#iframe")
+let form = document.querySelector("#formmm")
+let progressbar = document.querySelector("#progressbar")
+
+function renderr(uri){
+    let list = document.querySelector(".list")
+    let imgG = document.createElement("img")
+    imgG.classList.add("lol")
+    imgG.setAttribute("src", uri)
+    list.appendChild(imgG)
+}
+
+async function sendData(url, method, data) {
+    // Default options are marked with *
+    const response = await fetch(url, {
+        method: method, // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/octate-stream'
+            // 'Content-Type': 'multipart/form-data'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *client
+        // body: JSON.stringify(data) // body data type must match "Content-Type" header
+        body: data // body data type must match "Content-Type" header
+    });
+    return await response.json(); // parses JSON response into native JavaScript objects
+}
+
+let customButton = document.querySelector("#custom")
+let presetsButton = document.querySelector("#presets")
+let presetContainer = document.querySelector("#presetContainer")
+
+customButton.addEventListener("click", function () {
+    customButton.classList.add("btnm-act")
+    presetsButton.classList.remove("btnm-act")
+    presetContainer.classList.add("nonDisplay")
+})
+presetsButton.addEventListener("click", function () {
+    presetsButton.classList.add("btnm-act")
+    customButton.classList.remove("btnm-act")
+    presetContainer.classList.remove("nonDisplay")
+})
+
 document.querySelector("#document").addEventListener("click", function () {
     thisFile.type = "ДОКУМЕНТ"
     thisFile.format = "A4"
@@ -241,82 +339,4 @@ document.querySelector("#calendar").addEventListener("click", function () {
     thisFile.color = ""
     thisFile.destiny = undefined
     thisFile.renderSettings()
-})
-
-countInt.addEventListener("change", function () {
-    thisFile._count = countInt.value
-    thisFile.renderSettings()
-})
-
-sizeX.addEventListener("change", function () {
-    if(sizeX.value < 45){
-        sizeX.value = 45
-    }
-    if(sizeX.value > 310){
-        sizeX.value = 310
-    }
-    thisFile.x = sizeX.value
-    thisFile.format = "Свій розмір"
-    thisFile.renderSettings()
-})
-sizeY.addEventListener("change", function () {
-    if(sizeY.value < 45){
-        sizeY.value = 45
-    }
-    if(sizeY.value > 440){
-        sizeY.value = 440
-    }
-    thisFile.y = sizeY.value
-    thisFile.format = "Свій розмір"
-    thisFile.renderSettings()
-})
-
-let imgInp = document.querySelector("#imgInp")
-let iframe = document.querySelector("#iframe")
-let form = document.querySelector("#formmm")
-let progressbar = document.querySelector("#progressbar")
-
-function renderr(uri){
-    let list = document.querySelector(".list")
-    let imgG = document.createElement("img")
-    imgG.classList.add("lol")
-    imgG.setAttribute("src", uri)
-    list.appendChild(imgG)
-}
-
-async function sendData(url, method, data) {
-    // Default options are marked with *
-    const response = await fetch(url, {
-        method: method, // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, *cors, same-origin
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
-        headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/octate-stream'
-            // 'Content-Type': 'multipart/form-data'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *client
-        // body: JSON.stringify(data) // body data type must match "Content-Type" header
-        body: data // body data type must match "Content-Type" header
-    });
-    await console.log(response);
-    return await response.json(); // parses JSON response into native JavaScript objects
-}
-
-let customButton = document.querySelector("#custom")
-let presetsButton = document.querySelector("#presets")
-let presetContainer = document.querySelector("#presetContainer")
-
-customButton.addEventListener("click", function () {
-    customButton.classList.add("btnm-act")
-    presetsButton.classList.remove("btnm-act")
-    presetContainer.classList.add("nonDisplay")
-})
-presetsButton.addEventListener("click", function () {
-    presetsButton.classList.add("btnm-act")
-    customButton.classList.remove("btnm-act")
-    presetContainer.classList.remove("nonDisplay")
 })
