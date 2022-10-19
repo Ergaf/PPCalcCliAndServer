@@ -91,7 +91,8 @@ app.post("/orders", function (req, res) {
                 let order = {
                     id: Date.now().toString(),
                     name : "БЕЗ ФАЙЛУ",
-                    format: "A4"
+                    format: "A4",
+                    countInFile: 1
                 }
                 e.orders.push(order)
                 res.send(JSON.stringify(order))
@@ -247,7 +248,8 @@ async function processing(filePath, cookies, filenameToNorm, res, id){
                     id: id,
                     name : filenameToNorm,
                     url: ress,
-                    format: "A4"
+                    format: "A4",
+                    countInFile: 1
                 }
                 e.orders.push(order)
                 res.send(order)
@@ -333,7 +335,8 @@ async function toPng(outputPath, cookies, filenameToNorm, res, id) {
                 id: id,
                 name : filenameToNorm,
                 url: ress,
-                format: "A4"
+                format: "A4",
+                countInFile: readdir.length
             }
             e.orders.push(order)
             res.send(order)

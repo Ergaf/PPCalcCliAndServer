@@ -7,12 +7,11 @@ const allFiles = []
 let thisFile;
 
 orient.addEventListener("click", function () {
-    if(thisFile.format === "Свій розмір"){
+    if(thisFile.format === "custom"){
         let iks = thisFile.x
         let igrik = thisFile.y
         thisFile.x = igrik
         thisFile.y = iks
-        thisFile.orient = false
     }
     thisFile.orient = !thisFile.orient
     thisFile.renderSettings()
@@ -37,6 +36,7 @@ nonUpload.addEventListener("click", function () {
             console.log(e);
             let file1 = new file(e.data.name, e.data.id)
             file1.format = e.data.format
+            file1.countInFile = e.data.countInFile
             allFiles.push(file1)
             file1.createFileContainer()
             file1.pick({target: file1.container})
@@ -65,6 +65,7 @@ function uploadFile() {
                 let file1 = new file(e.data.name, e.data.id)
                 file1.url = e.data.url
                 file1.format = e.data.format
+                file1.countInFile = e.data.countInFile
                 allFiles.push(file1)
                 file1.createFileContainer()
                 file1.pick({target: file1.container})
@@ -79,7 +80,7 @@ let price = document.querySelector(".price")
 const formatButtons = document.querySelector("#formatButtons");
 Array.prototype.slice.call(formatButtons.children).forEach(e => {
     e.addEventListener("click", function () {
-        thisFile.format = e.innerText
+        thisFile.format = e.getAttribute("toFile")
         thisFile.renderSettings()
     })
 })
@@ -161,6 +162,7 @@ fetch("/orders")
             let file1 = new file(o.name, o.id)
             file1.url = o.url
             file1.format = o.format
+            file1.countInFile = o.countInFile
             allFiles.push(file1)
             file1.createFileContainer()
         })

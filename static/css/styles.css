@@ -7,7 +7,7 @@
     user-select: none;           /* Non-prefixed version, currently*/
     font-family: Montserrat, sans-serif;
     font-weight: 700;
-    background: #fafafa;
+    background: rgba(250, 250, 250, 0.96);
 }
 .btnm {
     padding: 1vh;

@@ -16,6 +16,7 @@ class file {
     big;
     holes;
     realCount;
+    countInFile;
     orient;
     x;
     y;
@@ -80,29 +81,46 @@ class file {
     }
 
     renderSettings() {
-        if(this.format !== "Свій розмір"){
+        if(this.format !== "custom"){
             this.getSize()
+        }
+        else {
+            thisFile.orient = false
         }
         sizeX.value = this.x
         sizeY.value = this.y
 
         let priceCalc = 0;
         if(this.format === "A4" || this.format === "A3"){
-            this.realCount = this._count
-            let t = getPriceFromCount(thisFile.destiny)
-            if(!isNaN(t) && t !== undefined){
-                priceCalc = t*this.realCount
+            this.realCount = this._count*this.countInFile
+            let paperPrice = getPriceFromCountPaper(thisFile.destiny)
+            let laminationPrice = getPriceFromCount(thisFile.lamination, "Ламінування")
+            if(!isNaN(paperPrice) && paperPrice !== undefined){
+                priceCalc = paperPrice*this.realCount
+            }
+            if(!isNaN(laminationPrice) && laminationPrice !== undefined){
+                let lamPrice = laminationPrice*this.realCount
+                priceCalc = priceCalc + lamPrice
             }
         }
         else {
-            let sss = Math.ceil(this._count / getHowInASheet())
+            let sss = Math.ceil(this._count*this.countInFile / getHowInASheet())
             this.realCount = sss
-            let t = getPriceFromCount(thisFile.destiny)
-            if(!isNaN(t) && t !== undefined){
-                priceCalc = getPriceFromCount(thisFile.destiny)*sss;
+            let paperPrice = getPriceFromCountPaper(thisFile.destiny)
+            let laminationPrice = getPriceFromCount(thisFile.lamination, "Ламінування")
+            if(!isNaN(paperPrice) && paperPrice !== undefined){
+                priceCalc = paperPrice*sss;
+            }
+            if(!isNaN(laminationPrice) && laminationPrice !== undefined){
+                let lamPrice = laminationPrice*sss
+                priceCalc = priceCalc + lamPrice;
             }
         }
         price.value = priceCalc
+        realCount.value = this.realCount
+        countInt.value = this._count
+        countInFile.value = this.countInFile
+        allPaper.value = this.countInFile*thisFile._count
 
         destinyButtons.innerHTML = ""
         roundCornerButtons.innerHTML = ""
@@ -326,7 +344,7 @@ class file {
             thisFile.roundCorner = undefined
         }
         Array.prototype.slice.call(formatButtons.children).forEach(e => {
-            if(e.innerText === this.format){
+            if(e.getAttribute("toFile") === this.format){
                 e.classList.add("btnm-act")
             }
             else {
@@ -358,8 +376,6 @@ class file {
             }
         })
 
-        realCount.value = this.realCount
-        countInt.value = this._count
         renderListAndCard()
         if(thisFile.url){
             if(thisFile.url.ext === 1){

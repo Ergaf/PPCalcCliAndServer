@@ -50,12 +50,12 @@
 
             <div class="optionsContainer">
                 <div class="d-flex justify-content-center settingElem" id="formatButtons">
-                    <div class="btnm">A7</div>
-                    <div class="btnm">A6</div>
-                    <div class="btnm">A5</div>
-                    <div class="btnm">A4</div>
-                    <div class="btnm">A3</div>
-                    <div class="btnm">Свій розмір</div>
+                    <div class="btnm" toFile="A7">A7</div>
+                    <div class="btnm" toFile="A6">A6</div>
+                    <div class="btnm" toFile="A5">A5</div>
+                    <div class="btnm" toFile="A4">A4</div>
+                    <div class="btnm" toFile="A3">A3</div>
+                    <div class="btnm" toFile="custom">Свій розмір</div>
                 </div>
                 <div class="input-group">
                     <input type="number" class="form-control" id="sizeX">
@@ -109,7 +109,7 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-center settingElem" id="text"></div>
+                <div class="d-flex justify-content-center settingElem text-light" id="text"></div>
 
                 <div class="input-group">
                     <span class="input-group-text">Кількість</span>
@@ -117,12 +117,21 @@
                 </div>
 
                 <div class="countContainer">
-                    <span class="input-group-text">Кількість затраченного матеріалу(листів):</span>
-                    <input type="number" class="form-control" id="realCount" disabled>
+                    <span class="input-group-text">Кількість листів у файлі:</span>
+                    <input type="number" class="form-control" id="countInFile" disabled>
                     <span class="input-group-text">шт.</span>
 
+                    <span class="input-group-text">Кількість затраченного матеріалу(листів А4 чи А3):</span>
+                    <input type="number" class="form-control" id="realCount" disabled>
+                    <span class="input-group-text">шт.</span>
+                </div>
+                <div class="countContainer">
+                    <span class="input-group-text">Підсумоково листів після усіх маніпуляцій:</span>
+                    <input type="number" class="form-control" id="allPaper" disabled>
+                    <span class="input-group-text">грн.</span>
+
                     <span class="input-group-text">Ціна:</span>
-                    <input type="number" class="form-control price" disabled>
+                    <input type="number" class="form-control price" id="price" disabled>
                     <span class="input-group-text">грн.</span>
                 </div>
 
@@ -188,7 +197,6 @@
 </div>
 
 <script src="js/bootstrap.bundle.js" charset="utf-8"></script>
-<script src="js/modals.js" charset="utf-8"></script>
 <script src="js/cardRender.js" charset="utf-8"></script>
 <script src="js/utf8.js" charset="utf-8"></script>
 
