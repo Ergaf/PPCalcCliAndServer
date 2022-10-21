@@ -17,6 +17,7 @@ class file {
     holes;
     realCount;
     countInFile;
+    allPaperCount;
     orient;
     x;
     y;
@@ -33,7 +34,7 @@ class file {
         let Item = document.createElement('div');
         this.container = Item;
 
-        Item.classList.add('btnm');
+        Item.classList.add('btn');
         // Item.classList.add('btn-outline-dark');
         // Item.classList.add('align-items-center');
         Item.style.cssText = "display: flex; transition: 0.5s;"
@@ -81,6 +82,8 @@ class file {
     }
 
     renderSettings() {
+        // console.log(thisFile);
+        this.allPaperCount = this.countInFile*thisFile._count
         if(this.format !== "custom"){
             this.getSize()
         }
@@ -94,7 +97,7 @@ class file {
         if(this.format === "A4" || this.format === "A3"){
             this.realCount = this._count*this.countInFile
             let paperPrice = getPriceFromCountPaper(thisFile.destiny)
-            let laminationPrice = getPriceFromCount(thisFile.lamination, "Ламінування")
+            let laminationPrice = getPriceFromCount(thisFile.lamination, "Ламінування", thisFile.format)
             if(!isNaN(paperPrice) && paperPrice !== undefined){
                 priceCalc = paperPrice*this.realCount
             }
@@ -107,7 +110,7 @@ class file {
             let sss = Math.ceil(this._count*this.countInFile / getHowInASheet())
             this.realCount = sss
             let paperPrice = getPriceFromCountPaper(thisFile.destiny)
-            let laminationPrice = getPriceFromCount(thisFile.lamination, "Ламінування")
+            let laminationPrice = getPriceFromCount(thisFile.lamination, "Ламінування", thisFile.format)
             if(!isNaN(paperPrice) && paperPrice !== undefined){
                 priceCalc = paperPrice*sss;
             }
@@ -116,11 +119,26 @@ class file {
                 priceCalc = priceCalc + lamPrice;
             }
         }
-        price.value = priceCalc
+        let bigPrice = getPriceFromCount(thisFile.big, "згиби")*this.allPaperCount
+        let holesPrice = getPriceFromCount(thisFile.holes, "отвір")*this.allPaperCount
+        let roundCornerPrice = getPriceFromCount(thisFile.roundCorner, "кути")*this.allPaperCount
+
+
+
+        let bindingPrice = getBindingFromPaperCount("брошурування").filter(e => e[0] === this.binding)
+
+
+        priceCalc = priceCalc + bigPrice
+        priceCalc = priceCalc + holesPrice
+        priceCalc = priceCalc + roundCornerPrice
+        if(bindingPrice[0]){
+            priceCalc = priceCalc + bindingPrice[0][1]
+        }
+
         realCount.value = this.realCount
         countInt.value = this._count
         countInFile.value = this.countInFile
-        allPaper.value = this.countInFile*thisFile._count
+        allPaper.value = this.allPaperCount
 
         destinyButtons.innerHTML = ""
         roundCornerButtons.innerHTML = ""
@@ -138,7 +156,8 @@ class file {
             getVariantsFromNameInData(thisFile.paper).forEach(e => {
                 let elem = document.createElement("div")
                 elem.innerText = e[0]
-                elem.classList.add("btnm")
+                elem.classList.add("btn")
+                elem.classList.add("col")
                 elem.addEventListener("click", function () {
                     thisFile.destiny = elem.innerText
                     thisFile.renderSettings()
@@ -156,7 +175,7 @@ class file {
             getVariantsFromNameInData("згиби").forEach(e => {
                 let elem = document.createElement("div")
                 elem.innerText = e[0]
-                elem.classList.add("btnm")
+                elem.classList.add("btn")
                 elem.addEventListener("click", function () {
                     thisFile.big = elem.innerText
                     thisFile.renderSettings()
@@ -174,7 +193,7 @@ class file {
             getVariantsFromNameInData("отвір").forEach(e => {
                 let elem = document.createElement("div")
                 elem.innerText = e[0]
-                elem.classList.add("btnm")
+                elem.classList.add("btn")
                 elem.addEventListener("click", function () {
                     thisFile.holes = elem.innerText
                     thisFile.renderSettings()
@@ -192,7 +211,7 @@ class file {
             getVariantsFromNameInData("кути").forEach(e => {
                 let elem = document.createElement("div")
                 elem.innerText = e[0]
-                elem.classList.add("btnm")
+                elem.classList.add("btn")
                 elem.addEventListener("click", function () {
                     thisFile.roundCorner = elem.innerText
                     thisFile.renderSettings()
@@ -212,7 +231,7 @@ class file {
                 getVariantsFromNameInData("ламінування").forEach(e => {
                     let elem = document.createElement("div")
                     elem.innerText = e[0]
-                    elem.classList.add("btnm")
+                    elem.classList.add("btn")
                     elem.addEventListener("click", function () {
                         thisFile.lamination = elem.innerText
                         thisFile.renderSettings()
@@ -223,16 +242,18 @@ class file {
                     laminationButtons.appendChild(elem)
                 })
             }
-            if(getVariantsFromNameInData("прошивка") !== undefined){
+            if(getBindingFromPaperCount("брошурування") !== undefined){
                 if(this.binding === undefined){
-                    this.binding = "без прошивки"
+                    this.binding = "без брошурування"
                 }
-                getVariantsFromNameInData("прошивка").forEach(e => {
+                getBindingFromPaperCount("брошурування").forEach(e => {
                     let elem = document.createElement("div")
                     elem.innerText = e[0]
-                    elem.classList.add("btnm")
-                    if(e[0] === "на пластикову" || e[0] === "на металеву"){
+                    elem.classList.add("btn")
+                    if(e[0] === "на пластикову" || e[0] === "на металеву" || e[0] === "прошивка дипломних робіт"){
                         elem.addEventListener("click", function () {
+                            thisFile.bindingSelect = undefined
+                            thisFile.cower = undefined
                             thisFile.binding = elem.innerText
                             thisFile.renderSettings()
                         })
@@ -255,7 +276,7 @@ class file {
                 getVariantsFromNameInData(this.binding).forEach(e => {
                     let elem = document.createElement("div")
                     elem.innerText = e[0]
-                    elem.classList.add("btnm")
+                    elem.classList.add("btn")
                     elem.addEventListener("click", function () {
                         thisFile.bindingSelect = elem.innerText
                         thisFile.renderSettings()
@@ -278,7 +299,7 @@ class file {
                         getVariantsFromNameInData("обкладинка").forEach(e => {
                             let elem = document.createElement("div")
                             elem.innerText = e[0]
-                            elem.classList.add("btnm")
+                            elem.classList.add("btn")
                             elem.addEventListener("click", function () {
                                 thisFile.cower = elem.innerText
                                 thisFile.renderSettings()
@@ -298,7 +319,7 @@ class file {
                             getVariantsFromNameInData("лицьова підкладка").forEach(e => {
                                 let elem = document.createElement("div")
                                 elem.innerText = e[0]
-                                elem.classList.add("btnm")
+                                elem.classList.add("btn")
                                 elem.addEventListener("click", function () {
                                     thisFile.frontLining = elem.innerText
                                     thisFile.renderSettings()
@@ -316,7 +337,7 @@ class file {
                             getVariantsFromNameInData("задньою підкладкою").forEach(e => {
                                 let elem = document.createElement("div")
                                 elem.innerText = e[0]
-                                elem.classList.add("btnm")
+                                elem.classList.add("btn")
                                 elem.addEventListener("click", function () {
                                     thisFile.backLining = elem.innerText
                                     thisFile.renderSettings()
@@ -389,6 +410,7 @@ class file {
         else {
             imgInServer.setAttribute("src", "")
         }
+        price.value = priceCalc
         text.innerText = this.format
             +", "
             +this.color
@@ -445,7 +467,7 @@ class file {
             getVariantsFromNameInData(thisFile.paper).forEach(e => {
                 let elem = document.createElement("div")
                 elem.innerText = e[0]
-                elem.classList.add("btnm")
+                elem.classList.add("btn")
                 elem.addEventListener("click", function () {
                     console.log(this[thisFileProp]);
                     this[thisFileProp] = elem.innerText

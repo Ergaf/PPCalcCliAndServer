@@ -171,6 +171,23 @@ fetch("/orders")
 let optContainer = document.querySelector(".optionsContainer")
 
 countInt.addEventListener("change", function () {
+    if(countInt.value < 1){
+        countInt.value = 1
+    }
+    thisFile._count = countInt.value
+    thisFile.renderSettings()
+})
+countInt.addEventListener("wheel", function () {
+    event.preventDefault();
+    if(Math.sign(event.deltaY) === 1){
+        countInt.value = parseInt(countInt.value)-1
+    }
+    if(Math.sign(event.deltaY) === -1){
+        countInt.value = parseInt(countInt.value)+1
+    }
+    if(countInt.value < 1){
+        countInt.value = 1
+    }
     thisFile._count = countInt.value
     thisFile.renderSettings()
 })
@@ -189,9 +206,32 @@ sizeX.addEventListener("change", function () {
     }
     thisFile.x = sizeX.value
     thisFile.y = sizeY.value
-    thisFile.format = "Свій розмір"
-    // thisFile.renderSettings()
-    renderListAndCard()
+    thisFile.format = "custom"
+    thisFile.renderSettings()
+})
+sizeX.addEventListener("wheel", function () {
+    event.preventDefault();
+    if(Math.sign(event.deltaY) === 1){
+        sizeX.value = parseInt(sizeX.value)-1
+    }
+    if(Math.sign(event.deltaY) === -1){
+        sizeX.value = parseInt(sizeX.value)+1
+    }
+    if(sizeX.value < 45){
+        sizeX.value = 45
+    }
+    if(sizeX.value > 310){
+        if(sizeY.value > 310){
+            sizeY.value = 310
+        }
+        if(sizeX.value > 440){
+            sizeX.value = 440
+        }
+    }
+    thisFile.x = sizeX.value
+    thisFile.y = sizeY.value
+    thisFile.format = "custom"
+    thisFile.renderSettings()
 })
 sizeY.addEventListener("change", function () {
     if(sizeY.value < 45){
@@ -207,9 +247,32 @@ sizeY.addEventListener("change", function () {
     }
     thisFile.y = sizeY.value
     thisFile.x = sizeX.value
-    thisFile.format = "Свій розмір"
-    // thisFile.renderSettings()
-    renderListAndCard()
+    thisFile.format = "custom"
+    thisFile.renderSettings()
+})
+sizeY.addEventListener("wheel", function () {
+    event.preventDefault();
+    if(Math.sign(event.deltaY) === 1){
+        sizeY.value = parseInt(sizeY.value)-1
+    }
+    if(Math.sign(event.deltaY) === -1){
+        sizeY.value = parseInt(sizeY.value)+1
+    }
+    if(sizeY.value < 45){
+        sizeY.value = 45
+    }
+    if(sizeY.value > 310){
+        if(sizeX.value > 310){
+            sizeX.value = 310
+        }
+        if(sizeY.value > 440){
+            sizeY.value = 440
+        }
+    }
+    thisFile.y = sizeY.value
+    thisFile.x = sizeX.value
+    thisFile.format = "custom"
+    thisFile.renderSettings()
 })
 
 let imgInp = document.querySelector("#imgInp")

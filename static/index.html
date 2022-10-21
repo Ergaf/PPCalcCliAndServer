@@ -20,7 +20,7 @@
 
 <div class="mainContainer nonDisplay">
     <div class="FilesContainer">
-        <button class="btnm" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button class="btn" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
             +
         </button>
     </div>
@@ -32,62 +32,66 @@
     <div class="settingsContainer">
         <div class="fileSettingsContainer">
             <div class="d-flex justify-content-center d-none">
-                <button class="btnm btnm-act" id="custom">СВІЙ ВИБІР</button>
-                <button class="btnm" id="presets">ВИБІР ІЗ ШАБЛОНІВ</button>
+                <button class="btn btnm-act" id="custom">СВІЙ ВИБІР</button>
+                <button class="btn" id="presets">ВИБІР ІЗ ШАБЛОНІВ</button>
             </div>
             <div class="presetContainer nonDisplay" id="presetContainer">
-                <button class="btnm" id="document">ДОКУМЕНТ</button>
-                <button class="btnm" id="presentation">ПРЕЗЕНТАЦІЯ</button>
-                <button class="btnm" id="poster">ПЛАКАТ</button>
-                <button class="btnm" id="card">ЛИСТІВКА</button>
-                <button class="btnm" id="visitCard">ВІЗІТІВКА</button>
-                <button class="btnm" id="sticker">НАЛІПКА</button>
-                <button class="btnm" id="tags">БІРКИ</button>
-                <button class="btnm" id="brochure">БРОШУРА</button>
-                <button class="btnm" id="note">БЛОКНОТ</button>
-                <button class="btnm" id="calendar">КАЛЕНДАРЬ</button>
+                <button class="btn" id="document">ДОКУМЕНТ</button>
+                <button class="btn" id="presentation">ПРЕЗЕНТАЦІЯ</button>
+                <button class="btn" id="poster">ПЛАКАТ</button>
+                <button class="btn" id="card">ЛИСТІВКА</button>
+                <button class="btn" id="visitCard">ВІЗІТІВКА</button>
+                <button class="btn" id="sticker">НАЛІПКА</button>
+                <button class="btn" id="tags">БІРКИ</button>
+                <button class="btn" id="brochure">БРОШУРА</button>
+                <button class="btn" id="note">БЛОКНОТ</button>
+                <button class="btn" id="calendar">КАЛЕНДАРЬ</button>
             </div>
 
             <div class="optionsContainer">
                 <div class="d-flex justify-content-center settingElem" id="formatButtons">
-                    <div class="btnm" toFile="A7">A7</div>
-                    <div class="btnm" toFile="A6">A6</div>
-                    <div class="btnm" toFile="A5">A5</div>
-                    <div class="btnm" toFile="A4">A4</div>
-                    <div class="btnm" toFile="A3">A3</div>
-                    <div class="btnm" toFile="custom">Свій розмір</div>
+                    <div class="btn" toFile="A7">A7</div>
+                    <div class="btn" toFile="A6">A6</div>
+                    <div class="btn" toFile="A5">A5</div>
+                    <div class="btn" toFile="A4">A4</div>
+                    <div class="btn" toFile="A3">A3</div>
+                    <div class="btn" toFile="custom">Свій розмір</div>
                 </div>
-                <div class="input-group">
-                    <input type="number" class="form-control" id="sizeX">
-                    <span class="input-group-text btn">мм</span>
-                    <button class="btn input-group-text" id="orient">
-                        <img src="img/orient.png" class="img-fluid" style="height: 20px" alt="">
-                    </button>
-                    <input type="number" class="form-control" id="sizeY">
-                    <span class="input-group-text btn">мм</span>
+
+                <div class="btn-toolbar mb-3 settingElem" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="input-group m-auto">
+                        <input type="number" class="input-group-text white" id="sizeX">
+                        <span class="input-group-text">мм</span>
+                        <button class="btn input-group-text" id="orient">
+                            <img src="img/orient.png" class="img-fluid" style="height: 20px" alt="">
+                        </button>
+                        <input type="number" class="input-group-text white" id="sizeY">
+                        <span class="input-group-text">мм</span>
+                    </div>
                 </div>
+
                 <div class="d-flex justify-content-center settingElem" id="colorButtons">
-                    <div class="btnm" toFile="bw">Чорно-білий друк</div>
-                    <div class="btnm" toFile="colors">Кольоровий друк</div>
+                    <div class="btn" toFile="bw">Чорно-білий друк</div>
+                    <div class="btn" toFile="colors">Кольоровий друк</div>
                 </div>
                 <div class="d-flex justify-content-center settingElem" id="sidesButtons">
-                    <div class="btnm" toFile="one">з одніеї сторони</div>
-                    <div class="btnm" toFile="two">з обох сторін</div>
+                    <div class="btn" toFile="one">з одніеї сторони</div>
+                    <div class="btn" toFile="two">з обох сторін</div>
                 </div>
                 <div class="d-flex justify-content-center settingElem" id="paperButtons">
-                    <div class="btnm" toFile="на папері">на папері</div>
-                    <div class="btnm" toFile="на самоклейці">на самоклейці</div>
-                    <div class="btnm" toFile="на Xerox Transparencies ®">на Xerox Transparencies ®</div>
+                    <div class="btn" toFile="на папері">на папері</div>
+                    <div class="btn" toFile="на самоклейці">на самоклейці</div>
+                    <div class="btn" toFile="на Xerox Transparencies ®">на Xerox Transparencies ®</div>
                 </div>
-                <div class="d-flex justify-content-center settingElem" id="destinyButtons"></div>
+                <div class="row row-cols-4 settingElem" id="destinyButtons"></div>
 
 
 
 
-                <div class="accordion" id="accordionOptions">
+                <div class="accordion" style="border: #4b4b4b 1px solid" id="accordionOptions">
                     <div class="accordion-item">
                         <div class="d-flex justify-content-center" id="headingThree">
-                            <button class="btnm collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <button class="btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                 Додаткові опції
                             </button>
                         </div>
@@ -98,7 +102,7 @@
                                 <div class="d-flex justify-content-center settingElem" id="bindingSelectButtons"></div>
                                 <div class="d-flex justify-content-center settingElem" id="cowerButtons"></div>
                                 <div class="d-flex justify-content-center settingElem" id="frontLiningButtons"></div>
-                                <div class="d-flex justify-content-center settingElem" id="backLiningText"></div>
+                                <div class="d-flex justify-content-center settingElem" style="font-weight: 600" id="backLiningText"></div>
                                 <div class="d-flex justify-content-center settingElem" id="backLiningButtons"></div>
 
                                 <div class="d-flex justify-content-center settingElem" id="bigButtons"></div>
@@ -111,34 +115,37 @@
 
                 <div class="d-flex justify-content-center settingElem text-light" id="text"></div>
 
-                <div class="input-group">
+                <div class="btn-group d-flex justify-content-center">
                     <span class="input-group-text">Кількість</span>
-                    <input type="number" id="countInt" class="form-control">
+                    <input type="number" id="countInt" class="input-group-text white">
                 </div>
 
-                <div class="countContainer">
+
+                <div class="btn-group d-flex justify-content-center">
                     <span class="input-group-text">Кількість листів у файлі:</span>
-                    <input type="number" class="form-control" id="countInFile" disabled>
-                    <span class="input-group-text">шт.</span>
-
-                    <span class="input-group-text">Кількість затраченного матеріалу(листів А4 чи А3):</span>
-                    <input type="number" class="form-control" id="realCount" disabled>
+                    <input type="number" class="input-group-text" id="countInFile" disabled>
                     <span class="input-group-text">шт.</span>
                 </div>
-                <div class="countContainer">
+                <div class="btn-group d-flex justify-content-center">
+                    <span class="input-group-text">Кількість затраченного матеріалу(листів А4 чи А3):</span>
+                    <input type="number" class="input-group-text" id="realCount" disabled>
+                    <span class="input-group-text">шт.</span>
+                </div>
+                <div class="btn-group d-flex justify-content-center">
                     <span class="input-group-text">Підсумоково листів після усіх маніпуляцій:</span>
-                    <input type="number" class="form-control" id="allPaper" disabled>
+                    <input type="number" class="input-group-text" id="allPaper" disabled>
                     <span class="input-group-text">грн.</span>
-
+                </div>
+                <div class="btn-group d-flex justify-content-center">
                     <span class="input-group-text">Ціна:</span>
-                    <input type="number" class="form-control price" id="price" disabled>
+                    <input type="number" class="input-group-text price" id="price" disabled>
                     <span class="input-group-text">грн.</span>
                 </div>
 
             </div>
         </div>
         <div class="fileViewContainer">
-            <div class="list">
+            <div class="list m-auto">
                 <img src="" alt="" class="imgInServer">
             </div>
             <div class="">
@@ -161,7 +168,7 @@
 </div>
 
 <footer>
-    <div class="pagenation">
+    <div class="pagenation d-none">
         <div class="btn btn-info btnViewControl" id="prev"><</div>
         <div>
             <div id="pagenation"></div>
@@ -179,7 +186,7 @@
                 <div class="" id="exampleModalLabel">ДОДАТИ ФАЙЛ</div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body d-none">
                 <div class="input-group">
                     <input type="file" class="form-control" id="imgInp" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                 </div>
@@ -189,8 +196,8 @@
             </div>
             <div class="modal-footer">
 <!--                <button type="button" class="btnm" data-bs-dismiss="modal">Назад</button>-->
-                <div type="button" id="nonUpload" class="btnm" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>
-                <div type="button" id="upload" class="btnm" data-bs-dismiss="modal">ПРОРАХУВАТИ</div>
+                <div type="button" id="nonUpload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>
+                <div type="button" id="upload" class="btn d-none" data-bs-dismiss="modal" disabled>ПРОРАХУВАТИ</div>
             </div>
         </div>
     </div>

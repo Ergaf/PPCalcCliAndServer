@@ -197,8 +197,8 @@ function getHowInASheet() {
     return forR
 }
 
-function getPriceFromCount(name, nameService) {
-    let price = getProductInVariantsFromNameNotPaper(name, nameService)
+function getPriceFromCount(name, nameService, format) {
+    let price = getProductInVariantsFromNameNotPaper(name, nameService, format)
     let priceOfCount = 0;
     if(price !== undefined) {
         if(thisFile.realCount > 0 && thisFile.realCount < 10){
@@ -220,8 +220,8 @@ function getPriceFromCount(name, nameService) {
     return priceOfCount;
 }
 
-function getProductInVariantsFromNameNotPaper(name, nameService) {
-    let price = getVariantsFromName(nameService)
+function getProductInVariantsFromNameNotPaper(name, nameService, format) {
+    let price = getVariantsFromName(nameService, format)
     let pricePaper = undefined
     if(price !== undefined){
         for (let i = 0; i < price.length; i++){
@@ -234,9 +234,9 @@ function getProductInVariantsFromNameNotPaper(name, nameService) {
     return pricePaper
 }
 
-function getVariantsFromName(nameService) {
+function getVariantsFromName(nameService, format) {
     let price = undefined
-    if(thisFile.format === "A4"){
+    if(format === "A4"){
         for (let i = 0; i < prices.length; i++){
             if(prices[i].name === `${nameService} А4`) {
                 price = prices[i].variants
@@ -245,11 +245,11 @@ function getVariantsFromName(nameService) {
         }
     }
     if(
-        thisFile.format === "A3" ||
-        thisFile.format === "A5" ||
-        thisFile.format === "A6" ||
-        thisFile.format === "A7" ||
-        thisFile.format === "custom"
+        format === "A3" ||
+        format === "A5" ||
+        format === "A6" ||
+        format === "A7" ||
+        format === "custom"
     ){
         for (let i = 0; i < prices.length; i++){
             if(prices[i].name === `${nameService} А3`) {
@@ -258,5 +258,54 @@ function getVariantsFromName(nameService) {
             }
         }
     }
+    else {
+        for (let i = 0; i < prices.length; i++){
+            if(prices[i].name === `${nameService}`) {
+                price = prices[i].variants
+                break;
+            }
+        }
+    }
     return price
+}
+
+
+//БРОШУРУВАННЯ
+function getBindingFromNameAndFormat(nameService) {
+    let price = undefined
+    if(thisFile.format === "A4"){
+        for (let i = 0; i < prices.length; i++){
+            if(prices[i].name === `${nameService} A4`) {
+                price = prices[i].variants
+                break;
+            }
+        }
+    }
+    if(
+        thisFile.format === "A3"
+    ){
+        for (let i = 0; i < prices.length; i++){
+            if(prices[i].name === `${nameService} A3`) {
+                price = prices[i].variants
+                break;
+            }
+        }
+    }
+    return price
+}
+function getBindingFromPaperCount(nameService) {
+    let price = getBindingFromNameAndFormat(nameService)
+    let pricePaper = []
+    if(price !== undefined){
+        for (let i = 0; i < price.length; i++){
+            if(thisFile.allPaperCount >= price[i][2] && thisFile.allPaperCount <= price[i][3]){
+                pricePaper.push(price[i])
+                // if(price[i][0] === name) {
+                //     pricePaper = price[i]
+                //     break;
+                // }
+            }
+        }
+    }
+    return pricePaper
 }
