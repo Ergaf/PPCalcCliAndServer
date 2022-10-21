@@ -3,6 +3,7 @@ const nonUpload = document.querySelector("#nonUpload")
 const addFileButton = document.querySelector("#addFileButton");
 const list = document.querySelector(".list");
 const orient = document.querySelector("#orient");
+const primirnyk = document.querySelector("#primirnyk");
 const allFiles = []
 let thisFile;
 

@@ -1,5 +1,6 @@
-let list1 = document.querySelector(".list");
-let cardForEtalon = document.querySelector(".imgKarta");
+let list1 = document.querySelector("#list");
+let cardForEtalon = document.querySelector("#imgKarta");
+let listAndKard = document.querySelector("#listAndKard");
 let imgInServer = document.querySelector(".imgInServer");
 let realCount = document.querySelector("#realCount");
 let countInFile = document.querySelector("#countInFile");
@@ -21,6 +22,7 @@ function renderListAndCard() {
         // else {
         //     list1.style.transform = ""
         // }
+        list1.style.transform = ""
         list1.style.opacity = "1"
         cardForEtalon.style.opacity = "1"
         prev.style.opacity = "1"
@@ -31,10 +33,16 @@ function renderListAndCard() {
         let etalonForRender = 83
 
         imgInServer.style = ''
-
+        let cardWidth = x/cardSizeW;
         if(coef < 1){
-            etalonForRender = etalon*coef
+            // etalonForRender = etalon*coef
             // width = width*coef
+
+            coef = x/y
+            width = etalon/coef;
+            list1.style.transform = "rotate(90deg)"
+            imgInServer.style.transform = "rotate(90deg)"
+            cardWidth = y/cardSizeW;
         }
 
         list1.style.width = width+"vh"
@@ -42,8 +50,6 @@ function renderListAndCard() {
         list1.style.height = etalonForRender+"vh"
         list1.style.minHeight = etalonForRender+"vh"
         imgInServer.style.height = 100+"%"
-
-        let cardWidth = x/cardSizeW;
 
         if(coef > 1){
             etalon = etalon/coef
@@ -75,3 +81,6 @@ next.addEventListener("click", function () {
     }
     pagenation.innerText = `${thisFile.url.pag+1}/${thisFile.url.count}`
 })
+
+const listAndCardClass = new listAndCard()
+listAndCardClass.queryListAndCard()

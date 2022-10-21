@@ -22,11 +22,16 @@ class file {
     x;
     y;
     url;
+    list;
     constructor (name, id) {
         this._name = name;
         this._id = id;
         this._count = 1
         this.orient = false
+        this.list = {
+            scale: false,
+            position: false
+        }
     }
     createFileContainer() {
         //create item and bind this object to this DOM element // query filesContainer
@@ -122,6 +127,7 @@ class file {
         let bigPrice = getPriceFromCount(thisFile.big, "згиби")*this.allPaperCount
         let holesPrice = getPriceFromCount(thisFile.holes, "отвір")*this.allPaperCount
         let roundCornerPrice = getPriceFromCount(thisFile.roundCorner, "кути")*this.allPaperCount
+        let cowerPrice = getPriceFromCount(thisFile.cower, "обкладинка")*this.allPaperCount
 
 
 
@@ -131,6 +137,7 @@ class file {
         priceCalc = priceCalc + bigPrice
         priceCalc = priceCalc + holesPrice
         priceCalc = priceCalc + roundCornerPrice
+        priceCalc = priceCalc + cowerPrice
         if(bindingPrice[0]){
             priceCalc = priceCalc + bindingPrice[0][1]
         }
@@ -152,6 +159,15 @@ class file {
         backLiningButtons.innerHTML = ""
         backLiningText.innerText = ""
 
+        if(this._count < 2){
+            primirnyk.innerText = "примірник"
+        }
+        if(this._count > 1 && this._count < 5){
+            primirnyk.innerText = "примірника"
+        }
+        if(this._count > 4){
+            primirnyk.innerText = "примірників"
+        }
         if(getVariantsFromNameInData(thisFile.paper) !== undefined){
             getVariantsFromNameInData(thisFile.paper).forEach(e => {
                 let elem = document.createElement("div")
@@ -296,6 +312,9 @@ class file {
                         this.cower = "без обкладинки"
                     }
                     if(getVariantsFromNameInData("обкладинка") !== undefined){
+                        if(this.cower === undefined){
+                            this.cower = "без обкладинки"
+                        }
                         getVariantsFromNameInData("обкладинка").forEach(e => {
                             let elem = document.createElement("div")
                             elem.innerText = e[0]
@@ -310,7 +329,7 @@ class file {
                             cowerButtons.appendChild(elem)
                         })
                     }
-                    if(this.cower !== "без обкладинки"){
+
                         backLiningText.innerText = "з задньою подкладкою"
                         if(this.frontLining === undefined){
                             this.frontLining = "з прозорою лицьовою підкладкою"
@@ -348,7 +367,7 @@ class file {
                                 backLiningButtons.appendChild(elem)
                             })
                         }
-                    }
+
                 }
             }
         }
@@ -408,7 +427,7 @@ class file {
             pagenation.innerText = `${thisFile.url.pag+1}/${thisFile.url.count}`
         }
         else {
-            imgInServer.setAttribute("src", "")
+            imgInServer.setAttribute("src", "files/toTest/file-1.png")
         }
         price.value = priceCalc
         text.innerText = this.format

@@ -21,7 +21,7 @@
 <div class="mainContainer nonDisplay">
     <div class="FilesContainer">
         <button class="btn" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            +
+            Додати файл
         </button>
     </div>
 
@@ -61,12 +61,19 @@
                 <div class="btn-toolbar mb-3 settingElem" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="input-group m-auto">
                         <input type="number" class="input-group-text white" id="sizeX">
-                        <span class="input-group-text">мм</span>
-                        <button class="btn input-group-text" id="orient">
-                            <img src="img/orient.png" class="img-fluid" style="height: 20px" alt="">
+                        <span class="input-group-text gray">мм</span>
+                        <button class="btn input-group-text gray" id="orient">
+                            <img src="img/orient.png" class="orient" style="height: 20px" alt="">
                         </button>
                         <input type="number" class="input-group-text white" id="sizeY">
-                        <span class="input-group-text">мм</span>
+                        <span class="input-group-text gray">мм</span>
+                    </div>
+                </div>
+
+                <div class="btn-toolbar">
+                    <div class="input-group m-auto">
+                        <input type="number" id="countInt" class="input-group-text white">
+                        <span class="input-group-text gray" id="primirnyk"></span>
                     </div>
                 </div>
 
@@ -83,12 +90,12 @@
                     <div class="btn" toFile="на самоклейці">на самоклейці</div>
                     <div class="btn" toFile="на Xerox Transparencies ®">на Xerox Transparencies ®</div>
                 </div>
-                <div class="row row-cols-4 settingElem" id="destinyButtons"></div>
+                <div class="row row-cols-4 align-items-center settingElem" id="destinyButtons"></div>
 
 
 
 
-                <div class="accordion" style="border: #4b4b4b 1px solid" id="accordionOptions">
+                <div class="accordion border" id="accordionOptions">
                     <div class="accordion-item">
                         <div class="d-flex justify-content-center" id="headingThree">
                             <button class="btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
@@ -97,17 +104,17 @@
                         </div>
                         <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionOptions">
                             <div class="accordion-body">
-                                <div class="d-flex justify-content-center settingElem" id="laminationButtons"></div>
-                                <div class="d-flex justify-content-center settingElem" id="bindingButtons"></div>
-                                <div class="d-flex justify-content-center settingElem" id="bindingSelectButtons"></div>
-                                <div class="d-flex justify-content-center settingElem" id="cowerButtons"></div>
-                                <div class="d-flex justify-content-center settingElem" id="frontLiningButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="laminationButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="bindingButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="bindingSelectButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="cowerButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="frontLiningButtons"></div>
                                 <div class="d-flex justify-content-center settingElem" style="font-weight: 600" id="backLiningText"></div>
-                                <div class="d-flex justify-content-center settingElem" id="backLiningButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="backLiningButtons"></div>
 
-                                <div class="d-flex justify-content-center settingElem" id="bigButtons"></div>
-                                <div class="d-flex justify-content-center settingElem" id="holesButtons"></div>
-                                <div class="d-flex justify-content-center settingElem" id="roundCornerButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="bigButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="holesButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="roundCornerButtons"></div>
                             </div>
                         </div>
                     </div>
@@ -115,41 +122,59 @@
 
                 <div class="d-flex justify-content-center settingElem text-light" id="text"></div>
 
-                <div class="btn-group d-flex justify-content-center">
-                    <span class="input-group-text">Кількість</span>
-                    <input type="number" id="countInt" class="input-group-text white">
-                </div>
 
+                <div class="input-group d-flex justify-content-center">
+                    <span class="input-group-text gray">Аркушів файлі:</span>
+                    <input type="number" class="input-group-text gray" id="countInFile" disabled>
+                    <span class="input-group-text gray">шт.</span>
 
-                <div class="btn-group d-flex justify-content-center">
-                    <span class="input-group-text">Кількість листів у файлі:</span>
-                    <input type="number" class="input-group-text" id="countInFile" disabled>
-                    <span class="input-group-text">шт.</span>
+                    <span class="input-group-text gray">Кількість затраченного:</span>
+                    <input type="number" class="input-group-text gray" id="realCount" disabled>
+                    <span class="input-group-text gray">шт.</span>
+
+                    <span class="input-group-text gray">Підсумоково аркушів:</span>
+                    <input type="number" class="input-group-text gray" id="allPaper" disabled>
+                    <span class="input-group-text gray">грн.</span>
+
+                    <span class="input-group-text gray">Ціна:</span>
+                    <input type="number" class="input-group-text gray price" id="price" disabled>
+                    <span class="input-group-text gray">грн.</span>
                 </div>
-                <div class="btn-group d-flex justify-content-center">
-                    <span class="input-group-text">Кількість затраченного матеріалу(листів А4 чи А3):</span>
-                    <input type="number" class="input-group-text" id="realCount" disabled>
-                    <span class="input-group-text">шт.</span>
-                </div>
-                <div class="btn-group d-flex justify-content-center">
-                    <span class="input-group-text">Підсумоково листів після усіх маніпуляцій:</span>
-                    <input type="number" class="input-group-text" id="allPaper" disabled>
-                    <span class="input-group-text">грн.</span>
-                </div>
-                <div class="btn-group d-flex justify-content-center">
-                    <span class="input-group-text">Ціна:</span>
-                    <input type="number" class="input-group-text price" id="price" disabled>
-                    <span class="input-group-text">грн.</span>
-                </div>
+<!--                <div class="input-group d-flex justify-content-center">-->
+<!--                    <span class="input-group-text gray">Кількість затраченного:</span>-->
+<!--                    <input type="number" class="input-group-text gray" id="realCount" disabled>-->
+<!--                    <span class="input-group-text gray">шт.</span>-->
+<!--                </div>-->
+<!--                <div class="input-group d-flex justify-content-center">-->
+<!--                    <span class="input-group-text gray">Підсумоково аркушів:</span>-->
+<!--                    <input type="number" class="input-group-text gray" id="allPaper" disabled>-->
+<!--                    <span class="input-group-text gray">грн.</span>-->
+<!--                </div>-->
+<!--                <div class="input-group d-flex justify-content-center">-->
+<!--                    <span class="input-group-text gray">Ціна:</span>-->
+<!--                    <input type="number" class="input-group-text gray price" id="price" disabled>-->
+<!--                    <span class="input-group-text gray">грн.</span>-->
+<!--                </div>-->
 
             </div>
         </div>
-        <div class="fileViewContainer">
-            <div class="list m-auto">
-                <img src="" alt="" class="imgInServer">
+        <div class="fileViewContainer overflow-hidden">
+            <div class="listAndCard invisible m-auto" id="listAndCard">
+                <div class="list m-auto visible" id="list">
+                    <img src="" alt="" class="imgInServer">
+                </div>
             </div>
-            <div class="">
-                <img src="img/karta.png" alt="" class="imgKarta">
+
+<!--            <div class="m-auto">-->
+                <img src="img/karta.png" alt="" class="imgKarta" id="imgKarta">
+<!--            </div>-->
+
+            <div class="position-absolute">
+                <div class="d-flex justify-content-center">
+                    <div class="btn gray" id="prev"><</div>
+                    <div class="gray" id="pagenation">1/1</div>
+                    <div class="btn gray" id="next">></div>
+                </div>
             </div>
         </div>
 
@@ -168,13 +193,7 @@
 </div>
 
 <footer>
-    <div class="pagenation d-none">
-        <div class="btn btn-info btnViewControl" id="prev"><</div>
-        <div>
-            <div id="pagenation"></div>
-        </div>
-        <div class="btn btn-info btnViewControl btnViewControlNext" id="next">></div>
-    </div>
+
 
 <!--    <iframe src="" frameborder="2" class="frame" id="iframe"></iframe>-->
 </footer>
@@ -183,10 +202,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="" id="exampleModalLabel">ДОДАТИ ФАЙЛ</div>
+                <div class="" id="exampleModalLabel">ДОДАТИ ФАЙЛ (функції файлообміну в розробці)</div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body d-none">
+            <div class="modal-body">
                 <div class="input-group">
                     <input type="file" class="form-control" id="imgInp" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                 </div>
@@ -197,19 +216,20 @@
             <div class="modal-footer">
 <!--                <button type="button" class="btnm" data-bs-dismiss="modal">Назад</button>-->
                 <div type="button" id="nonUpload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>
-                <div type="button" id="upload" class="btn d-none" data-bs-dismiss="modal" disabled>ПРОРАХУВАТИ</div>
+                <div type="button" id="upload" class="btn " data-bs-dismiss="modal" disabled>ПРОРАХУВАТИ</div>
             </div>
         </div>
     </div>
 </div>
 
 <script src="js/bootstrap.bundle.js" charset="utf-8"></script>
-<script src="js/cardRender.js" charset="utf-8"></script>
 <script src="js/utf8.js" charset="utf-8"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" charset="utf-8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js" charset="utf-8"></script>
 <script src="js/fileClass.js" charset="utf-8"></script>
+<script src="js/listClass.js" charset="utf-8"></script>
+<script src="js/cardRender.js" charset="utf-8"></script>
 <script src="js/ifsForThisTabl.js" charset="utf-8"></script>
 <script src="js/script.js" charset="utf-8"></script>
 </body>
