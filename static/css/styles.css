@@ -146,9 +146,15 @@ input {
     }
 }
 
+.containerForImgInServer {
+    display: flex;
+    justify-content: center;
+    background: white;
+}
 .fileSettingsContainer {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 .fileViewContainer {
     background: #e2e2e2;
@@ -185,6 +191,7 @@ input {
 .optionsContainer {
     display: flex;
     flex-direction: column;
+    width: 96%;
 }
 .settingElem {
     margin-top: 0.5vh;

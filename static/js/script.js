@@ -3,7 +3,11 @@ const nonUpload = document.querySelector("#nonUpload")
 const addFileButton = document.querySelector("#addFileButton");
 const list = document.querySelector(".list");
 const orient = document.querySelector("#orient");
+const stickerCutting = document.querySelector("#stickerCutting");
+const stickerCuttingThis = document.querySelector("#stickerCuttingThis");
+const arkushi = document.querySelector("#arkushi");
 const primirnyk = document.querySelector("#primirnyk");
+const containerForImgInServer = document.querySelector("#containerForImgInServer");
 const allFiles = []
 let thisFile;
 

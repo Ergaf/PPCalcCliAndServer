@@ -90,8 +90,36 @@
                     <div class="btn" toFile="на самоклейці">на самоклейці</div>
                     <div class="btn" toFile="на Xerox Transparencies ®">на Xerox Transparencies ®</div>
                 </div>
-                <div class="row row-cols-4 align-items-center settingElem" id="destinyButtons"></div>
 
+                <div class="row row-cols-3 align-items-center settingElem" id="destinyButtons"></div>
+
+
+                <div class="d-flex justify-content-center">
+
+                    <div class="input-group d-flex justify-content-center d-none">
+                        <span class="input-group-text gray">Аркушів файлі:</span>
+                        <input type="number" class="input-group-text gray" id="countInFile" disabled>
+                        <span class="input-group-text gray">шт.</span>
+                    </div>
+
+                    <div class="input-group d-flex justify-content-center d-none">
+                        <span class="input-group-text gray">Кількість затраченного:</span>
+                        <input type="number" class="input-group-text gray" id="realCount" disabled>
+                        <span class="input-group-text gray">шт.</span>
+                    </div>
+
+                    <div class="input-group d-flex justify-content-center">
+                        <span class="input-group-text gray">Загалом: </span>
+                        <input type="number" class="input-group-text gray" id="allPaper" disabled>
+                        <span class="input-group-text gray" id="arkushi"></span>
+                    </div>
+
+                    <div class="input-group d-flex justify-content-center">
+                        <span class="input-group-text gray">Ціна: </span>
+                        <input type="number" class="input-group-text gray price" id="price" disabled>
+                        <span class="input-group-text gray">грн.</span>
+                    </div>
+                </div>
 
 
 
@@ -115,30 +143,15 @@
                                 <div class="row row-cols-5 align-items-center settingElem" id="bigButtons"></div>
                                 <div class="row row-cols-5 align-items-center settingElem" id="holesButtons"></div>
                                 <div class="row row-cols-5 align-items-center settingElem" id="roundCornerButtons"></div>
+
+                                <div class="row row-cols-5 align-items-center settingElem" id="stickerCutting"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="stickerCuttingThis"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-center settingElem text-light" id="text"></div>
-
-
-                <div class="input-group d-flex justify-content-center">
-                    <span class="input-group-text gray invisible">Аркушів файлі:</span>
-                    <input type="number" class="input-group-text gray invisible" id="countInFile" disabled>
-                    <span class="input-group-text gray invisible">шт.</span>
-
-                    <span class="input-group-text gray">Кількість затраченного:</span>
-                    <input type="number" class="input-group-text gray" id="realCount" disabled>
-                    <span class="input-group-text gray">шт.</span>
-
-                    <span class="input-group-text gray">Підсумоково аркушів:</span>
-                    <input type="number" class="input-group-text gray" id="allPaper" disabled>
-                    <span class="input-group-text gray">грн.</span>
-
-                    <input type="number" class="input-group-text gray price" id="price" disabled>
-                    <span class="input-group-text gray">грн.</span>
-                </div>
+                <div class="d-flex justify-content-center settingElem text-light d-none" id="text"></div>
 <!--                <div class="input-group d-flex justify-content-center">-->
 <!--                    <span class="input-group-text gray">Кількість затраченного:</span>-->
 <!--                    <input type="number" class="input-group-text gray" id="realCount" disabled>-->
@@ -160,7 +173,9 @@
         <div class="fileViewContainer overflow-hidden">
             <div class="listAndCard invisible m-auto" id="listAndCard">
                 <div class="list m-auto visible" id="list">
-                    <img src="" alt="" class="imgInServer">
+                    <div class="containerForImgInServer" id="containerForImgInServer">
+                        <img src="" alt="" class="imgInServer">
+                    </div>
                 </div>
             </div>
 
@@ -215,7 +230,7 @@
             <div class="modal-footer">
 <!--                <button type="button" class="btnm" data-bs-dismiss="modal">Назад</button>-->
                 <div type="button" id="nonUpload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>
-                <div type="button" id="upload" class="btn " data-bs-dismiss="modal" disabled>ПРОРАХУВАТИ</div>
+                <div type="button" id="upload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ</div>
             </div>
         </div>
     </div>

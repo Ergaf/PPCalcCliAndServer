@@ -6,8 +6,8 @@ class listAndCard {
     queryListAndCard() {
         this.item = document.querySelector('#listAndCard');
         this.item.style.transform = "scale(1)"
-        this.item.onmousedown = this.dragAndDrop.bind( this);
-        this.item.onmousewheel = this.onWheel.bind( this);
+        // this.item.onmousedown = this.dragAndDrop.bind( this);
+        // this.item.onmousewheel = this.onWheel.bind( this);
     }
 
     dragAndDrop(e) {
