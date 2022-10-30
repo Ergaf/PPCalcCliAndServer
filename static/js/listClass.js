@@ -92,3 +92,55 @@ class listAndCard {
         return float
     }
 }
+
+class navPanelCl {
+    item;
+    constructor () {
+
+    }
+    queryNavPanel() {
+        this.item = document.querySelector('#navPanel');
+        // this.item.style.transform = "scale(1)"
+        this.item.onmousedown = this.dragAndDrop.bind( this);
+        // this.item.onmousewheel = this.onWheel.bind( this);
+    }
+
+    dragAndDrop(e) {
+        e.preventDefault()
+        // let drag = e.target.closest('.listAndCard');
+        // let drag = e.target.closest(this.item);
+
+        let drag = this.item
+
+        let coords = this.getCoords(drag);
+        let shiftX = e.pageX - coords.left;
+        let shiftY = e.pageY - coords.top;
+
+        drag.style.position = 'absolute';
+        moveAt(e);
+
+        drag.style.zIndex = 2;
+
+        function moveAt(e) {
+            drag.style.left = e.pageX - shiftX + 'px';
+            drag.style.top = e.pageY - shiftY + 'px';
+        }
+
+        document.onmousemove = function(e) {
+            moveAt(e);
+        };
+
+        drag.onmouseup = function() {
+            document.onmousemove = null;
+            drag.onmouseup = null;
+        };
+    }
+
+    getCoords(elem) {
+        let box = elem.getBoundingClientRect();
+        return {
+            top: box.top + pageYOffset,
+            left: box.left + pageXOffset
+        };
+    }
+}

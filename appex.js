@@ -9,6 +9,13 @@ const busboy = require('connect-busboy');
 const mime = require('mime');
 const  { Poppler }  =  require ( "node-poppler" ) ;
 
+//for pdfJs---------------------------------------------------------
+// const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
+// const util = require("util");
+// const stream = require("stream");
+// const CMAP_URL = "../../node_modules/pdfjs-dist/cmaps/";
+// const CMAP_PACKED = true;
+//------------------------------------------------------------------
 
 const fsp = require('fs').promises;
 const libre = require('libreoffice-convert');
@@ -225,7 +232,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id){
         mime.getType(filePath) === "image/x-png" ||
         mime.getType(filePath) === "image/png"
     ){
-        let folder = __dirname + `/files/${cookies}/${id}/toUrl`
+        let folder = __dirname + `/files/${cookies}/${id}/notPdf`
         try {
             if (!fs.existsSync(folder)){
                 await fs.mkdirSync(folder)
@@ -234,14 +241,12 @@ async function processing(filePath, cookies, filenameToNorm, res, id){
             console.error(err)
         }
         fs.createReadStream(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`)
-            .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/toUrl/file`));
+            .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/notpdf/file`));
 
-        let ress =
-            { url: `${cookies}/${id}/toUrl/file`,
-                count: 1,
-                ext: 1,
-                pag: 0
-            }
+        let ress = {
+            url: `/files/${cookies}/${id}/notpdf/file`,
+            img: true
+        }
         cookieStore.forEach(e => {
             if(e.cookie === cookies){
                 let order = {
@@ -257,7 +262,35 @@ async function processing(filePath, cookies, filenameToNorm, res, id){
         })
     }
     if(mime.getType(filePath) === "application/pdf"){
-        toPng(filePath, cookies, filenameToNorm, res, id)
+        // toPng(filePath, cookies, filenameToNorm, res, id)
+        let folder = __dirname + `/files/${cookies}/${id}/pdf`
+        try {
+            if (!fs.existsSync(folder)){
+                await fs.mkdirSync(folder)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+        fs.createReadStream(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`)
+            .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/pdf/file1.pdf`));
+        let ress = {
+            url: `/files/${cookies}/${id}/pdf/file1.pdf`,
+        }
+        cookieStore.forEach(e => {
+            if(e.cookie === cookies){
+                let order = {
+                    id: id,
+                    name : filenameToNorm,
+                    url: ress,
+                    format: "A4",
+                    countInFile: 1
+                }
+                e.orders.push(order)
+                res.send(order)
+            }
+        })
+
+
     }
     if(mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
         docToPdf(filePath, cookies, filenameToNorm, res, id)
@@ -283,7 +316,7 @@ async function docToPdf(inputPath, cookies, filenameToNorm, res, id) {
         console.error(err)
     }
     const ext = '.pdf'
-    const outputPath = __dirname + `/files/${cookies}/${id}/pdf/${filenameToNorm}.pdf`;
+    const outputPath = __dirname + `/files/${cookies}/${id}/pdf/file1.pdf`;
     // Read file
     const docxBuf = await fsp.readFile(inputPath);
     // Convert it to pdf format with undefined filter (see Libreoffice docs about filter)
@@ -291,43 +324,9 @@ async function docToPdf(inputPath, cookies, filenameToNorm, res, id) {
     // Here in done you have pdf file which you can save or transfer in another stream
     await fsp.writeFile(outputPath, pdfBuf);
     console.log("sucess in pdf!!!"+filenameToNorm);
-    await toPng(outputPath, cookies, filenameToNorm, res, id)
-}
 
-async function toPng(outputPath, cookies, filenameToNorm, res, id) {
-    let folder = __dirname + `/files/${cookies}/${id}/png`
-    try {
-        if (!fs.existsSync(folder)){
-            fs.mkdirSync(folder)
-        }
-    } catch (err) {
-        console.error(err)
-    }
-    const file = outputPath;
-    const poppler = new Poppler();
-    const options = {
-        firstPageToConvert: 1,
-        lastPageToConvert: -1,
-        pngFile: true,
-    };
-    const outputFile = __dirname + `/files/${cookies}/${id}/png/file`;
-    const resz = await poppler.pdfToCairo(file, outputFile, options);
-    console.log(resz);
-    let readdir = fs.readdirSync(__dirname + `/files/${cookies}/${id}/png`)
-    console.log(readdir);
-    let pag = "1";
-    if(readdir.length > 9){
-        pag = "01";
-    }
-    if(readdir.length > 99){
-        pag = "001";
-    }
     let ress = {
-        url: `${cookies}/${id}/png/`,
-        count: readdir.length,
-        pag: 0,
-        readdir: readdir,
-        ext: 2
+        url: `/files/${cookies}/${id}/pdf/file1.pdf`,
     }
     cookieStore.forEach(e => {
         if(e.cookie === cookies){
@@ -336,12 +335,14 @@ async function toPng(outputPath, cookies, filenameToNorm, res, id) {
                 name : filenameToNorm,
                 url: ress,
                 format: "A4",
-                countInFile: readdir.length
+                countInFile: 1
             }
             e.orders.push(order)
             res.send(order)
         }
     })
+
+    // await toPng(outputPath, cookies, filenameToNorm, res, id)
 }
 
 function getContentType(url) {
@@ -363,7 +364,72 @@ function getContentType(url) {
     }
 }
 
+async function toPdf(outputPath, cookies, filenameToNorm, res, id) {
+    // const pdfPath =
+    //     process.argv[2] || outputPath;
+    // const data = new Uint8Array(fs.readFileSync(pdfPath));
+    //
+    // let folder = __dirname + `/files/${cookies}/${id}/pdf`
+    // try {
+    //     if (!fs.existsSync(folder)){
+    //         fs.mkdirSync(folder)
+    //     }
+    // } catch (err) {
+    //     console.error(err)
+    // }
+    //
+    // const outputDirectory = folder;
+}
 
+// async function toPng(outputPath, cookies, filenameToNorm, res, id) {
+//     let folder = __dirname + `/files/${cookies}/${id}/png`
+//     try {
+//         if (!fs.existsSync(folder)){
+//             fs.mkdirSync(folder)
+//         }
+//     } catch (err) {
+//         console.error(err)
+//     }
+//     const file = outputPath;
+//     const poppler = new Poppler();
+//     const options = {
+//         firstPageToConvert: 1,
+//         lastPageToConvert: -1,
+//         pngFile: true,
+//     };
+//     const outputFile = __dirname + `/files/${cookies}/${id}/png/file`;
+//     const resz = await poppler.pdfToCairo(file, outputFile, options);
+//     console.log(resz);
+//     let readdir = fs.readdirSync(__dirname + `/files/${cookies}/${id}/png`)
+//     console.log(readdir);
+//     let pag = "1";
+//     if(readdir.length > 9){
+//         pag = "01";
+//     }
+//     if(readdir.length > 99){
+//         pag = "001";
+//     }
+//     let ress = {
+//         url: `${cookies}/${id}/png/`,
+//         count: readdir.length,
+//         pag: 0,
+//         readdir: readdir,
+//         ext: 2
+//     }
+//     cookieStore.forEach(e => {
+//         if(e.cookie === cookies){
+//             let order = {
+//                 id: id,
+//                 name : filenameToNorm,
+//                 url: ress,
+//                 format: "A4",
+//                 countInFile: readdir.length
+//             }
+//             e.orders.push(order)
+//             res.send(order)
+//         }
+//     })
+// }
 
 // app.post("/upload", function (req, res) {
 //     let fstream;

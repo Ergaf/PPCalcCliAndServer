@@ -8,6 +8,7 @@ const stickerCuttingThis = document.querySelector("#stickerCuttingThis");
 const arkushi = document.querySelector("#arkushi");
 const primirnyk = document.querySelector("#primirnyk");
 const containerForImgInServer = document.querySelector("#containerForImgInServer");
+const containerForPdfInServer = document.querySelector("#containerForPdfInServer");
 const allFiles = []
 let thisFile;
 
@@ -66,7 +67,6 @@ function uploadFile() {
         fd.append('file', imgInp.files[0], imgInp.files[0].name)
         axios.post("/upload", fd, config)
             .then(e => {
-                console.log(e);
                 let file1 = new file(e.data.name, e.data.id)
                 file1.url = e.data.url
                 file1.format = e.data.format

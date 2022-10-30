@@ -150,6 +150,15 @@ input {
     display: flex;
     justify-content: center;
     background: white;
+    overflow: auto;
+}
+.navPanel {
+    opacity: 45%;
+    z-index: 20;
+    top: 84vh;
+}
+.navPanel:hover {
+    opacity: 100%;
 }
 .fileSettingsContainer {
     display: flex;

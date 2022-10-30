@@ -1,13 +1,17 @@
 let list1 = document.querySelector("#list");
 let cardForEtalon = document.querySelector("#imgKarta");
 let listAndKard = document.querySelector("#listAndKard");
-let imgInServer = document.querySelector(".imgInServer");
+let imgInServer = document.querySelector("#imgInServer");
+let pdfInServer = document.querySelector("#pdfInServer");
 let realCount = document.querySelector("#realCount");
 let countInFile = document.querySelector("#countInFile");
 let allPaper = document.querySelector("#allPaper");
 let prev = document.querySelector("#prev");
 let next = document.querySelector("#next");
 let pagenation = document.querySelector("#pagenation");
+let navPanel = document.querySelector("#navPanel");
+let theCanvas = document.querySelector(".theCanvas");
+let pdfRenderer = document.querySelector(".pdfRenderer");
 
 let cardSizeW = 86;
 let cardSizeH = 54;
@@ -32,8 +36,12 @@ function renderListAndCard() {
         let width = etalon/coef;
         let etalonForRender = 83
 
+        let cardWCoef = thisFile.x/cardSizeW
+        cardForEtalon.style.width = width/cardWCoef+"vh"
+
         // imgInServer.style.transform = ''
         containerForImgInServer.style.transform = ""
+        containerForPdfInServer.style.transform = ""
 
         let imgCoef = imgInServer.naturalHeight/imgInServer.naturalWidth
         imgInServer.style = ''
@@ -41,15 +49,19 @@ function renderListAndCard() {
         if(imgCoef >= coef){
             let newCoef = 100 * coef / imgCoef
             imgInServer.style.width = newCoef+"%"
+            pdfRenderer.style.width = newCoef+"%"
         }
         else {
             imgInServer.style.width = 100+"%"
+            pdfRenderer.style.width = 100+"%"
         }
 
-        let cardWidth = cardSizeW*100/x;
-        console.log(cardWidth);
+        // let cardWidth = cardSizeW*100/x;
+        // console.log(cardWidth);
 
         if(coef < 1){
+
+
             // etalonForRender = etalon*coef
             // width = width*coef
             let newCoef = 100 * coef / imgCoef
@@ -57,19 +69,23 @@ function renderListAndCard() {
 
             coef = x/y
             width = etalon/coef;
+
+            let cardWCoef = thisFile.y/cardSizeW
+            cardForEtalon.style.width = width/cardWCoef+"vh"
+
             list1.style.transform = "rotate(90deg)"
             containerForImgInServer.style.transform = "rotate(-90deg)"
-            cardWidth = y/cardSizeW;
+            containerForPdfInServer.style.transform = "rotate(-90deg)"
 
-            imgInServer.style.width = newCoef*coef+"%"
 
             if(imgCoef >= coef1){
                 imgInServer.style.width = newCoef*coef+"%"
+                // pdfRenderer.style.width = newCoef*coef+"%"
             }
             else {
                 imgInServer.style.width = 100/coef1+"%"
+                // pdfRenderer.style.width = 100/coef1+"%"
             }
-
         }
 
         list1.style.width = width+"vh"
@@ -85,7 +101,7 @@ function renderListAndCard() {
 
         // cardForEtalon.style.width = etalon/cardWidth+"vh"
         // cardForEtalon.style.width = etalon/cardWidth+"vh"
-        cardForEtalon.style.width = etalon/cardWidth+"vh"
+        // cardForEtalon.style.width = etalon/cardWidth+"vh"
     }
     else {
         list1.style.opacity = "0"
@@ -112,3 +128,6 @@ next.addEventListener("click", function () {
 
 const listAndCardClass = new listAndCard()
 listAndCardClass.queryListAndCard()
+
+const navPanelClass = new navPanelCl()
+navPanelClass.queryNavPanel()

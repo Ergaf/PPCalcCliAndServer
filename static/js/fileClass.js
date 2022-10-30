@@ -24,6 +24,7 @@ class file {
     x;
     y;
     url;
+    url2;
     list;
     constructor (name, id) {
         this._name = name;
@@ -33,6 +34,11 @@ class file {
         this.list = {
             scale: false,
             position: false
+        }
+        this.url2 = {
+            pdf: null,
+            currentPage: 1,
+            zoom: 1
         }
     }
     createFileContainer() {
@@ -189,18 +195,19 @@ class file {
 
         if(getVariantsFromNameInData(thisFile.paper) !== undefined){
             getVariantsFromNameInData(thisFile.paper).forEach(e => {
-                let elem = document.createElement("div")
-                elem.innerText = e[0]
-                elem.classList.add("btn")
-                elem.classList.add("col")
-                elem.addEventListener("click", function () {
-                    thisFile.destiny = elem.innerText
-                    thisFile.renderSettings()
-                })
-                if(e[0] === thisFile.destiny){
-                    elem.classList.add("btnm-act")
+                if(e[0][0] !== "!"){
+                    let elem = document.createElement("div")
+                    elem.innerText = e[0]
+                    elem.classList.add("btn")
+                    elem.addEventListener("click", function () {
+                        thisFile.destiny = elem.innerText
+                        thisFile.renderSettings()
+                    })
+                    if(e[0] === thisFile.destiny){
+                        elem.classList.add("btnm-act")
+                    }
+                    destinyButtons.appendChild(elem)
                 }
-                destinyButtons.appendChild(elem)
             })
         }
         if(this.paper === "на папері"){
@@ -495,17 +502,53 @@ class file {
 
         renderListAndCard()
         if(thisFile.url){
-            if(thisFile.url.ext === 1){
-                imgInServer.setAttribute("src", "/files/"+thisFile.url.url);
+            // if(thisFile.url.ext === 1){
+            //     imgInServer.setAttribute("src", "/files/"+thisFile.url.url);
+            // }
+            // else {
+            //     imgInServer.setAttribute("src", "/files/"+thisFile.url.url+thisFile.url.readdir[thisFile.url.pag])
+            // }
+            // pagenation.innerText = `${thisFile.url.pag+1}/${thisFile.url.count}`
+
+            console.log(thisFile.url);
+            if(thisFile.url.img){
+                let image = new Image();
+                image.onload = function(){
+                    imgInServer.setAttribute("src", image.src)
+                    renderListAndCard()
+                }
+                image.src = thisFile.url.url;
+
+                containerForImgInServer.classList.remove("d-none")
+                containerForPdfInServer.classList.add("d-none")
+                // imgInServer.setAttribute("src", image.src)
+                document.querySelector("#page_count").innerText = 1
             }
             else {
-                imgInServer.setAttribute("src", "/files/"+thisFile.url.url+thisFile.url.readdir[thisFile.url.pag])
+                imgInServer.setAttribute("src", "")
+                containerForImgInServer.classList.add("d-none")
+                containerForPdfInServer.classList.remove("d-none")
+                if(!this.url2.pdf){
+                    pdfjsLib.getDocument(thisFile.url.url).then((pdf) => {
+                        this.url2.pdf = pdf
+                        render();
+                    })
+                }
             }
-            pagenation.innerText = `${thisFile.url.pag+1}/${thisFile.url.count}`
         }
         else {
-            imgInServer.setAttribute("src", "files/toTest/file-1.png")
+            imgInServer.setAttribute("src", "")
+            containerForImgInServer.classList.add("d-none")
+            containerForPdfInServer.classList.remove("d-none")
+            if(!this.url2.pdf){
+                pdfjsLib.getDocument("/files/totest/file1.pdf").then((pdf) => {
+                    this.url2.pdf = pdf
+                    render();
+                })
+            }
         }
+
+
         price.value = priceCalc
         text.innerText = this.format
             +", "
