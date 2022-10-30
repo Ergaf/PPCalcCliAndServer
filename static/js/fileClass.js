@@ -500,7 +500,6 @@ class file {
             }
         })
 
-        renderListAndCard()
         if(thisFile.url){
             // if(thisFile.url.ext === 1){
             //     imgInServer.setAttribute("src", "/files/"+thisFile.url.url);
@@ -510,7 +509,6 @@ class file {
             // }
             // pagenation.innerText = `${thisFile.url.pag+1}/${thisFile.url.count}`
 
-            console.log(thisFile.url);
             if(thisFile.url.img){
                 let image = new Image();
                 image.onload = function(){
@@ -528,7 +526,7 @@ class file {
                 imgInServer.setAttribute("src", "")
                 containerForImgInServer.classList.add("d-none")
                 containerForPdfInServer.classList.remove("d-none")
-                if(!this.url2.pdf){
+                if(!this.url2.pdf || lastFileId !== thisFile._id){
                     pdfjsLib.getDocument(thisFile.url.url).then((pdf) => {
                         this.url2.pdf = pdf
                         render();
@@ -540,14 +538,20 @@ class file {
             imgInServer.setAttribute("src", "")
             containerForImgInServer.classList.add("d-none")
             containerForPdfInServer.classList.remove("d-none")
-            if(!this.url2.pdf){
+            if(!this.url2.pdf || lastFileId !== thisFile._id){
                 pdfjsLib.getDocument("/files/totest/file1.pdf").then((pdf) => {
                     this.url2.pdf = pdf
                     render();
                 })
             }
         }
-
+        renderListAndCard()
+        if(thisFile.url2.pdf){
+            document.querySelector("#page_count").innerText = thisFile.url2.pdf.numPages
+        }
+        if(thisFile){
+            lastFileId = thisFile._id
+        }
 
         price.value = priceCalc
         text.innerText = this.format

@@ -1,3 +1,6 @@
+let viewportWidth;
+let viewportHeight;
+
 function render() {
     thisFile.url2.pdf.getPage(thisFile.url2.currentPage).then((page) => {
         let canvas = document.getElementById("pdf_renderer");
@@ -7,7 +10,9 @@ function render() {
 
         // more code here
         canvas.width = viewport.width;
+        viewportWidth = viewport.width;
         canvas.height = viewport.height;
+        viewportHeight = viewport.height;
 
         page.render({
             canvasContext: ctx,
@@ -15,6 +20,7 @@ function render() {
         });
         document.querySelector("#page_count").innerText = thisFile.url2.pdf.numPages
     });
+    renderListAndCard()
 }
 
 document.getElementById("go_previous").addEventListener("click", (e) => {
@@ -48,27 +54,42 @@ currentPage.addEventListener("change", (e) => {
         // }
         render();
     }
-    currentPage.value = 1
+    else {
+        currentPage.value = 1
+    }
 });
 
 currentPage.addEventListener("wheel", function () {
     event.preventDefault();
     if(thisFile.url2.pdf){
         if(Math.sign(event.deltaY) === 1){
-            currentPage.value = parseInt(currentPage.value)-1
+            if(currentPage.value > 1){
+                currentPage.value = parseInt(currentPage.value)-1
+
+                if(currentPage.value < 1){
+                    currentPage.value = 1
+                }
+                if(currentPage.value > thisFile.url2.pdf.numPages){
+                    currentPage.value = thisFile.url2.pdf.numPages
+                }
+                thisFile.url2.currentPage = parseInt(currentPage.value)
+                render();
+            }
         }
         if(Math.sign(event.deltaY) === -1){
-            currentPage.value = parseInt(currentPage.value)+1
-        }
+            if(currentPage.value < thisFile.url2.pdf.numPages){
+                currentPage.value = parseInt(currentPage.value)+1
 
-        if(currentPage.value < 1){
-            currentPage.value = 1
+                if(currentPage.value < 1){
+                    currentPage.value = 1
+                }
+                if(currentPage.value > thisFile.url2.pdf.numPages){
+                    currentPage.value = thisFile.url2.pdf.numPages
+                }
+                thisFile.url2.currentPage = parseInt(currentPage.value)
+                render();
+            }
         }
-        if(currentPage.value > thisFile.url2.pdf.numPages){
-            currentPage.value = thisFile.url2.pdf.numPages
-        }
-        thisFile.url2.currentPage = parseInt(currentPage.value)
-        render();
     }
 })
 

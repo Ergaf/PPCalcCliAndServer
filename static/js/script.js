@@ -11,6 +11,7 @@ const containerForImgInServer = document.querySelector("#containerForImgInServer
 const containerForPdfInServer = document.querySelector("#containerForPdfInServer");
 const allFiles = []
 let thisFile;
+let lastFileId;
 
 orient.addEventListener("click", function () {
     if(thisFile.format === "custom"){
@@ -58,10 +59,10 @@ function uploadFile() {
         let config = {
             headers: { 'Content-Type': 'multipart/form-data' },
             response_type: "arraybuffer",
-            onUploadProgress(progressEvent) {
-                const progress = progressEvent.loaded / progressEvent.total * 100
-                progressbar.value = progress
-            }
+            // onUploadProgress(progressEvent) {
+            //     const progress = progressEvent.loaded / progressEvent.total * 100
+            //     progressbar.value = progress
+            // }
         };
         let fd = new FormData();
         fd.append('file', imgInp.files[0], imgInp.files[0].name)

@@ -152,6 +152,15 @@ input {
     background: white;
     overflow: auto;
 }
+.theCanvas {
+    display: flex;
+    justify-content: center;
+    background: white;
+    overflow: auto;
+}
+.pdfRenderer {
+    transition: 0.5s;
+}
 .navPanel {
     opacity: 45%;
     z-index: 20;
