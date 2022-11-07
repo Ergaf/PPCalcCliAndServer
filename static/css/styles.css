@@ -28,7 +28,7 @@ input {
     border-bottom: #ffffff solid;
     color: #323232;
     font-weight: 600;
-    z-index: 5;
+    z-index: 33;
 }
 .btn:hover {
     background: #fcfcfc;
@@ -69,6 +69,14 @@ input {
 }
 .FilesContainer {
     display: flex;
+    flex-direction: row-reverse;
+    /*position: absolute;*/
+    /*right: 4vw;*/
+    /*top: 5vh;*/
+    opacity: 50%;
+}
+.FilesContainer:hover {
+    opacity: 1;
 }
 .oneFileInFilesContainer {
     display: flex;
@@ -139,10 +147,10 @@ input {
         flex-direction: row;
     }
     .fileSettingsContainer{
-        width: 44%;
+        width: 40%;
     }
     .fileViewContainer {
-        width: 55%;
+        width: 60%;
     }
 }
 
@@ -164,7 +172,7 @@ input {
 .navPanel {
     opacity: 45%;
     z-index: 20;
-    top: 84vh;
+    top: 93vh;
 }
 .navPanel:hover {
     opacity: 100%;
@@ -177,7 +185,7 @@ input {
 .fileViewContainer {
     background: #e2e2e2;
     display: flex;
-    height: 85vh;
+    height: 94vh;
     overflow: hidden;
     z-index: 0;
 }

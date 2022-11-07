@@ -1,0 +1,33 @@
+let main = document.querySelector("#main");
+let files = document.querySelector("#files");
+let users = document.querySelector("#users");
+let prices = document.querySelector("#prices");
+let functions = document.querySelector("#functions");
+
+
+
+sendData("/getfiles", "POST", JSON.stringify("/")).then(e => {
+    console.log(e);
+})
+
+async function sendData(url, method, data) {
+    // Default options are marked with *
+    const response = await fetch(url, {
+        method: method, // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/octate-stream'
+            // 'Content-Type': 'multipart/form-data'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *client
+        // body: JSON.stringify(data) // body data type must match "Content-Type" header
+        body: data // body data type must match "Content-Type" header
+    });
+    let res = await response.json()
+    return await res; // parses JSON response into native JavaScript objects
+}

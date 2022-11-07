@@ -159,7 +159,6 @@ fetch('https://script.googleusercontent.com/macros/echo?user_content_key=wLSQSat
         document.querySelector(".download").classList.add("nonDisplay")
     })
 
-
 fetch("/orders")
     .then(response => response.json())
     .then(json => {

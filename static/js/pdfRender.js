@@ -19,6 +19,7 @@ function render() {
             viewport: viewport
         });
         document.querySelector("#page_count").innerText = thisFile.url2.pdf.numPages
+        thisFile.countInFile = thisFile.url2.pdf.numPages
     });
     renderListAndCard()
 }

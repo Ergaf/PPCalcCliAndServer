@@ -10,7 +10,7 @@ const mime = require('mime');
 const  { Poppler }  =  require ( "node-poppler" ) ;
 
 //for pdfJs---------------------------------------------------------
-// const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
+const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
 // const util = require("util");
 // const stream = require("stream");
 // const CMAP_URL = "../../node_modules/pdfjs-dist/cmaps/";
@@ -30,7 +30,6 @@ app.use(cookieParser('govnobliat'));
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/", express.static(__dirname + "/static"));
-app.use("/admin", express.static(__dirname + "/admin"));
 app.use((req, res, next) => {
     console.log(req.cookies.to);
     // console.log(cookieStore);
@@ -44,8 +43,12 @@ app.use((req, res, next) => {
         cookieStore.push(user)
         res.send(cookieId)
     }
-    next();
+    else {
+        next();
+    }
 })
+app.use("/login", express.static(__dirname + "/admin/login"));
+app.use("/admin", express.static(__dirname + "/admin/admin"));
 
 app.post("/upload", function (req, res) {
     let fstream;
@@ -261,7 +264,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id){
             }
         })
     }
-    if(mime.getType(filePath) === "application/pdf"){
+    else if(mime.getType(filePath) === "application/pdf"){
         // toPng(filePath, cookies, filenameToNorm, res, id)
         let folder = __dirname + `/files/${cookies}/${id}/pdf`
         try {
@@ -273,6 +276,8 @@ async function processing(filePath, cookies, filenameToNorm, res, id){
         }
         fs.createReadStream(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`)
             .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/pdf/file1.pdf`));
+
+        // getInfoInPdf(filePath, cookies, filenameToNorm, res, id, __dirname + `/files/${cookies}/${id}/pdf/file1.pdf`)
         let ress = {
             url: `/files/${cookies}/${id}/pdf/file1.pdf`,
         }
@@ -292,17 +297,41 @@ async function processing(filePath, cookies, filenameToNorm, res, id){
 
 
     }
-    if(mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
+    else if(mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
         docToPdf(filePath, cookies, filenameToNorm, res, id)
     }
-    if(mime.getType(filePath) === "application/msword"){
+    else if(mime.getType(filePath) === "application/msword"){
         docToPdf(filePath, cookies, filenameToNorm, res, id)
     }
-    if(mime.getType(filePath) === "application/powerpoint"){
+    else if(mime.getType(filePath) === "application/powerpoint"){
         docToPdf(filePath, cookies, filenameToNorm, res, id)
     }
-    if(mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.presentationml.presentation"){
+    else if(mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.presentationml.presentation"){
         docToPdf(filePath, cookies, filenameToNorm, res, id)
+    }
+    else {
+        let ress = {
+            url: `/files/totest/errorNoFormat.png`,
+            img: true
+        }
+        cookieStore.forEach(e => {
+            if(e.cookie === cookies){
+                let order = {
+                    id: id,
+                    name : filenameToNorm,
+                    url: ress,
+                    format: "A4",
+                    countInFile: 1
+                }
+                e.orders.push(order)
+                try {
+                    filesDelete(__dirname + `/files/${cookies}/${id}/`)
+                } catch (e) {
+                    console.log(e);
+                }
+                res.send(order)
+            }
+        })
     }
 }
 
@@ -325,22 +354,7 @@ async function docToPdf(inputPath, cookies, filenameToNorm, res, id) {
     await fsp.writeFile(outputPath, pdfBuf);
     console.log("sucess in pdf!!!"+filenameToNorm);
 
-    let ress = {
-        url: `/files/${cookies}/${id}/pdf/file1.pdf`,
-    }
-    cookieStore.forEach(e => {
-        if(e.cookie === cookies){
-            let order = {
-                id: id,
-                name : filenameToNorm,
-                url: ress,
-                format: "A4",
-                countInFile: 1
-            }
-            e.orders.push(order)
-            res.send(order)
-        }
-    })
+    getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputPath)
 
     // await toPng(outputPath, cookies, filenameToNorm, res, id)
 }
@@ -364,22 +378,105 @@ function getContentType(url) {
     }
 }
 
-async function toPdf(outputPath, cookies, filenameToNorm, res, id) {
-    // const pdfPath =
-    //     process.argv[2] || outputPath;
-    // const data = new Uint8Array(fs.readFileSync(pdfPath));
-    //
-    // let folder = __dirname + `/files/${cookies}/${id}/pdf`
-    // try {
-    //     if (!fs.existsSync(folder)){
-    //         fs.mkdirSync(folder)
-    //     }
-    // } catch (err) {
-    //     console.error(err)
-    // }
-    //
-    // const outputDirectory = folder;
+async function getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputPath) {
+    try {
+        console.log(outputPath);
+        const pdfPath =
+            process.argv[2] || outputPath;
+
+        const loadingTask = pdfjsLib.getDocument(pdfPath);
+        loadingTask.promise.then(function (doc) {
+            const numPages = doc.numPages;
+            console.log(numPages);
+
+
+            //отправка назад со всем говном--------
+            let ress = {
+                url: `/files/${cookies}/${id}/pdf/file1.pdf`,
+            }
+            cookieStore.forEach(e => {
+                if(e.cookie === cookies){
+                    let order = {
+                        id: id,
+                        name : filenameToNorm,
+                        url: ress,
+                        format: "A4",
+                        countInFile: numPages
+                    }
+                    e.orders.push(order)
+                    res.send(order)
+                }
+            })
+            //-----------------------------
+
+        })
+
+    } catch (e) {
+        let ress = {
+            url: `/files/${cookies}/${id}/pdf/file1.pdf`,
+        }
+        cookieStore.forEach(e => {
+            if(e.cookie === cookies){
+                let order = {
+                    id: id,
+                    name : filenameToNorm,
+                    url: ress,
+                    format: "A4",
+                    countInFile: 1
+                }
+                e.orders.push(order)
+                res.send(order)
+            }
+        })
+    }
 }
+
+app.post("/login", function (req, res) {
+    let body = [];
+    try {
+        req.on('error', (err) => {
+            console.error(err);
+        }).on('data', (chunk) => {
+            body.push(chunk);
+        }).on('end', () => {
+            body = Buffer.concat(body).toString();
+            body = JSON.parse(body)
+            console.log(body);
+            res.send("1")
+        })
+    } catch (e) {
+        console.log(e);
+    }
+})
+
+app.post("/getfiles", function (req, res) {
+    let body = [];
+    try {
+        req.on('error', (err) => {
+            console.error(err);
+        }).on('data', (chunk) => {
+            body.push(chunk);
+        }).on('end', () => {
+            body = Buffer.concat(body).toString();
+            body = JSON.parse(body)
+            console.log(body);
+
+            let readdir = fs.readdirSync(__dirname + `/files`)
+            console.log(readdir);
+
+            res.send(readdir)
+        })
+    } catch (e) {
+        console.log(e);
+    }
+
+
+    // let urll = req.url;
+    // console.log(urll);
+    // sendRes(urll, getContentType(urll), res)
+})
+
+
 
 // async function toPng(outputPath, cookies, filenameToNorm, res, id) {
 //     let folder = __dirname + `/files/${cookies}/${id}/png`

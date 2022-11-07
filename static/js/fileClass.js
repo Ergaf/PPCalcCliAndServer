@@ -48,6 +48,7 @@ class file {
         this.container = Item;
 
         Item.classList.add('btn');
+        Item.classList.add('btn-sm');
         // Item.classList.add('btn-outline-dark');
         // Item.classList.add('align-items-center');
         Item.style.cssText = "display: flex; transition: 0.5s;"
@@ -150,11 +151,6 @@ class file {
             priceCalc = priceCalc + bindingPrice[0][1]
         }
 
-        realCount.value = this.realCount
-        countInt.value = this._count
-        countInFile.value = this.countInFile
-        allPaper.value = this.allPaperCount
-
         destinyButtons.innerHTML = ""
         roundCornerButtons.innerHTML = ""
         holesButtons.innerHTML = ""
@@ -181,16 +177,6 @@ class file {
         }
         if(this._count > 4){
             primirnyk.innerText = "примірників"
-        }
-
-        if(this.realCount < 2){
-            arkushi.innerText = "аркуш"
-        }
-        if(this.realCount > 1 && this._count < 5){
-            arkushi.innerText = "аркуша"
-        }
-        if(this.realCount > 4){
-            arkushi.innerText = "аркушів"
         }
 
         if(getVariantsFromNameInData(thisFile.paper) !== undefined){
@@ -548,9 +534,25 @@ class file {
         renderListAndCard()
         if(thisFile.url2.pdf){
             document.querySelector("#page_count").innerText = thisFile.url2.pdf.numPages
+            this.countInFile = thisFile.url2.pdf.numPages
         }
         if(thisFile){
             lastFileId = thisFile._id
+        }
+
+        realCount.value = this.realCount
+        countInt.value = this._count
+        countInFile.value = this.countInFile
+        allPaper.value = this.allPaperCount
+
+        if(this.realCount < 2){
+            arkushi.innerText = "аркуш"
+        }
+        if(this.realCount > 1 && this._count < 5){
+            arkushi.innerText = "аркуша"
+        }
+        if(this.realCount > 4){
+            arkushi.innerText = "аркушів"
         }
 
         price.value = priceCalc
