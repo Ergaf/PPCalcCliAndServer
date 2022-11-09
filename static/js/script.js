@@ -9,6 +9,41 @@ const arkushi = document.querySelector("#arkushi");
 const primirnyk = document.querySelector("#primirnyk");
 const containerForImgInServer = document.querySelector("#containerForImgInServer");
 const containerForPdfInServer = document.querySelector("#containerForPdfInServer");
+const mainDisplay = document.querySelector("#mainDisplay");
+const digitalPrintingContainer = document.querySelector("#digitalPrintingContainer");
+
+// const digitalCalcButton = document.querySelector("#digitalCalcButton");
+// const digitalCalcButtonNotFile = document.querySelector("#digitalCalcButtonNotFile");
+// const widescreenCalcButton = document.querySelector("#widescreenCalcButton");
+// const widescreenCalcButtonNotFile = document.querySelector("#widescreenCalcButtonNotFile");
+// const photoCalcButton = document.querySelector("#photoCalcButton");
+// const photoCalcButtonNotFile = document.querySelector("#photoCalcButtonNotFile");
+// digitalCalcButton.addEventListener("click", function () {
+    // mainDisplay.classList.add("d-none")
+    // digitalPrintingContainer.classList.remove("d-none")
+// })
+// digitalCalcButtonNotFile.addEventListener("click", function () {
+//     axios.post("/orders")
+//         .then(e => {
+//             let file1 = new file(e.data.name, e.data.id)
+//             file1.format = e.data.format
+//             file1.countInFile = e.data.countInFile
+//             allFiles.push(file1)
+//             file1.createFileContainer()
+//             file1.pick({target: file1.container})
+//             mainDisplay.classList.add("d-none")
+//             digitalPrintingContainer.classList.remove("d-none")
+//         })
+// })
+// widescreenCalcButton.addEventListener("click", function () {
+//     // mainDisplay.classList.add("d-none")
+//     // digitalPrintingContainer.classList.remove("d-none")
+// })
+// widescreenCalcButtonNotFile.addEventListener("click", function () {
+//     // mainDisplay.classList.add("d-none")
+//     // digitalPrintingContainer.classList.remove("d-none")
+// })
+
 const allFiles = []
 let thisFile;
 let lastFileId;
@@ -50,24 +85,30 @@ nonUpload.addEventListener("click", function () {
         })
 })
 upload.addEventListener("click", function () {
-    uploadFile()
+    uploadFile(imgInp)
 })
 
-function uploadFile() {
-    if(imgInp.files[0]){
-        document.querySelector(".download").classList.remove("nonDisplay")
+// document.querySelector("#digitalCalcButton").addEventListener("click", e => {
+//     uploadFile(document.querySelector("#digitalCalcInput"))
+// })
+
+function uploadFile(fileInput) {
+    if(fileInput.files[0]){
+        // document.querySelector("#download").classList.remove("d-none")
         let config = {
             headers: { 'Content-Type': 'multipart/form-data' },
             response_type: "arraybuffer",
-            // onUploadProgress(progressEvent) {
-            //     const progress = progressEvent.loaded / progressEvent.total * 100
-            //     progressbar.value = progress
-            // }
+            onUploadProgress(progressEvent) {
+                const progress = progressEvent.loaded / progressEvent.total * 100
+                progressbar.value = progress
+            }
         };
         let fd = new FormData();
-        fd.append('file', imgInp.files[0], imgInp.files[0].name)
+        fd.append('file', fileInput.files[0], fileInput.files[0].name)
         axios.post("/upload", fd, config)
             .then(e => {
+                mainDisplay.classList.add("d-none")
+                digitalPrintingContainer.classList.remove("d-none")
                 let file1 = new file(e.data.name, e.data.id)
                 file1.url = e.data.url
                 file1.format = e.data.format
@@ -75,7 +116,7 @@ function uploadFile() {
                 allFiles.push(file1)
                 file1.createFileContainer()
                 file1.pick({target: file1.container})
-                document.querySelector(".download").classList.add("nonDisplay")
+                // document.querySelector("#download").classList.add("d-none")
             })
     }
 }
@@ -155,14 +196,27 @@ fetch('https://script.googleusercontent.com/macros/echo?user_content_key=wLSQSat
         })
         console.log(data)
         prices = data
-        document.querySelector(".mainContainer").classList.remove("nonDisplay")
-        document.querySelector(".download").classList.add("nonDisplay")
+
+        if(allFiles.length > 0){
+            mainDisplay.classList.add("d-none")
+            digitalPrintingContainer.classList.remove("d-none")
+            document.querySelector("#download").classList.add("d-none")
+        }
+        else {
+            document.querySelector(".digitalPrinting").classList.remove("nonDisplay")
+            document.querySelector("#download").classList.add("d-none")
+            mainDisplay.classList.remove("d-none")
+        }
     })
 
 fetch("/orders")
     .then(response => response.json())
     .then(json => {
         console.log(json);
+        if(json.orders.length !== 0){
+            // mainDisplay.classList.add("d-none")
+            // digitalPrintingContainer.classList.remove("d-none")
+        }
         json.orders.forEach(o => {
             let file1 = new file(o.name, o.id)
             file1.url = o.url

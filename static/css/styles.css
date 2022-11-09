@@ -13,6 +13,12 @@ input {
     width: 100px;
     z-index: 5;
 }
+body{
+    /* set margin to 0 and overflow to hidden,
+    to use the complete page */
+    margin: 0;
+    /*overflow: hidden;*/
+}
 .gray {
     background: rgba(250, 250, 250, 0.96);
     font-weight: 600;
@@ -96,7 +102,6 @@ input {
 .nonDisplay {
     display: none;
 }
-
 .frame{
     width: 100%;
     height: 85vmin;
@@ -247,4 +252,35 @@ input {
 }
 .listAndCard {
     z-index: 1;
+}
+.mainItem {
+
+}
+.mainItem:hover {
+    cursor: pointer;
+}
+.mainItem div:hover {
+    background: #d4d4d4;
+}
+.download{
+    margin-top: 40vh;
+}
+
+/*@media (prefers-reduced-motion: no-preference) {*/
+/*    .App-logo {*/
+/*        animation: App-logo-spin infinite 20s linear;*/
+/*    }*/
+/*}*/
+
+/*@keyframes App-logo-spin {*/
+/*    from {*/
+/*        transform: rotate(0deg);*/
+/*    }*/
+/*    to {*/
+/*        transform: rotate(360deg);*/
+/*    }*/
+/*}*/
+
+.cursorPointer:hover {
+    cursor: pointer;
 }

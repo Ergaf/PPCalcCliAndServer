@@ -1,0 +1,59 @@
+* {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;           /* Non-prefixed version, currently*/
+}
+.gray {
+    background: #767676;
+}
+iframe {
+    display: block;
+    width: 100%;
+    border: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0;
+    height: 100%;
+}
+.act {
+    color: #7b7b7b;
+    text-shadow: black;
+}
+
+.directoryUnit {
+
+}
+.directoryUnit:hover {
+    background: #bdbdbd;
+    cursor: pointer;
+}
+.pathUnit {
+    color: #004099;
+}
+.pathUnit:hover {
+    color: #0046c1;
+    cursor: pointer;
+}
+.folderIcon {
+    width: 20px;
+}
+.fileNameInFileView {
+    float: left;
+}
+.tableUnit {
+    border: #b1b1b1 solid 1px;
+}
+.tableUnit:hover {
+    cursor: pointer;
+    background: #bababa;
+}
+.headerTableUnit {
+    background: #a7a7a7;
+    border: #b1b1b1 solid 1px;
+}
+.backgroundSecondary {
+    background: #e2e3e5;
+}

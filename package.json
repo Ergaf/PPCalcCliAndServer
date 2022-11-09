@@ -39,6 +39,7 @@
     "office-to-pdf": "^4.0.0",
     "pdf-img-convert": "^1.0.6",
     "pdf2pic": "^2.1.4",
-    "pdfjs-dist": "^3.0.279"
+    "pdfjs-dist": "^3.0.279",
+    "read-excel-file": "^5.5.3"
   }
 }

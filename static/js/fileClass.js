@@ -72,7 +72,8 @@ class file {
             this.container.classList.add("btnm-act")
             thisFile = this
             this.renderSettings()
-            document.querySelector(".settingsContainer").style.display = "flex"
+            // document.querySelector(".settingsContainer").style.display = "flex"
+            document.querySelector(".settingsContainer").classList.remove("d-none")
         }
     }
     removePick() {
@@ -83,7 +84,9 @@ class file {
             console.log(e);
             if(e.toString() === this._id.toString()){
                 if(thisFile === this){
-                    document.querySelector(".settingsContainer").style.display = "none"
+                    // document.querySelector(".settingsContainer").style.display = "none"
+                    document.querySelector(".settingsContainer").classList.add("d-none")
+                    mainDisplay.classList.remove("d-none")
                 }
                 for (let i = 0; i < allFiles.length; i++){
                     if(allFiles[i]._id === this._id){

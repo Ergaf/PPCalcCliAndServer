@@ -8,6 +8,17 @@ const fs = require('fs');
 const busboy = require('connect-busboy');
 const mime = require('mime');
 const  { Poppler }  =  require ( "node-poppler" ) ;
+const readXlsxFile = require('read-excel-file/node');
+
+const fsEx = require('fs-extra')
+
+let tabl1;
+readXlsxFile(fs.createReadStream(__dirname + "/data/tabl1.xlsx")).then((rows) => {
+    tabl1 = rows
+    console.log(tabl1);
+    // `rows` is an array of rows
+    // each row being an array of cells.
+})
 
 //for pdfJs---------------------------------------------------------
 const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
@@ -49,6 +60,7 @@ app.use((req, res, next) => {
 })
 app.use("/login", express.static(__dirname + "/admin/login"));
 app.use("/admin", express.static(__dirname + "/admin/admin"));
+app.use("/3dtest", express.static(__dirname + "/admin/3dtest"));
 
 app.post("/upload", function (req, res) {
     let fstream;
@@ -137,6 +149,14 @@ app.delete("/orders", function (req, res) {
                             if(c.orders[i].id === body.id){
                                 try {
                                     filesDelete(__dirname + `/files/${c.cookie}/${c.orders[i].id}/`)
+
+
+                                    // fs.remove(__dirname + `/files/${c.cookie}/${c.orders[i].id}`).then(() => {
+                                    //     //готово
+                                    // }).catch(err => {
+                                    //     console.error(err)
+                                    // })
+
                                 } catch (e) {
                                     console.log(e);
                                 }
@@ -459,22 +479,87 @@ app.post("/getfiles", function (req, res) {
         }).on('end', () => {
             body = Buffer.concat(body).toString();
             body = JSON.parse(body)
-            console.log(body);
+            console.log(`/files${body.to}`);
 
-            let readdir = fs.readdirSync(__dirname + `/files`)
-            console.log(readdir);
-
-            res.send(readdir)
+            try {
+                const stats = fs.statSync (__dirname + `/files${body.to}`)
+                console.log(stats.isDirectory());
+                if(stats.isDirectory()){
+                    let readdir = fs.readdirSync(__dirname + `/files${body.to}`)
+                    let readdirInfo = []
+                    for (let i = 0; i < readdir.length; i++){
+                        let path = __dirname + `/files${body.to}/${readdir[i]}`
+                        let stats = getStatsInFile(path);
+                        let reddirUnit = {
+                            name: readdir[i],
+                            size: stats.size,
+                            birthtime: stats.birthtime,
+                            error: stats.error,
+                            isFile: stats.isFile
+                        }
+                        readdirInfo.push(reddirUnit)
+                    }
+                    res.send(readdirInfo)
+                } else if (stats.isFile()) {
+                    let readdirInfo = []
+                    let reddirUnit = {
+                        isFileOpen: true,
+                        name: "file",
+                        size: stats.size,
+                        birthtime: stats.birthtime,
+                        error: false,
+                        url: `/files${body.to}`
+                    }
+                    readdirInfo.push(reddirUnit)
+                    res.send(readdirInfo)
+                }
+            } catch (e) {
+                console.log(e);
+                let readdirInfo = []
+                let reddirUnit = {
+                    error: e.toString()
+                }
+                readdirInfo.push(reddirUnit)
+                res.send(readdirInfo)
+            }
         })
     } catch (e) {
         console.log(e);
+        let readdirInfo = []
+        let reddirUnit = {
+            error: e.toString()
+        }
+        readdirInfo.push(reddirUnit)
+        res.send(readdirInfo)
     }
-
-
     // let urll = req.url;
     // console.log(urll);
     // sendRes(urll, getContentType(urll), res)
 })
+
+app.get("/getprices", function (req, res){
+    res.send(tabl1)
+})
+
+function getStatsInFile(path) {
+    try {
+        const stats = fs.statSync (path)
+        let statsToReturn = {
+            birthtime: stats.birthtime,
+            size: stats.size,
+            error: false,
+            isFile: stats.isFile()
+        }
+        return statsToReturn
+    } catch (e) {
+        let statsToReturn = {
+            birthtime: "no",
+            size: "no",
+            error: e.toString(),
+        }
+        return statsToReturn
+    }
+}
 
 
 
