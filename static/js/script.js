@@ -11,7 +11,18 @@ const containerForImgInServer = document.querySelector("#containerForImgInServer
 const containerForPdfInServer = document.querySelector("#containerForPdfInServer");
 const mainDisplay = document.querySelector("#mainDisplay");
 const digitalPrintingContainer = document.querySelector("#digitalPrintingContainer");
-
+const selectButtonCalc = document.querySelector("#selectButtonCalc");
+const digitalPrint = document.querySelector("#digitalPrint");
+const widescreenPrint = document.querySelector("#widescreenPrint");
+const fileClassCalcToModal = document.querySelector("#fileClassCalcToModal");
+const toUseButtons = document.querySelector("#toUseButtons");
+const destinyThisButtons = document.querySelector("#destinyThisButtons");
+digitalPrint.addEventListener("click", event => {
+    fileClassCalcToModal.innerHTML = "digital"
+})
+widescreenPrint.addEventListener("click", event => {
+    fileClassCalcToModal.innerHTML = "wide"
+})
 // const digitalCalcButton = document.querySelector("#digitalCalcButton");
 // const digitalCalcButtonNotFile = document.querySelector("#digitalCalcButtonNotFile");
 // const widescreenCalcButton = document.querySelector("#widescreenCalcButton");
@@ -44,6 +55,21 @@ const digitalPrintingContainer = document.querySelector("#digitalPrintingContain
 //     // digitalPrintingContainer.classList.remove("d-none")
 // })
 
+const digitalCalcSelect = document.querySelector("#digitalCalcSelect");
+const widelCalcSelect = document.querySelector("#widelCalcSelect");
+digitalCalcSelect.addEventListener("click", event => {
+    widelCalcSelect.classList.remove("btnm-act")
+    digitalCalcSelect.classList.add("btnm-act")
+    thisFile.calc = digitalCalcSelect.getAttribute("toFile")
+    thisFile.renderSettings()
+})
+widelCalcSelect.addEventListener("click", event => {
+    widelCalcSelect.classList.add("btnm-act")
+    digitalCalcSelect.classList.remove("btnm-act")
+    thisFile.calc = widelCalcSelect.getAttribute("toFile")
+    thisFile.renderSettings()
+})
+
 const allFiles = []
 let thisFile;
 let lastFileId;
@@ -73,15 +99,24 @@ addFileButton.addEventListener("click", function () {
     //     })
 })
 nonUpload.addEventListener("click", function () {
-    axios.post("/orders")
+    let config = {
+        data: {
+            calc: fileClassCalcToModal.innerHTML
+        },
+    };
+    axios.post("/orders", config)
         .then(e => {
             console.log(e);
             let file1 = new file(e.data.name, e.data.id)
             file1.format = e.data.format
             file1.countInFile = e.data.countInFile
+            file1.calc = fileClassCalcToModal.innerHTML
             allFiles.push(file1)
             file1.createFileContainer()
             file1.pick({target: file1.container})
+            document.querySelector(".settingsContainer").classList.remove("d-none")
+            digitalPrintingContainer.classList.remove("d-none")
+            mainDisplay.classList.add("d-none")
         })
 })
 upload.addEventListener("click", function () {
@@ -101,7 +136,10 @@ function uploadFile(fileInput) {
             onUploadProgress(progressEvent) {
                 const progress = progressEvent.loaded / progressEvent.total * 100
                 progressbar.value = progress
-            }
+            },
+            data: {
+                calc: fileClassCalcToModal.innerHTML
+            },
         };
         let fd = new FormData();
         fd.append('file', fileInput.files[0], fileInput.files[0].name)
@@ -125,33 +163,9 @@ let presetName = document.querySelector(".presetName")
 let price = document.querySelector(".price")
 
 const formatButtons = document.querySelector("#formatButtons");
-Array.prototype.slice.call(formatButtons.children).forEach(e => {
-    e.addEventListener("click", function () {
-        thisFile.format = e.getAttribute("toFile")
-        thisFile.renderSettings()
-    })
-})
-let sidesButtons = document.querySelector("#sidesButtons")
-Array.prototype.slice.call(sidesButtons.children).forEach(e => {
-    e.addEventListener("click", function () {
-        thisFile.sides = e.getAttribute("toFile")
-        thisFile.renderSettings()
-    })
-})
-let colorButtons = document.querySelector("#colorButtons")
-Array.prototype.slice.call(colorButtons.children).forEach(e => {
-    e.addEventListener("click", function () {
-        thisFile.color = e.getAttribute("toFile")
-        thisFile.renderSettings()
-    })
-})
-let paperButtons = document.querySelector("#paperButtons")
-Array.prototype.slice.call(paperButtons.children).forEach(e => {
-    e.addEventListener("click", function () {
-        thisFile.paper = e.getAttribute("toFile")
-        thisFile.renderSettings()
-    })
-})
+let sidesButtons = document.querySelector("#sidesButtons");
+let colorButtons = document.querySelector("#colorButtons");
+let paperButtons = document.querySelector("#paperButtons");
 let destinyButtons = document.querySelector("#destinyButtons")
 let laminationButtons = document.querySelector("#laminationButtons")
 let cowerButtons = document.querySelector("#cowerButtons")
@@ -165,16 +179,33 @@ let holesButtons = document.querySelector("#holesButtons")
 let roundCornerButtons = document.querySelector("#roundCornerButtons")
 let text = document.querySelector("#text")
 let accordionOptions = document.querySelector("#accordionOptions")
-
+Array.prototype.slice.call(sidesButtons.children).forEach(e => {
+    e.addEventListener("click", function () {
+        thisFile.sides = e.getAttribute("toFile")
+        thisFile.renderSettings()
+    })
+});
+Array.prototype.slice.call(colorButtons.children).forEach(e => {
+    e.addEventListener("click", function () {
+        thisFile.color = e.getAttribute("toFile")
+        thisFile.renderSettings()
+    })
+})
+Array.prototype.slice.call(paperButtons.children).forEach(e => {
+    e.addEventListener("click", function () {
+        thisFile.paper = e.getAttribute("toFile")
+        thisFile.renderSettings()
+    })
+})
 
 let countInt = document.querySelector("#countInt")
 let sizeX = document.querySelector("#sizeX")
 let sizeY = document.querySelector("#sizeY")
 let prices;
 fetch('https://script.googleusercontent.com/macros/echo?user_content_key=wLSQSatR6bZv9i8U5VtiOsa7GMSDGnnZijrnGFZE1_jwd1QJkdBz8Sl8ITa_TvVjVpf_ByOh6IcFuOZ7evsUSo_9NYtdFJYTm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnDbwAl7CMxVAiYx-XcQGm2-pK98VFRlg2L1Bgi9-N5lGP8ipd0KGqDVV0UksueULwVpami56uyJ4IxkRYgJm5B_wls8-MAHEtdz9Jw9Md8uu&lib=MKqsPpMpIdvM_NE9JC918gzq7P1CHZY8E')
+// fetch('/getprices')
     .then(response => response.json())
     .then(json => {
-
         let x = 1
         let data = [];
         json.forEach(e => {
@@ -203,7 +234,7 @@ fetch('https://script.googleusercontent.com/macros/echo?user_content_key=wLSQSat
             document.querySelector("#download").classList.add("d-none")
         }
         else {
-            document.querySelector(".digitalPrinting").classList.remove("nonDisplay")
+            digitalPrintingContainer.classList.add("d-none")
             document.querySelector("#download").classList.add("d-none")
             mainDisplay.classList.remove("d-none")
         }
@@ -221,6 +252,7 @@ fetch("/orders")
             let file1 = new file(o.name, o.id)
             file1.url = o.url
             file1.format = o.format
+            file1.calc = o.calc
             file1.countInFile = o.countInFile
             allFiles.push(file1)
             file1.createFileContainer()
@@ -367,100 +399,3 @@ async function sendData(url, method, data) {
     });
     return await response.json(); // parses JSON response into native JavaScript objects
 }
-
-let customButton = document.querySelector("#custom")
-let presetsButton = document.querySelector("#presets")
-let presetContainer = document.querySelector("#presetContainer")
-
-customButton.addEventListener("click", function () {
-    customButton.classList.add("btnm-act")
-    presetsButton.classList.remove("btnm-act")
-    presetContainer.classList.add("nonDisplay")
-})
-presetsButton.addEventListener("click", function () {
-    presetsButton.classList.add("btnm-act")
-    customButton.classList.remove("btnm-act")
-    presetContainer.classList.remove("nonDisplay")
-})
-
-document.querySelector("#document").addEventListener("click", function () {
-    thisFile.type = "ДОКУМЕНТ"
-    thisFile.format = "A4"
-    thisFile.sides = "one"
-    thisFile.color = "bw"
-    thisFile.destiny = "90 гр офісний"
-    thisFile.renderSettings()
-
-})
-document.querySelector("#presentation").addEventListener("click", function () {
-    thisFile.type = "ПРЕЗЕНТАЦІЯ"
-    thisFile.format = "A4"
-    thisFile.sides = "one"
-    thisFile.color = "colors"
-    thisFile.destiny = "160 гр DNS"
-    thisFile.renderSettings()
-})
-document.querySelector("#poster").addEventListener("click", function () {
-    thisFile.type = "Постер"
-    thisFile.format = "A3"
-    thisFile.sides = "one"
-    thisFile.color = "colors"
-    thisFile.destiny = "160 гр DNS"
-    thisFile.renderSettings()
-})
-document.querySelector("#card").addEventListener("click", function () {
-    thisFile.type = "card"
-    thisFile.format = "A6"
-    thisFile.sides = ""
-    thisFile.color = ""
-    thisFile.destiny = undefined
-    thisFile.renderSettings()
-})
-document.querySelector("#visitCard").addEventListener("click", function () {
-    thisFile.type = "visitCard"
-    thisFile.format = "A5"
-    thisFile.sides = ""
-    thisFile.color = ""
-    thisFile.destiny = undefined
-    thisFile.renderSettings()
-})
-document.querySelector("#sticker").addEventListener("click", function () {
-    thisFile.type = "sticker"
-    thisFile.format = ""
-    thisFile.sides = ""
-    thisFile.color = ""
-    thisFile.destiny = undefined
-    thisFile.renderSettings()
-})
-document.querySelector("#tags").addEventListener("click", function () {
-    thisFile.type = "tags"
-    thisFile.format = ""
-    thisFile.sides = ""
-    thisFile.color = ""
-    thisFile.destiny = undefined
-    thisFile.renderSettings()
-})
-document.querySelector("#brochure").addEventListener("click", function () {
-    thisFile.type = "brochure"
-    thisFile.format = ""
-    thisFile.sides = ""
-    thisFile.color = ""
-    thisFile.destiny = undefined
-    thisFile.renderSettings()
-})
-document.querySelector("#note").addEventListener("click", function () {
-    thisFile.type = "note"
-    thisFile.format = ""
-    thisFile.sides = ""
-    thisFile.color = ""
-    thisFile.destiny = undefined
-    thisFile.renderSettings()
-})
-document.querySelector("#calendar").addEventListener("click", function () {
-    thisFile.type = "calendar"
-    thisFile.format = ""
-    thisFile.sides = ""
-    thisFile.color = ""
-    thisFile.destiny = undefined
-    thisFile.renderSettings()
-})

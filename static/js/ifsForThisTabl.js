@@ -146,34 +146,16 @@ function getSizes() {
         x: 0,
         y: 0
     }
-    if(thisFile.format === "A4"){
-        size = {
-            x: prices[0].variants[2][2],
-            y: prices[0].variants[2][3]
-        }
-    }
-    if(thisFile.format === "A3"){
-        size = {
-            x: prices[0].variants[3][2],
-            y: prices[0].variants[3][3]
-        }
-    }
-    if(thisFile.format === "A5"){
-        size = {
-            x: prices[0].variants[1][2],
-            y: prices[0].variants[1][3]
-        }
-    }
-    if(thisFile.format === "A6"){
-        size = {
-            x: prices[0].variants[0][2],
-            y: prices[0].variants[0][3]
-        }
-    }
-    if(thisFile.format === "A7"){
-        size = {
-            x: prices[0].variants[4][2],
-            y: prices[0].variants[4][3]
+    for (let i = 0; i < prices.length; i++){
+        if(prices[i].name === "formats") {
+            for (let o = 0; o < prices[i].variants.length; o++){
+                if(prices[i].variants[o][0] === thisFile.format) {
+                        size.x = prices[i].variants[o][2]
+                        size.y = prices[i].variants[o][3]
+                    break;
+                }
+            }
+            break;
         }
     }
     return size

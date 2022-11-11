@@ -9,13 +9,26 @@ const busboy = require('connect-busboy');
 const mime = require('mime');
 const  { Poppler }  =  require ( "node-poppler" ) ;
 const readXlsxFile = require('read-excel-file/node');
+const fsEx = require('fs-extra');
+// const mysql = require('mysql');
+// const connection = mysql.createConnection({
+//     host     : 'localhost',
+//     // user     : 'e',
+//     // password : '1',
+// });
+// connection.connect(function(err){
+//     if (err) {
+//         return console.error("Ошибка: " + err.message);
+//     }
+//     else{
+//         console.log("Подключение к серверу MySQL успешно установлено");
+//     }
+// });
 
-const fsEx = require('fs-extra')
-
-let tabl1;
-readXlsxFile(fs.createReadStream(__dirname + "/data/tabl1.xlsx")).then((rows) => {
-    tabl1 = rows
-    console.log(tabl1);
+let tableMain;
+readXlsxFile(fs.createReadStream(__dirname + "/data/tableMain.xlsx")).then((rows) => {
+    tableMain = rows
+    console.log("tableMain reading close with no err");
     // `rows` is an array of rows
     // each row being an array of cells.
 })
@@ -107,19 +120,34 @@ app.get("/files*", function (req, res) {
     sendRes(urll, getContentType(urll), res)
 });
 app.post("/orders", function (req, res) {
-    if(req.cookies.to){
-        cookieStore.forEach(e => {
-            if(e.cookie === req.cookies.to){
-                let order = {
-                    id: Date.now().toString(),
-                    name : "БЕЗ ФАЙЛУ",
-                    format: "A4",
-                    countInFile: 1
-                }
-                e.orders.push(order)
-                res.send(JSON.stringify(order))
+    let body = [];
+    try {
+        req.on('error', (err) => {
+            console.error(err);
+        }).on('data', (chunk) => {
+            body.push(chunk);
+        }).on('end', () => {
+            body = Buffer.concat(body).toString();
+            body = JSON.parse(body)
+            console.log(body);
+            if(req.cookies.to){
+                cookieStore.forEach(e => {
+                    if(e.cookie === req.cookies.to){
+                        let order = {
+                            id: Date.now().toString(),
+                            name : "БЕЗ ФАЙЛУ",
+                            calc: body.calc,
+                            format: "А4",
+                            countInFile: 1
+                        }
+                        e.orders.push(order)
+                        res.send(JSON.stringify(order))
+                    }
+                })
             }
         })
+    }catch (e) {
+        console.log(e);
     }
 });
 app.get("/orders", function (req, res) {
@@ -131,7 +159,9 @@ app.get("/orders", function (req, res) {
         })
     }
 });
-app.listen(port)
+app.listen(port, function () {
+    console.log(`server on port ${port}`);
+})
 app.delete("/orders", function (req, res) {
     let body = [];
     try {
@@ -479,49 +509,9 @@ app.post("/getfiles", function (req, res) {
         }).on('end', () => {
             body = Buffer.concat(body).toString();
             body = JSON.parse(body)
-            console.log(`/files${body.to}`);
-
-            try {
-                const stats = fs.statSync (__dirname + `/files${body.to}`)
-                console.log(stats.isDirectory());
-                if(stats.isDirectory()){
-                    let readdir = fs.readdirSync(__dirname + `/files${body.to}`)
-                    let readdirInfo = []
-                    for (let i = 0; i < readdir.length; i++){
-                        let path = __dirname + `/files${body.to}/${readdir[i]}`
-                        let stats = getStatsInFile(path);
-                        let reddirUnit = {
-                            name: readdir[i],
-                            size: stats.size,
-                            birthtime: stats.birthtime,
-                            error: stats.error,
-                            isFile: stats.isFile
-                        }
-                        readdirInfo.push(reddirUnit)
-                    }
-                    res.send(readdirInfo)
-                } else if (stats.isFile()) {
-                    let readdirInfo = []
-                    let reddirUnit = {
-                        isFileOpen: true,
-                        name: "file",
-                        size: stats.size,
-                        birthtime: stats.birthtime,
-                        error: false,
-                        url: `/files${body.to}`
-                    }
-                    readdirInfo.push(reddirUnit)
-                    res.send(readdirInfo)
-                }
-            } catch (e) {
-                console.log(e);
-                let readdirInfo = []
-                let reddirUnit = {
-                    error: e.toString()
-                }
-                readdirInfo.push(reddirUnit)
-                res.send(readdirInfo)
-            }
+            body.to = `files${body.to}`;
+            console.log(`${body.to}`);
+            getFilesForAdminView(req, res, body.to)
         })
     } catch (e) {
         console.log(e);
@@ -532,13 +522,10 @@ app.post("/getfiles", function (req, res) {
         readdirInfo.push(reddirUnit)
         res.send(readdirInfo)
     }
-    // let urll = req.url;
-    // console.log(urll);
-    // sendRes(urll, getContentType(urll), res)
 })
 
 app.get("/getprices", function (req, res){
-    res.send(tabl1)
+    res.send(tableMain)
 })
 
 function getStatsInFile(path) {
@@ -561,7 +548,73 @@ function getStatsInFile(path) {
     }
 }
 
+app.post("/database", function (req, res){
+    let body = [];
+    try {
+        req.on('error', (err) => {
+            console.error(err);
+        }).on('data', (chunk) => {
+            body.push(chunk);
+        }).on('end', () => {
+            body = Buffer.concat(body).toString();
+            body = JSON.parse(body)
+            console.log(body);
 
+            if(body.do === "showAll"){
+                getFilesForAdminView(req, res, `/data/database`)
+            }
+            else {
+                res.send("1")
+            }
+
+        })
+    } catch (err) {
+        console.log(err);
+    }
+})
+
+function getFilesForAdminView(req, res, url){
+    try {
+        let stats = fs.statSync (__dirname + `/${url}`)
+        if(stats.isDirectory()){
+            let readdir = fs.readdirSync(__dirname + `/${url}`)
+            let readdirInfo = []
+            for (let i = 0; i < readdir.length; i++){
+                let path = __dirname + `/${url}/${readdir[i]}`
+                let stats = getStatsInFile(path);
+                let reddirUnit = {
+                    name: readdir[i],
+                    size: stats.size,
+                    birthtime: stats.birthtime,
+                    error: stats.error,
+                    isFile: stats.isFile
+                }
+                readdirInfo.push(reddirUnit)
+            }
+            res.send(readdirInfo)
+        } else if (stats.isFile()) {
+            let readdirInfo = []
+            let reddirUnit = {
+                isFileOpen: true,
+                name: "file",
+                size: stats.size,
+                birthtime: stats.birthtime,
+                error: false,
+                url: `/${url}`
+            }
+            readdirInfo.push(reddirUnit)
+            res.send(readdirInfo)
+        }
+    } catch (e) {
+        console.log(e);
+        let readdirInfo = []
+        let reddirUnit = {
+            error: e.toString()
+        }
+        readdirInfo.push(reddirUnit)
+        res.send(readdirInfo)
+    }
+}
 
 // async function toPng(outputPath, cookies, filenameToNorm, res, id) {
 //     let folder = __dirname + `/files/${cookies}/${id}/png`

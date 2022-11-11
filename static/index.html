@@ -33,7 +33,7 @@
 <!--            <div id="digitalCalcButtonNotFile" class="btn">Без файлу рахуватиму</div>-->
         </div>
         <div class="card m-5 shadow-lg cursorPointer" id="widescreenPrint" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <img src="img/giphy.gif" class="card-img-top" alt="...">
+            <img src="img/print-arthur.gif" class="card-img-top" alt="...">
 <!--            <div class="card-body">-->
 <!--                <h5 class="card-title">Широкоформат</h5>-->
 <!--                <p class="card-text">Рулооооонииblbl......</p>-->
@@ -104,21 +104,9 @@
 
     <div class="settingsContainer d-flex d-none">
         <div class="fileSettingsContainer">
-            <div class="d-flex justify-content-center d-none">
-                <button class="btn btnm-act" id="custom">СВІЙ ВИБІР</button>
-                <button class="btn" id="presets">ВИБІР ІЗ ШАБЛОНІВ</button>
-            </div>
-            <div class="presetContainer nonDisplay" id="presetContainer">
-                <button class="btn" id="document">ДОКУМЕНТ</button>
-                <button class="btn" id="presentation">ПРЕЗЕНТАЦІЯ</button>
-                <button class="btn" id="poster">ПЛАКАТ</button>
-                <button class="btn" id="card">ЛИСТІВКА</button>
-                <button class="btn" id="visitCard">ВІЗІТІВКА</button>
-                <button class="btn" id="sticker">НАЛІПКА</button>
-                <button class="btn" id="tags">БІРКИ</button>
-                <button class="btn" id="brochure">БРОШУРА</button>
-                <button class="btn" id="note">БЛОКНОТ</button>
-                <button class="btn" id="calendar">КАЛЕНДАРЬ</button>
+            <div class="d-flex justify-content-center settingElem" id="selectButtonCalc">
+                <div id="digitalCalcSelect" class="btn" toFile="digital">digital</div>
+                <div id="widelCalcSelect" class="btn" toFile="wide">wide</div>
             </div>
             <div class="optionsContainer">
                 <div class="d-flex justify-content-center settingElem" id="formatButtons">
@@ -154,12 +142,11 @@
                     <div class="btn" toFile="one">з одніеї сторони</div>
                     <div class="btn" toFile="two">з обох сторін</div>
                 </div>
-                <div class="d-flex justify-content-center settingElem" id="paperButtons">
-                    <div class="btn" toFile="на папері">на папері</div>
-                    <div class="btn" toFile="на самоклейці">на самоклейці</div>
-                    <div class="btn" toFile="на Xerox Transparencies ®">на Xerox Transparencies ®</div>
-                </div>
+                <div class="d-flex justify-content-center settingElem" id="paperButtons"></div>
+                <div class="d-flex justify-content-center settingElem" id="toUseButtons"></div>
                 <div class="row row-cols-3 align-items-center settingElem" id="destinyButtons"></div>
+                <div class="row row-cols-3 align-items-center settingElem" id="destinyThisButtons"></div>
+
                 <div class="d-flex justify-content-center">
                     <div class="input-group d-flex justify-content-center d-none">
                         <span class="input-group-text gray">Аркушів файлі:</span>
@@ -217,6 +204,11 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center settingElem text-light d-none" id="text"></div>
+
+
+
+
+
                 <!--                <div class="input-group d-flex justify-content-center">-->
                 <!--                    <span class="input-group-text gray">Кількість затраченного:</span>-->
                 <!--                    <input type="number" class="input-group-text gray" id="realCount" disabled>-->
@@ -304,10 +296,12 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="" id="exampleModalLabel">ДОДАТИ ФАЙЛ (функції файлообміну в розробці)</div>
+                <div class="" id="exampleModalLabel">ДОДАТИ ФАЙЛ</div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form>
             <div class="modal-body">
+                <div id="fileClassCalcToModal"></div>
                 <div class="input-group">
                     <input type="file" class="form-control" id="imgInp" aria-describedby="inputGroupFileAddon04"
                            aria-label="Upload">
@@ -318,6 +312,7 @@
                 <div type="button" id="nonUpload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>
                 <div type="button" id="upload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ</div>
             </div>
+            </form>
         </div>
     </div>
 </div>

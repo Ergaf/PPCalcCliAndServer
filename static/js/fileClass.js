@@ -26,6 +26,8 @@ class file {
     url;
     url2;
     list;
+    calc;
+    touse;
     constructor (name, id) {
         this._name = name;
         this._id = id;
@@ -86,6 +88,7 @@ class file {
                 if(thisFile === this){
                     // document.querySelector(".settingsContainer").style.display = "none"
                     document.querySelector(".settingsContainer").classList.add("d-none")
+                    digitalPrintingContainer.classList.add("d-none")
                     mainDisplay.classList.remove("d-none")
                 }
                 for (let i = 0; i < allFiles.length; i++){
@@ -111,6 +114,252 @@ class file {
         sizeY.value = this.y
 
         let priceCalc = 0;
+        Array.prototype.slice.call(selectButtonCalc.children).forEach(e => {
+            if(e.getAttribute("toFile") === this.calc){
+                e.classList.add("btnm-act")
+            }
+            else {
+                e.classList.remove("btnm-act")
+            }
+        })
+        if(thisFile.calc === "digital"){
+            let formats = `
+                    <div class="btn" toFile="A7">A7</div>
+                    <div class="btn" toFile="A6">A6</div>
+                    <div class="btn" toFile="A5">A5</div>
+                    <div class="btn" toFile="А4">А4</div>
+                    <div class="btn" toFile="А3">А3</div>
+                    <div class="btn" toFile="custom">Свій розмір</div>
+    `;
+            formatButtons.innerHTML = formats;
+            colorButtons.classList.remove("d-none")
+            sidesButtons.classList.remove("d-none")
+            paperButtons.classList.remove("d-none")
+            destinyThisButtons.classList.add("d-none")
+            this.renderDigitalCalc(priceCalc)
+        }
+        else if(thisFile.calc === "wide"){
+            let formats = `
+                    <div class="btn" toFile="А1">А1</div>
+                    <div class="btn" toFile="А2">А2</div>
+                    <div class="btn" toFile="А0">А0</div>
+                    <div class="btn" toFile="custom">Свій розмір</div>
+                        `;
+            formatButtons.innerHTML = formats;
+
+            colorButtons.classList.add("d-none")
+            sidesButtons.classList.add("d-none")
+            paperButtons.classList.add("d-none")
+
+            destinyButtons.innerHTML = ""
+            roundCornerButtons.classList.add("d-none")
+            holesButtons.classList.add("d-none")
+            bigButtons.classList.add("d-none")
+            laminationButtons.classList.add("d-none")
+            bindingSelectButtons.classList.add("d-none")
+            bindingButtons.classList.add("d-none")
+            cowerButtons.classList.add("d-none")
+            frontLiningButtons.classList.add("d-none")
+            backLiningButtons.classList.add("d-none")
+            stickerCutting.classList.add("d-none")
+            stickerCuttingThis.classList.add("d-none")
+            backLiningText.classList.add("d-none")
+
+            this.renderWideCalc(priceCalc)
+        }
+        Array.prototype.slice.call(formatButtons.children).forEach(e => {
+            e.addEventListener("click", function () {
+                thisFile.format = e.getAttribute("toFile")
+                thisFile.renderSettings()
+            })
+        });
+
+
+        Array.prototype.slice.call(formatButtons.children).forEach(e => {
+            if(e.getAttribute("toFile") === this.format){
+                e.classList.add("btnm-act")
+            }
+            else {
+                e.classList.remove("btnm-act")
+            }
+        })
+        Array.prototype.slice.call(sidesButtons.children).forEach(e => {
+            if(e.getAttribute("toFile") === this.sides){
+                e.classList.add("btnm-act")
+            }
+            else {
+                e.classList.remove("btnm-act")
+            }
+        })
+        Array.prototype.slice.call(colorButtons.children).forEach(e => {
+            if(e.getAttribute("toFile") === this.color){
+                e.classList.add("btnm-act")
+            }
+            else {
+                e.classList.remove("btnm-act")
+            }
+        })
+        Array.prototype.slice.call(paperButtons.children).forEach(e => {
+            if(e.getAttribute("toFile") === this.paper){
+                e.classList.add("btnm-act")
+            }
+            else {
+                e.classList.remove("btnm-act")
+            }
+        })
+
+        if(thisFile.url){
+            if(thisFile.url.img){
+                let image = new Image();
+                image.onload = function(){
+                    imgInServer.setAttribute("src", image.src)
+                    renderListAndCard()
+                }
+                image.src = thisFile.url.url;
+
+                containerForImgInServer.classList.remove("d-none")
+                containerForPdfInServer.classList.add("d-none")
+                // imgInServer.setAttribute("src", image.src)
+                document.querySelector("#page_count").innerText = 1
+            }
+            else {
+                imgInServer.setAttribute("src", "")
+                containerForImgInServer.classList.add("d-none")
+                containerForPdfInServer.classList.remove("d-none")
+                if(!this.url2.pdf || lastFileId !== thisFile._id){
+                    pdfjsLib.getDocument(thisFile.url.url).then((pdf) => {
+                        this.url2.pdf = pdf
+                        render();
+                    })
+                }
+            }
+        }
+        else {
+            imgInServer.setAttribute("src", "")
+            containerForImgInServer.classList.add("d-none")
+            containerForPdfInServer.classList.remove("d-none")
+            if(!this.url2.pdf || lastFileId !== thisFile._id){
+                pdfjsLib.getDocument("/files/totest/file1.pdf").then((pdf) => {
+                    this.url2.pdf = pdf
+                    render();
+                })
+            }
+        }
+        renderListAndCard()
+        if(thisFile.url2.pdf){
+            document.querySelector("#page_count").innerText = thisFile.url2.pdf.numPages
+            this.countInFile = thisFile.url2.pdf.numPages
+        }
+        if(thisFile){
+            lastFileId = thisFile._id
+        }
+        realCount.value = this.realCount
+        countInt.value = this._count
+        countInFile.value = this.countInFile
+        allPaper.value = this.allPaperCount
+        if(this.realCount < 2){
+            arkushi.innerText = "аркуш"
+        }
+        if(this.realCount > 1 && this._count < 5){
+            arkushi.innerText = "аркуша"
+        }
+        if(this.realCount > 4){
+            arkushi.innerText = "аркушів"
+        }
+        if(this._count < 2){
+            primirnyk.innerText = "примірник"
+        }
+        if(this._count > 1 && this._count < 5){
+            primirnyk.innerText = "примірника"
+        }
+        if(this._count > 4){
+            primirnyk.innerText = "примірників"
+        }
+
+        price.value = priceCalc
+        text.innerText = this.format
+            +", "
+            +this.color
+            +" color, "
+            +this.sides
+            +" sides, "
+            +this.paper
+            +" "
+            +this.destiny
+            +", "
+            +this.lamination
+            +", "
+            +this.binding
+            +", "
+            +this.bindingSelect
+            +", "
+            +this.cower
+            +", "
+            +this.frontLining
+            +", "
+            +", "
+            +", "
+            +this.backLining
+            +", "
+            +this.frontLining
+            +", "
+            +this.big
+            +", "
+            +this.holes
+            +", "
+            +this.roundCorner
+    }
+
+    // destinyAppend() {
+    //     getDestinyInData().forEach(e => {
+    //         let opt = document.createElement("option")
+    //         opt.innerText = e[0]
+    //         opt.value = e[0]
+    //         destinySelect.appendChild(opt)
+    //     })
+    // }
+
+    // bindingAppend() {
+    //     getBindingInData().forEach(e => {
+    //         let opt = document.createElement("option")
+    //         opt.innerText = e[0]
+    //         opt.value = e[0]
+    //         // bindingSelect.appendChild(opt)
+    //     })
+    // }
+
+    renderOptions(thisFilePaper, thisFileProp, renderIn){
+        if(getVariantsFromNameInData(thisFile.paper) !== undefined){
+            getVariantsFromNameInData(thisFile.paper).forEach(e => {
+                let elem = document.createElement("div")
+                elem.innerText = e[0]
+                elem.classList.add("btn")
+                elem.addEventListener("click", function () {
+                    console.log(this[thisFileProp]);
+                    this[thisFileProp] = elem.innerText
+                    thisFile.renderSettings()
+                })
+                if(e[0] === this[thisFileProp]){
+                    elem.classList.add("btnm-act")
+                }
+                renderIn.appendChild(elem)
+            })
+        }
+    }
+
+    getSize() {
+        let sizes = getSizes()
+        if(!this.orient){
+            this.x = sizes.x
+            this.y = sizes.y
+        }
+        else {
+            this.x = sizes.y
+            this.y = sizes.x
+        }
+    }
+
+    renderDigitalCalc(priceCalc){
         if(this.format === "A4" || this.format === "A3"){
             this.realCount = this._count*this.countInFile
             let paperPrice = getPriceFromCountPaper(thisFile.destiny)
@@ -156,31 +405,51 @@ class file {
 
         destinyButtons.innerHTML = ""
         roundCornerButtons.innerHTML = ""
+        roundCornerButtons.classList.remove("d-none")
         holesButtons.innerHTML = ""
+        holesButtons.classList.remove("d-none")
         bigButtons.innerHTML = ""
+        bigButtons.classList.remove("d-none")
         laminationButtons.innerHTML = ""
+        laminationButtons.classList.remove("d-none")
         bindingSelectButtons.innerHTML = ""
+        bindingSelectButtons.classList.remove("d-none")
         bindingButtons.innerHTML = ""
+        bindingButtons.classList.remove("d-none")
         cowerButtons.innerHTML = ""
+        cowerButtons.classList.remove("d-none")
         frontLiningButtons.innerHTML = ""
+        frontLiningButtons.classList.remove("d-none")
         backLiningButtons.innerHTML = ""
+        backLiningButtons.classList.remove("d-none")
 
         stickerCutting.innerHTML = ""
+        stickerCutting.classList.remove("d-none")
         stickerCuttingThis.innerHTML = ""
-
-
+        stickerCuttingThis.classList.remove("d-none")
 
         backLiningText.innerText = ""
+        backLiningText.classList.remove("d-none")
+        paperButtons.innerHTML = ""
+        if(getVariantsFromNameInData("на чому друк") !== undefined){
+            getVariantsFromNameInData("на чому друк").forEach(e => {
+                if(e[0][0] !== "!"){
+                    let elem = document.createElement("div")
+                    elem.innerText = e[0]
+                    elem.classList.add("btn")
+                    elem.setAttribute("toFile", e[0])
+                    elem.addEventListener("click", function () {
+                        thisFile.paper = elem.getAttribute("toFile")
+                        thisFile.renderSettings()
+                    })
+                    if(e[0] === thisFile.paper){
+                        elem.classList.add("btnm-act")
+                    }
+                    paperButtons.appendChild(elem)
+                }
+            })
+        }
 
-        if(this._count < 2){
-            primirnyk.innerText = "примірник"
-        }
-        if(this._count > 1 && this._count < 5){
-            primirnyk.innerText = "примірника"
-        }
-        if(this._count > 4){
-            primirnyk.innerText = "примірників"
-        }
 
         if(getVariantsFromNameInData(thisFile.paper) !== undefined){
             getVariantsFromNameInData(thisFile.paper).forEach(e => {
@@ -351,43 +620,43 @@ class file {
                         })
                     }
 
-                        backLiningText.innerText = "з задньою подкладкою"
-                        if(this.frontLining === undefined){
-                            this.frontLining = "з прозорою лицьовою підкладкою"
-                        }
-                        if(getVariantsFromNameInData("лицьова підкладка") !== undefined){
-                            getVariantsFromNameInData("лицьова підкладка").forEach(e => {
-                                let elem = document.createElement("div")
-                                elem.innerText = e[0]
-                                elem.classList.add("btn")
-                                elem.addEventListener("click", function () {
-                                    thisFile.frontLining = elem.innerText
-                                    thisFile.renderSettings()
-                                })
-                                if(e[0] === thisFile.frontLining){
-                                    elem.classList.add("btnm-act")
-                                }
-                                frontLiningButtons.appendChild(elem)
+                    backLiningText.innerText = "з задньою подкладкою"
+                    if(this.frontLining === undefined){
+                        this.frontLining = "з прозорою лицьовою підкладкою"
+                    }
+                    if(getVariantsFromNameInData("лицьова підкладка") !== undefined){
+                        getVariantsFromNameInData("лицьова підкладка").forEach(e => {
+                            let elem = document.createElement("div")
+                            elem.innerText = e[0]
+                            elem.classList.add("btn")
+                            elem.addEventListener("click", function () {
+                                thisFile.frontLining = elem.innerText
+                                thisFile.renderSettings()
                             })
-                        }
-                        if(this.backLining === undefined){
-                            this.backLining = ""
-                        }
-                        if(getVariantsFromNameInData("задньою підкладкою") !== undefined){
-                            getVariantsFromNameInData("задньою підкладкою").forEach(e => {
-                                let elem = document.createElement("div")
-                                elem.innerText = e[0]
-                                elem.classList.add("btn")
-                                elem.addEventListener("click", function () {
-                                    thisFile.backLining = elem.innerText
-                                    thisFile.renderSettings()
-                                })
-                                if(e[0] === thisFile.backLining){
-                                    elem.classList.add("btnm-act")
-                                }
-                                backLiningButtons.appendChild(elem)
+                            if(e[0] === thisFile.frontLining){
+                                elem.classList.add("btnm-act")
+                            }
+                            frontLiningButtons.appendChild(elem)
+                        })
+                    }
+                    if(this.backLining === undefined){
+                        this.backLining = ""
+                    }
+                    if(getVariantsFromNameInData("задньою підкладкою") !== undefined){
+                        getVariantsFromNameInData("задньою підкладкою").forEach(e => {
+                            let elem = document.createElement("div")
+                            elem.innerText = e[0]
+                            elem.classList.add("btn")
+                            elem.addEventListener("click", function () {
+                                thisFile.backLining = elem.innerText
+                                thisFile.renderSettings()
                             })
-                        }
+                            if(e[0] === thisFile.backLining){
+                                elem.classList.add("btnm-act")
+                            }
+                            backLiningButtons.appendChild(elem)
+                        })
+                    }
 
                 }
             }
@@ -456,188 +725,59 @@ class file {
             thisFile.roundCorner = undefined
             thisFile.stickerCutting = undefined
         }
-        Array.prototype.slice.call(formatButtons.children).forEach(e => {
-            if(e.getAttribute("toFile") === this.format){
-                e.classList.add("btnm-act")
-            }
-            else {
-                e.classList.remove("btnm-act")
-            }
-        })
-        Array.prototype.slice.call(sidesButtons.children).forEach(e => {
-            if(e.getAttribute("toFile") === this.sides){
-                e.classList.add("btnm-act")
-            }
-            else {
-                e.classList.remove("btnm-act")
-            }
-        })
-        Array.prototype.slice.call(colorButtons.children).forEach(e => {
-            if(e.getAttribute("toFile") === this.color){
-                e.classList.add("btnm-act")
-            }
-            else {
-                e.classList.remove("btnm-act")
-            }
-        })
-        Array.prototype.slice.call(paperButtons.children).forEach(e => {
-            if(e.getAttribute("toFile") === this.paper){
-                e.classList.add("btnm-act")
-            }
-            else {
-                e.classList.remove("btnm-act")
-            }
-        })
-
-        if(thisFile.url){
-            // if(thisFile.url.ext === 1){
-            //     imgInServer.setAttribute("src", "/files/"+thisFile.url.url);
-            // }
-            // else {
-            //     imgInServer.setAttribute("src", "/files/"+thisFile.url.url+thisFile.url.readdir[thisFile.url.pag])
-            // }
-            // pagenation.innerText = `${thisFile.url.pag+1}/${thisFile.url.count}`
-
-            if(thisFile.url.img){
-                let image = new Image();
-                image.onload = function(){
-                    imgInServer.setAttribute("src", image.src)
-                    renderListAndCard()
-                }
-                image.src = thisFile.url.url;
-
-                containerForImgInServer.classList.remove("d-none")
-                containerForPdfInServer.classList.add("d-none")
-                // imgInServer.setAttribute("src", image.src)
-                document.querySelector("#page_count").innerText = 1
-            }
-            else {
-                imgInServer.setAttribute("src", "")
-                containerForImgInServer.classList.add("d-none")
-                containerForPdfInServer.classList.remove("d-none")
-                if(!this.url2.pdf || lastFileId !== thisFile._id){
-                    pdfjsLib.getDocument(thisFile.url.url).then((pdf) => {
-                        this.url2.pdf = pdf
-                        render();
-                    })
-                }
-            }
-        }
-        else {
-            imgInServer.setAttribute("src", "")
-            containerForImgInServer.classList.add("d-none")
-            containerForPdfInServer.classList.remove("d-none")
-            if(!this.url2.pdf || lastFileId !== thisFile._id){
-                pdfjsLib.getDocument("/files/totest/file1.pdf").then((pdf) => {
-                    this.url2.pdf = pdf
-                    render();
-                })
-            }
-        }
-        renderListAndCard()
-        if(thisFile.url2.pdf){
-            document.querySelector("#page_count").innerText = thisFile.url2.pdf.numPages
-            this.countInFile = thisFile.url2.pdf.numPages
-        }
-        if(thisFile){
-            lastFileId = thisFile._id
-        }
-
-        realCount.value = this.realCount
-        countInt.value = this._count
-        countInFile.value = this.countInFile
-        allPaper.value = this.allPaperCount
-
-        if(this.realCount < 2){
-            arkushi.innerText = "аркуш"
-        }
-        if(this.realCount > 1 && this._count < 5){
-            arkushi.innerText = "аркуша"
-        }
-        if(this.realCount > 4){
-            arkushi.innerText = "аркушів"
-        }
-
-        price.value = priceCalc
-        text.innerText = this.format
-            +", "
-            +this.color
-            +" color, "
-            +this.sides
-            +" sides, "
-            +this.paper
-            +" "
-            +this.destiny
-            +", "
-            +this.lamination
-            +", "
-            +this.binding
-            +", "
-            +this.bindingSelect
-            +", "
-            +this.cower
-            +", "
-            +this.frontLining
-            +", "
-            +", "
-            +", "
-            +this.backLining
-            +", "
-            +this.frontLining
-            +", "
-            +this.big
-            +", "
-            +this.holes
-            +", "
-            +this.roundCorner
     }
 
-    // destinyAppend() {
-    //     getDestinyInData().forEach(e => {
-    //         let opt = document.createElement("option")
-    //         opt.innerText = e[0]
-    //         opt.value = e[0]
-    //         destinySelect.appendChild(opt)
-    //     })
-    // }
-
-    // bindingAppend() {
-    //     getBindingInData().forEach(e => {
-    //         let opt = document.createElement("option")
-    //         opt.innerText = e[0]
-    //         opt.value = e[0]
-    //         // bindingSelect.appendChild(opt)
-    //     })
-    // }
-
-    renderOptions(thisFilePaper, thisFileProp, renderIn){
-        if(getVariantsFromNameInData(thisFile.paper) !== undefined){
-            getVariantsFromNameInData(thisFile.paper).forEach(e => {
+    renderWideCalc(priceCalc){
+        toUseButtons.innerHTML = ""
+        if(getVariantsFromNameInData("Використання") !== undefined){
+            toUseButtons.classList.remove("d-none")
+            getVariantsFromNameInData("Використання").forEach(e => {
                 let elem = document.createElement("div")
                 elem.innerText = e[0]
                 elem.classList.add("btn")
                 elem.addEventListener("click", function () {
-                    console.log(this[thisFileProp]);
-                    this[thisFileProp] = elem.innerText
+                    thisFile.touse = elem.innerText
                     thisFile.renderSettings()
                 })
-                if(e[0] === this[thisFileProp]){
+                if(e[0] === thisFile.touse){
                     elem.classList.add("btnm-act")
                 }
-                renderIn.appendChild(elem)
+                toUseButtons.appendChild(elem)
             })
         }
-    }
-
-    getSize() {
-        let sizes = getSizes()
-        if(!this.orient){
-            this.x = sizes.x
-            this.y = sizes.y
+        destinyButtons.innerHTML = ""
+        if(getVariantsFromNameInData(thisFile.touse) !== undefined){
+            destinyButtons.classList.remove("d-none")
+            getVariantsFromNameInData(thisFile.touse).forEach(e => {
+                let elem = document.createElement("div")
+                elem.innerText = e[0]
+                elem.classList.add("btn")
+                elem.addEventListener("click", function () {
+                    thisFile.destiny = elem.innerText
+                    thisFile.renderSettings()
+                })
+                if(e[0] === thisFile.destiny){
+                    elem.classList.add("btnm-act")
+                }
+                destinyButtons.appendChild(elem)
+            })
         }
-        else {
-            this.x = sizes.y
-            this.y = sizes.x
+        destinyThisButtons.innerHTML = ""
+        if(getVariantsFromNameInData(thisFile.destiny) !== undefined){
+            destinyThisButtons.classList.remove("d-none")
+            getVariantsFromNameInData(thisFile.destiny).forEach(e => {
+                let elem = document.createElement("div")
+                elem.innerText = e[0]
+                elem.classList.add("btn")
+                elem.addEventListener("click", function () {
+                    thisFile.destinyThis = elem.innerText
+                    thisFile.renderSettings()
+                })
+                if(e[0] === thisFile.destinyThis){
+                    elem.classList.add("btnm-act")
+                }
+                destinyThisButtons.appendChild(elem)
+            })
         }
     }
 }

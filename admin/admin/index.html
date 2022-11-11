@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <title>Адмін</title>
     <style>
-        body{
+        body {
             /* set margin to 0 and overflow to hidden,
             to use the complete page */
             margin: 0;
@@ -18,6 +18,7 @@
             vertical-align: -.125em;
             fill: currentColor;
         }
+
         .nav-scroller .nav {
             display: flex;
             flex-wrap: nowrap;
@@ -39,7 +40,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="people-circle" viewBox="0 0 16 16">
         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+        <path fill-rule="evenodd"
+              d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
     </symbol>
     <symbol id="grid" viewBox="0 0 16 16">
         <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
@@ -60,13 +62,16 @@
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
-                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                    <use xlink:href="#bootstrap"/>
+                </svg>
             </a>
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0" id="headerMenuButtons">
                 <li><a href="#" class="nav-link px-2 text-dark">Додому</a></li>
                 <li id="files"><a href="#" class="nav-link px-2 text-dark">Файл Менеджер</a></li>
                 <li id="users"><a href="#" class="nav-link px-2 text-dark">Користувачі</a></li>
                 <li id="prices"><a href="#" class="nav-link px-2 text-dark">Послуги(поки що таблиця)</a></li>
+                <li id="bd"><a href="#" class="nav-link px-2 text-dark">DataBase View Test</a></li>
                 <li><a href="#" class="nav-link px-2 text-dark">Що за фігня?..</a></li>
             </ul>
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
@@ -74,14 +79,17 @@
             </form>
 
             <div class="dropdown">
-                <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+                   aria-expanded="false">
                     <img src="img/usericon2.jpg" alt="mdo" width="50" height="50" class="rounded-circle">
                 </a>
                 <ul class="dropdown-menu text-small">
                     <li><a class="dropdown-item" href="#">New project...</a></li>
                     <li><a class="dropdown-item" href="#">Settings</a></li>
                     <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
                     <li><a class="dropdown-item" href="#">Sign out</a></li>
                 </ul>
             </div>
@@ -98,70 +106,84 @@
 <!--    </main>-->
 
 
-    <div class="filesContainer d-none" id="filesContainer">
-        <div class="d-flex justify-content-center align-items-center">
-            <nav aria-label="breadcrumb " class="d-flex btn">
-                <ol class="breadcrumb" id="pathContainer">
+<div class="filesContainer d-none" id="filesContainer">
+    <div class="d-flex justify-content-center align-items-center">
+        <nav aria-label="breadcrumb " class="d-flex btn">
+            <ol class="breadcrumb" id="pathContainer">
 
-                </ol>
-            </nav>
-        </div>
-        <div class="btn btn-secondary btn-sm" id="goBackButton"><</div>
-        <div class="btn btn-secondary btn-sm" id="goHomePathButton">"/"</div>
-
-        <table class="table table-sm backgroundSecondary">
-            <thead>
-            <tr class="">
-                <th scope="col">#</th>
-                <th scope="col" class="float-start">Назва</th>
-                <th scope="col">Вага</th>
-                <th scope="col">Час створення</th>
-            </tr>
-            </thead>
-            <tbody id="tbodyFileContainer" class="filesContainerInFileView">
-
-            </tbody>
-        </table>
-        <div class="alert alert-danger d-none" role="alert" id="errorAlert"></div>
+            </ol>
+        </nav>
     </div>
+    <div class="btn btn-secondary btn-sm" id="goBackButton"><</div>
+    <div class="btn btn-secondary btn-sm" id="goHomePathButton">"/"</div>
 
-    <div>
-        <table class="table table-sm">
-            <thead>
-            <tr id="pricesTableHeaderContainer">
+    <table class="table table-sm backgroundSecondary">
+        <thead>
+        <tr class="">
+            <th scope="col">#</th>
+            <th scope="col" class="float-start">Назва</th>
+            <th scope="col">Вага</th>
+            <th scope="col">Час створення</th>
+        </tr>
+        </thead>
+        <tbody id="tbodyFileContainer" class="filesContainerInFileView">
 
-            </tr>
-            </thead>
-            <tbody id="pricesContainer">
+        </tbody>
+    </table>
+    <div class="alert alert-danger d-none" role="alert" id="errorAlert"></div>
+</div>
 
-            </tbody>
-        </table>
-    </div>
+<div>
+    <table class="table table-sm">
+        <thead>
+        <tr id="pricesTableHeaderContainer">
+
+        </tr>
+        </thead>
+        <tbody id="pricesContainer">
+
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <table class="table table-sm">
+        <thead>
+        <tr id="dataBaseTableHeaderContainer">
+
+        </tr>
+        </thead>
+        <tbody id="dataBaseContainer">
+
+        </tbody>
+    </table>
+</div>
 
 
-    <div class="dropdown-menu d-block position-absolute pt-0 mx-0 rounded-3 shadow overflow-hidden w-280px d-none" id="dropdownMenu">
-        <form class="p-2 mb-2 bg-light border-bottom">
-            <input type="search" class="form-control" autocomplete="false" placeholder="Пошук..">
-        </form>
-        <ul class="list-unstyled mb-0">
-            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
-                <span class="d-inline-block bg-success rounded-circle p-1"></span>
-                Дії
-            </a></li>
-            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
-                <span class="d-inline-block bg-primary rounded-circle p-1"></span>
-                Копіювати
-            </a></li>
-            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
-                <span class="d-inline-block bg-danger rounded-circle p-1"></span>
-                Видалити
-            </a></li>
-            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
-                <span class="d-inline-block bg-info rounded-circle p-1"></span>
-                Копіювати текст
-            </a></li>
-        </ul>
-    </div>
+<div class="dropdown-menu d-block position-absolute pt-0 mx-0 rounded-3 shadow overflow-hidden w-280px d-none"
+     id="dropdownMenu">
+    <form class="p-2 mb-2 bg-light border-bottom">
+        <input type="search" class="form-control" autocomplete="false" placeholder="Пошук..">
+    </form>
+    <ul class="list-unstyled mb-0">
+        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+            <span class="d-inline-block bg-success rounded-circle p-1"></span>
+            Дії
+        </a></li>
+        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+            <span class="d-inline-block bg-primary rounded-circle p-1"></span>
+            Копіювати
+        </a></li>
+        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+            <span class="d-inline-block bg-danger rounded-circle p-1"></span>
+            Видалити
+        </a></li>
+        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+            <span class="d-inline-block bg-info rounded-circle p-1"></span>
+            Копіювати текст
+        </a></li>
+    </ul>
+</div>
 
 <!--<iframe frameborder="0" src="" id="iframe" class="d-none"></iframe>-->
 <!--<div id="iframe" class="myPdfViewer">-->
@@ -194,16 +216,27 @@
 <!--</div>-->
 
 
-
 <div class="container">
     <footer class="py-5">
         <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-<!--            <p>&copy; 2022 Company, Inc. All rights reserved.</p>-->
+            <!--            <p>&copy; 2022 Company, Inc. All rights reserved.</p>-->
             <p>&copy; 2022 Компанія ебейшая, Слава Україні!</p>
             <ul class="list-unstyled d-flex">
-                <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"/></svg></a></li>
-                <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"/></svg></a></li>
-                <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"/></svg></a></li>
+                <li class="ms-3"><a class="link-dark" href="#">
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#twitter"/>
+                    </svg>
+                </a></li>
+                <li class="ms-3"><a class="link-dark" href="#">
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#instagram"/>
+                    </svg>
+                </a></li>
+                <li class="ms-3"><a class="link-dark" href="#">
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#facebook"/>
+                    </svg>
+                </a></li>
             </ul>
         </div>
     </footer>
@@ -211,7 +244,10 @@
 
 
 <script src="js/script.js"></script>
+<script src="js/d3@7.js"></script>
 <script src="js/fileViewer.js"></script>
+<script src="js/tableView.js"></script>
+<script src="js/dataBaseView.js"></script>
 <script src="js/bootstrap.bundle.js"></script>
 
 <!--<script src="js/pdf.js" charset="utf-8"></script>-->
