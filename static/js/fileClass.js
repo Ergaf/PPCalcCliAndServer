@@ -31,8 +31,7 @@ class file {
     luvers;
     bannerVarit;
     floorLamination;
-    matteLamination;
-    glossLamination;
+    widthLamination;
     constructor (name, id) {
         this._name = name;
         this._id = id;
@@ -93,8 +92,8 @@ class file {
                 if(thisFile === this){
                     // document.querySelector(".settingsContainer").style.display = "none"
                     document.querySelector(".settingsContainer").classList.add("d-none")
-                    digitalPrintingContainer.classList.add("d-none")
-                    mainDisplay.classList.remove("d-none")
+                    // digitalPrintingContainer.classList.add("d-none")
+                    // mainDisplay.classList.remove("d-none")
                 }
                 for (let i = 0; i < allFiles.length; i++){
                     if(allFiles[i]._id === this._id){
@@ -792,79 +791,84 @@ class file {
         luvers.innerHTML = ""
         bannerVarit.innerHTML = ""
         floorLamination.innerHTML = ""
-        matteLamination.innerHTML = ""
-        glossLamination.innerHTML = ""
+        widthLamination.innerHTML = ""
         if(getVariantsFromNameInData(`Доп ${thisFile.destiny}`) !== undefined){
             luvers.classList.remove("d-none")
             bannerVarit.classList.remove("d-none")
             floorLamination.classList.remove("d-none")
-            matteLamination.classList.remove("d-none")
-            glossLamination.classList.remove("d-none")
+            widthLamination.classList.remove("d-none")
             getVariantsFromNameInData(`Доп ${thisFile.destiny}`).forEach(e => {
                 if(e[0] === "Встановлення люверсов"){
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.addEventListener("click", function () {
-                        thisFile.luvers = elem.innerText
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.luvers){
-                        elem.classList.add("btnm-act")
+                    let variants = getVariantsFromNameInData(`Встановлення люверсов`);
+                    if(variants !== undefined){
+                        variants.forEach(option => {
+                            let elem = document.createElement("div")
+                            elem.innerText = option[0]
+                            elem.classList.add("btn")
+                            elem.addEventListener("click", function () {
+                                thisFile.luvers = elem.innerText
+                                thisFile.renderSettings()
+                            })
+                            if(option[0] === thisFile.luvers){
+                                elem.classList.add("btnm-act")
+                            }
+                            luvers.appendChild(elem)
+                        })
                     }
-                    luvers.appendChild(elem)
                 }
                 if(e[0] === "Проварювання банера"){
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.addEventListener("click", function () {
-                        thisFile.bannerVarit = elem.innerText
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.bannerVarit){
-                        elem.classList.add("btnm-act")
+                    let variants = getVariantsFromNameInData(`Проварювання банера`);
+                    if(variants !== undefined){
+                        variants.forEach(option => {
+                            let elem = document.createElement("div")
+                            elem.innerText = option[0]
+                            elem.classList.add("btn")
+                            elem.addEventListener("click", function () {
+                                thisFile.bannerVarit = elem.innerText
+                                thisFile.renderSettings()
+                            })
+                            if(option[0] === thisFile.bannerVarit){
+                                elem.classList.add("btnm-act")
+                            }
+                            bannerVarit.appendChild(elem)
+                        })
                     }
-                    bannerVarit.appendChild(elem)
                 }
                 if(e[0] === "Напольне ламінування"){
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.addEventListener("click", function () {
-                        thisFile.floorLamination = elem.innerText
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.floorLamination){
-                        elem.classList.add("btnm-act")
+                    let variants = getVariantsFromNameInData(`Напольне ламінування`);
+                    if(variants !== undefined){
+                        variants.forEach(option => {
+                            let elem = document.createElement("div")
+                            elem.innerText = option[0]
+                            elem.classList.add("btn")
+                            elem.addEventListener("click", function () {
+                                thisFile.floorLamination = elem.innerText
+                                thisFile.renderSettings()
+                            })
+                            if(option[0] === thisFile.floorLamination){
+                                elem.classList.add("btnm-act")
+                            }
+                            floorLamination.appendChild(elem)
+                        })
                     }
-                    floorLamination.appendChild(elem)
                 }
-                if(e[0] === "Ламінування матове"){
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.addEventListener("click", function () {
-                        thisFile.matteLamination = elem.innerText
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.matteLamination){
-                        elem.classList.add("btnm-act")
+                if(e[0] === "Ламінування"){
+                    let variants = getVariantsFromNameInData(`Ламінування`);
+                    if(variants !== undefined){
+                        variants.forEach(option => {
+                            let elem = document.createElement("div")
+                            elem.innerText = option[0]
+                            elem.classList.add("btn")
+                            elem.addEventListener("click", function () {
+                                thisFile.widthLamination = elem.innerText
+                                thisFile.renderSettings()
+                            })
+                            if(option[0] === thisFile.widthLamination){
+                                elem.classList.add("btnm-act")
+                            }
+                            widthLamination.appendChild(elem)
+                        })
                     }
-                    matteLamination.appendChild(elem)
-                }
-                if(e[0] === "Ламінування глянцеве"){
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.addEventListener("click", function () {
-                        thisFile.glossLamination = elem.innerText
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.glossLamination){
-                        elem.classList.add("btnm-act")
-                    }
-                    glossLamination.appendChild(elem)
                 }
             })
         }

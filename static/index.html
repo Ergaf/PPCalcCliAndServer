@@ -94,6 +94,9 @@
 <!----------------------------Цифровая печать калк------------------------------------------------>
 <div class="digitalPrinting d-none" id="digitalPrintingContainer">
     <div class="FilesContainer">
+        <button class="btn btn-sm" id="toHomeButton">
+            To home
+        </button>
         <button class="btn btn-sm" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
             +
         </button>
@@ -104,7 +107,7 @@
 
     <div class="settingsContainer d-flex d-none">
         <div class="fileSettingsContainer">
-            <div class="d-flex justify-content-center settingElem" id="selectButtonCalc">
+            <div class="d-flex justify-content-center settingElem d-none" id="selectButtonCalc">
                 <div id="digitalCalcSelect" class="btn" toFile="digital">digital</div>
                 <div id="widelCalcSelect" class="btn" toFile="wide">wide</div>
             </div>
@@ -204,8 +207,7 @@
                                 <div class="row row-cols-5 align-items-center settingElem" id="luvers"></div>
                                 <div class="row row-cols-5 align-items-center settingElem" id="bannerVarit"></div>
                                 <div class="row row-cols-5 align-items-center settingElem" id="floorLamination"></div>
-                                <div class="row row-cols-5 align-items-center settingElem" id="matteLamination"></div>
-                                <div class="row row-cols-5 align-items-center settingElem" id="glossLamination"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="widthLamination"></div>
                             </div>
                         </div>
                     </div>
@@ -262,7 +264,7 @@
                     <input id="current_page" class="input-group-text gray" value="1" type="number"/>
                     <button id="go_next" class="input-group-text gray">+</button>
                 </div>
-                <div id="zoom_controls" class="input-group d-flex justify-content-center align-items-center">
+                <div id="zoom_controls" class="input-group d-flex justify-content-center align-items-center d-none">
                     <button id="zoom_in" class="input-group-text gray">+</button>
                     <button id="zoom_out" class="input-group-text gray">-</button>
                     <button id="zoom_normal" class="input-group-text gray">normalize</button>

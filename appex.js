@@ -75,7 +75,7 @@ app.use("/login", express.static(__dirname + "/admin/login"));
 app.use("/admin", express.static(__dirname + "/admin/admin"));
 app.use("/3dtest", express.static(__dirname + "/admin/3dtest"));
 
-app.post("/upload", function (req, res) {
+app.post("/upload1", function (req, res) {
     let fstream;
     req.pipe(req.busboy);
     req.busboy.on('file', function (fieldname, file, filename) {
@@ -105,7 +105,45 @@ app.post("/upload", function (req, res) {
         file.pipe(fstream);
         fstream.on('close', function () {
             try {
-                processing(filePath, req.cookies.to, filenameToNorm, res, idForFile)
+                processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, "digital")
+            } catch (e) {
+                console.log(e);
+                res.send(e)
+            }
+        });
+    });
+});
+app.post("/upload2", function (req, res) {
+    let fstream;
+    req.pipe(req.busboy);
+    req.busboy.on('file', function (fieldname, file, filename) {
+        let filenameToNorm = utf8.decode(filename.filename)
+        console.log("Uploading: " + filenameToNorm);
+
+        let folder = __dirname + `/files/${req.cookies.to}`
+        try {
+            if (!fs.existsSync(folder)){
+                fs.mkdirSync(folder)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+        let idForFile = Date.now().toString()
+        let folder1 = __dirname + `/files/${req.cookies.to}/${idForFile}`
+        try {
+            if (!fs.existsSync(folder1)){
+                fs.mkdirSync(folder1)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+
+        let filePath = path.join(__dirname + `/files/${req.cookies.to}/${idForFile}/${filenameToNorm}`);
+        fstream = fs.createWriteStream(filePath);
+        file.pipe(fstream);
+        fstream.on('close', function () {
+            try {
+                processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, "wide")
             } catch (e) {
                 console.log(e);
                 res.send(e)
@@ -133,11 +171,18 @@ app.post("/orders", function (req, res) {
             if(req.cookies.to){
                 cookieStore.forEach(e => {
                     if(e.cookie === req.cookies.to){
+                        let calcTypeFormat = "custom";
+                        if(body.data.calc === "digital"){
+                            calcTypeFormat = "A4"
+                        }
+                        if(body.data.calc === "wide"){
+                            calcTypeFormat = "A1"
+                        }
                         let order = {
+                            calc: body.data.calc,
                             id: Date.now().toString(),
-                            name : "БЕЗ ФАЙЛУ",
-                            calc: body.calc,
-                            format: "А4",
+                            name : `БЕЗ ФАЙЛУ ${body.data.calc}`,
+                            format: calcTypeFormat,
                             countInFile: 1
                         }
                         e.orders.push(order)
@@ -278,7 +323,7 @@ function sessionHave (req) {
     return have;
 }
 
-async function processing(filePath, cookies, filenameToNorm, res, id){
+async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
     console.log(mime.getType(filePath));
     if(
         mime.getType(filePath) === "image/jpeg" ||
@@ -303,6 +348,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id){
         cookieStore.forEach(e => {
             if(e.cookie === cookies){
                 let order = {
+                    calc: calcType,
                     id: id,
                     name : filenameToNorm,
                     url: ress,
@@ -334,6 +380,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id){
         cookieStore.forEach(e => {
             if(e.cookie === cookies){
                 let order = {
+                    calc: calcType,
                     id: id,
                     name : filenameToNorm,
                     url: ress,
@@ -344,20 +391,18 @@ async function processing(filePath, cookies, filenameToNorm, res, id){
                 res.send(order)
             }
         })
-
-
     }
     else if(mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
-        docToPdf(filePath, cookies, filenameToNorm, res, id)
+        docToPdf(filePath, cookies, filenameToNorm, res, id, calcType)
     }
     else if(mime.getType(filePath) === "application/msword"){
-        docToPdf(filePath, cookies, filenameToNorm, res, id)
+        docToPdf(filePath, cookies, filenameToNorm, res, id, calcType)
     }
     else if(mime.getType(filePath) === "application/powerpoint"){
-        docToPdf(filePath, cookies, filenameToNorm, res, id)
+        docToPdf(filePath, cookies, filenameToNorm, res, id, calcType)
     }
     else if(mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.presentationml.presentation"){
-        docToPdf(filePath, cookies, filenameToNorm, res, id)
+        docToPdf(filePath, cookies, filenameToNorm, res, id, calcType)
     }
     else {
         let ress = {
@@ -367,6 +412,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id){
         cookieStore.forEach(e => {
             if(e.cookie === cookies){
                 let order = {
+                    calc: calcType,
                     id: id,
                     name : filenameToNorm,
                     url: ress,
@@ -385,7 +431,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id){
     }
 }
 
-async function docToPdf(inputPath, cookies, filenameToNorm, res, id) {
+async function docToPdf(inputPath, cookies, filenameToNorm, res, id, calcType) {
     let folder = __dirname + `/files/${cookies}/${id}/pdf`
     try {
         if (!fs.existsSync(folder)){
@@ -404,7 +450,7 @@ async function docToPdf(inputPath, cookies, filenameToNorm, res, id) {
     await fsp.writeFile(outputPath, pdfBuf);
     console.log("sucess in pdf!!!"+filenameToNorm);
 
-    getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputPath)
+    getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputPath, calcType)
 
     // await toPng(outputPath, cookies, filenameToNorm, res, id)
 }
@@ -428,7 +474,7 @@ function getContentType(url) {
     }
 }
 
-async function getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputPath) {
+async function getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputPath, calcType) {
     try {
         console.log(outputPath);
         const pdfPath =
@@ -447,6 +493,7 @@ async function getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputP
             cookieStore.forEach(e => {
                 if(e.cookie === cookies){
                     let order = {
+                        calc: calcType,
                         id: id,
                         name : filenameToNorm,
                         url: ress,
@@ -468,6 +515,7 @@ async function getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputP
         cookieStore.forEach(e => {
             if(e.cookie === cookies){
                 let order = {
+                    calc: calcType,
                     id: id,
                     name : filenameToNorm,
                     url: ress,

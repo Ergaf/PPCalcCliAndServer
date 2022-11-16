@@ -17,17 +17,24 @@ const widescreenPrint = document.querySelector("#widescreenPrint");
 const fileClassCalcToModal = document.querySelector("#fileClassCalcToModal");
 const toUseButtons = document.querySelector("#toUseButtons");
 const destinyThisButtons = document.querySelector("#destinyThisButtons");
+const toHomeButton = document.querySelector("#toHomeButton");
 
 const luvers = document.querySelector("#luvers");
 const bannerVarit = document.querySelector("#bannerVarit");
 const floorLamination = document.querySelector("#floorLamination");
-const matteLamination = document.querySelector("#matteLamination");
-const glossLamination = document.querySelector("#glossLamination");
+const widthLamination = document.querySelector("#widthLamination");
 
 
 
 
-
+toHomeButton.addEventListener("click", function () {
+    digitalPrintingContainer.classList.add("d-none")
+    mainDisplay.classList.remove("d-none")
+})
+toHomeButton.addEventListener("click", function () {
+    digitalPrintingContainer.classList.add("d-none")
+    mainDisplay.classList.remove("d-none")
+})
 
 digitalPrint.addEventListener("click", event => {
     fileClassCalcToModal.innerHTML = "digital"
@@ -256,19 +263,21 @@ fetch("/orders")
     .then(response => response.json())
     .then(json => {
         console.log(json);
-        if(json.orders.length !== 0){
-            // mainDisplay.classList.add("d-none")
-            // digitalPrintingContainer.classList.remove("d-none")
+        if(json.orders){
+            if(json.orders.length !== 0){
+                // mainDisplay.classList.add("d-none")
+                // digitalPrintingContainer.classList.remove("d-none")
+            }
+            json.orders.forEach(o => {
+                let file1 = new file(o.name, o.id)
+                file1.url = o.url
+                file1.format = o.format
+                file1.calc = o.calc
+                file1.countInFile = o.countInFile
+                allFiles.push(file1)
+                file1.createFileContainer()
+            })
         }
-        json.orders.forEach(o => {
-            let file1 = new file(o.name, o.id)
-            file1.url = o.url
-            file1.format = o.format
-            file1.calc = o.calc
-            file1.countInFile = o.countInFile
-            allFiles.push(file1)
-            file1.createFileContainer()
-        })
     })
 
 let optContainer = document.querySelector(".optionsContainer")
@@ -299,12 +308,14 @@ sizeX.addEventListener("change", function () {
     if(sizeX.value < 45){
         sizeX.value = 45
     }
-    if(sizeX.value > 310){
-        if(sizeY.value > 310){
-            sizeY.value = 310
-        }
-        if(sizeX.value > 440){
-            sizeX.value = 440
+    if(thisFile.calc === "digital"){
+        if(sizeX.value > 310){
+            if(sizeY.value > 310){
+                sizeY.value = 310
+            }
+            if(sizeX.value > 440){
+                sizeX.value = 440
+            }
         }
     }
     thisFile.x = sizeX.value
@@ -323,12 +334,14 @@ sizeX.addEventListener("wheel", function () {
     if(sizeX.value < 45){
         sizeX.value = 45
     }
-    if(sizeX.value > 310){
-        if(sizeY.value > 310){
-            sizeY.value = 310
-        }
-        if(sizeX.value > 440){
-            sizeX.value = 440
+    if(thisFile.calc === "digital"){
+        if(sizeX.value > 310){
+            if(sizeY.value > 310){
+                sizeY.value = 310
+            }
+            if(sizeX.value > 440){
+                sizeX.value = 440
+            }
         }
     }
     thisFile.x = sizeX.value
@@ -340,12 +353,14 @@ sizeY.addEventListener("change", function () {
     if(sizeY.value < 45){
         sizeY.value = 45
     }
-    if(sizeY.value > 310){
-        if(sizeX.value > 310){
-            sizeX.value = 310
-        }
-        if(sizeY.value > 440){
-            sizeY.value = 440
+    if(thisFile.calc === "digital"){
+        if(sizeY.value > 310){
+            if(sizeX.value > 310){
+                sizeX.value = 310
+            }
+            if(sizeY.value > 440){
+                sizeY.value = 440
+            }
         }
     }
     thisFile.y = sizeY.value
@@ -364,12 +379,14 @@ sizeY.addEventListener("wheel", function () {
     if(sizeY.value < 45){
         sizeY.value = 45
     }
-    if(sizeY.value > 310){
-        if(sizeX.value > 310){
-            sizeX.value = 310
-        }
-        if(sizeY.value > 440){
-            sizeY.value = 440
+    if(thisFile.calc === "digital"){
+        if(sizeY.value > 310){
+            if(sizeX.value > 310){
+                sizeX.value = 310
+            }
+            if(sizeY.value > 440){
+                sizeY.value = 440
+            }
         }
     }
     thisFile.y = sizeY.value

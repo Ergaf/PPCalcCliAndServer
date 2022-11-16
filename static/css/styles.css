@@ -75,11 +75,11 @@ body{
 }
 .FilesContainer {
     display: flex;
-    flex-direction: row-reverse;
+    /*flex-direction: row-reverse;*/
     /*position: absolute;*/
     /*right: 4vw;*/
     /*top: 5vh;*/
-    opacity: 50%;
+    /*opacity: 50%;*/
 }
 .FilesContainer:hover {
     opacity: 1;
@@ -218,6 +218,7 @@ body{
 .settingsContainer {
     display: none;
     z-index: 999;
+    overflow: auto;
 }
 .optionsContainer {
     display: flex;
