@@ -17,6 +17,18 @@ const widescreenPrint = document.querySelector("#widescreenPrint");
 const fileClassCalcToModal = document.querySelector("#fileClassCalcToModal");
 const toUseButtons = document.querySelector("#toUseButtons");
 const destinyThisButtons = document.querySelector("#destinyThisButtons");
+
+const luvers = document.querySelector("#luvers");
+const bannerVarit = document.querySelector("#bannerVarit");
+const floorLamination = document.querySelector("#floorLamination");
+const matteLamination = document.querySelector("#matteLamination");
+const glossLamination = document.querySelector("#glossLamination");
+
+
+
+
+
+
 digitalPrint.addEventListener("click", event => {
     fileClassCalcToModal.innerHTML = "digital"
 })

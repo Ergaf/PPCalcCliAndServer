@@ -284,3 +284,7 @@ body{
 .cursorPointer:hover {
     cursor: pointer;
 }
+.horizontalLine {
+    border-bottom: solid #a8a8a8;
+    margin-top: 4px;
+}

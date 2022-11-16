@@ -28,6 +28,11 @@ class file {
     list;
     calc;
     touse;
+    luvers;
+    bannerVarit;
+    floorLamination;
+    matteLamination;
+    glossLamination;
     constructor (name, id) {
         this._name = name;
         this._id = id;
@@ -127,22 +132,23 @@ class file {
                     <div class="btn" toFile="A7">A7</div>
                     <div class="btn" toFile="A6">A6</div>
                     <div class="btn" toFile="A5">A5</div>
-                    <div class="btn" toFile="А4">А4</div>
-                    <div class="btn" toFile="А3">А3</div>
+                    <div class="btn" toFile="A4">А4</div>
+                    <div class="btn" toFile="A3">А3</div>
                     <div class="btn" toFile="custom">Свій розмір</div>
-    `;
+                        `;
             formatButtons.innerHTML = formats;
             colorButtons.classList.remove("d-none")
             sidesButtons.classList.remove("d-none")
             paperButtons.classList.remove("d-none")
             destinyThisButtons.classList.add("d-none")
+            toUseButtons.classList.add("d-none");
             this.renderDigitalCalc(priceCalc)
         }
         else if(thisFile.calc === "wide"){
             let formats = `
-                    <div class="btn" toFile="А1">А1</div>
-                    <div class="btn" toFile="А2">А2</div>
-                    <div class="btn" toFile="А0">А0</div>
+                    <div class="btn" toFile="A2">А2</div>
+                    <div class="btn" toFile="A1">А1</div>
+                    <div class="btn" toFile="A0">А0</div>
                     <div class="btn" toFile="custom">Свій розмір</div>
                         `;
             formatButtons.innerHTML = formats;
@@ -165,6 +171,8 @@ class file {
             stickerCuttingThis.classList.add("d-none")
             backLiningText.classList.add("d-none")
 
+            toUseButtons.classList.remove("d-none");
+            accordionOptions.classList.remove("d-none");
             this.renderWideCalc(priceCalc)
         }
         Array.prototype.slice.call(formatButtons.children).forEach(e => {
@@ -276,7 +284,6 @@ class file {
             primirnyk.innerText = "примірників"
         }
 
-        price.value = priceCalc
         text.innerText = this.format
             +", "
             +this.color
@@ -394,7 +401,6 @@ class file {
 
         let bindingPrice = getBindingFromPaperCount("брошурування").filter(e => e[0] === this.binding)
 
-
         priceCalc = priceCalc + bigPrice
         priceCalc = priceCalc + holesPrice
         priceCalc = priceCalc + roundCornerPrice
@@ -402,6 +408,8 @@ class file {
         if(bindingPrice[0]){
             priceCalc = priceCalc + bindingPrice[0][1]
         }
+        console.log(priceCalc);
+        price.value = priceCalc
 
         destinyButtons.innerHTML = ""
         roundCornerButtons.innerHTML = ""
@@ -777,6 +785,87 @@ class file {
                     elem.classList.add("btnm-act")
                 }
                 destinyThisButtons.appendChild(elem)
+            })
+        }
+
+
+        luvers.innerHTML = ""
+        bannerVarit.innerHTML = ""
+        floorLamination.innerHTML = ""
+        matteLamination.innerHTML = ""
+        glossLamination.innerHTML = ""
+        if(getVariantsFromNameInData(`Доп ${thisFile.destiny}`) !== undefined){
+            luvers.classList.remove("d-none")
+            bannerVarit.classList.remove("d-none")
+            floorLamination.classList.remove("d-none")
+            matteLamination.classList.remove("d-none")
+            glossLamination.classList.remove("d-none")
+            getVariantsFromNameInData(`Доп ${thisFile.destiny}`).forEach(e => {
+                if(e[0] === "Встановлення люверсов"){
+                    let elem = document.createElement("div")
+                    elem.innerText = e[0]
+                    elem.classList.add("btn")
+                    elem.addEventListener("click", function () {
+                        thisFile.luvers = elem.innerText
+                        thisFile.renderSettings()
+                    })
+                    if(e[0] === thisFile.luvers){
+                        elem.classList.add("btnm-act")
+                    }
+                    luvers.appendChild(elem)
+                }
+                if(e[0] === "Проварювання банера"){
+                    let elem = document.createElement("div")
+                    elem.innerText = e[0]
+                    elem.classList.add("btn")
+                    elem.addEventListener("click", function () {
+                        thisFile.bannerVarit = elem.innerText
+                        thisFile.renderSettings()
+                    })
+                    if(e[0] === thisFile.bannerVarit){
+                        elem.classList.add("btnm-act")
+                    }
+                    bannerVarit.appendChild(elem)
+                }
+                if(e[0] === "Напольне ламінування"){
+                    let elem = document.createElement("div")
+                    elem.innerText = e[0]
+                    elem.classList.add("btn")
+                    elem.addEventListener("click", function () {
+                        thisFile.floorLamination = elem.innerText
+                        thisFile.renderSettings()
+                    })
+                    if(e[0] === thisFile.floorLamination){
+                        elem.classList.add("btnm-act")
+                    }
+                    floorLamination.appendChild(elem)
+                }
+                if(e[0] === "Ламінування матове"){
+                    let elem = document.createElement("div")
+                    elem.innerText = e[0]
+                    elem.classList.add("btn")
+                    elem.addEventListener("click", function () {
+                        thisFile.matteLamination = elem.innerText
+                        thisFile.renderSettings()
+                    })
+                    if(e[0] === thisFile.matteLamination){
+                        elem.classList.add("btnm-act")
+                    }
+                    matteLamination.appendChild(elem)
+                }
+                if(e[0] === "Ламінування глянцеве"){
+                    let elem = document.createElement("div")
+                    elem.innerText = e[0]
+                    elem.classList.add("btn")
+                    elem.addEventListener("click", function () {
+                        thisFile.glossLamination = elem.innerText
+                        thisFile.renderSettings()
+                    })
+                    if(e[0] === thisFile.glossLamination){
+                        elem.classList.add("btnm-act")
+                    }
+                    glossLamination.appendChild(elem)
+                }
             })
         }
     }
