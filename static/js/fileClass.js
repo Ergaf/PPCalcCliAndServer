@@ -141,7 +141,7 @@ class file {
             paperButtons.classList.remove("d-none")
             destinyThisButtons.classList.add("d-none")
             toUseButtons.classList.add("d-none");
-            this.renderDigitalCalc(priceCalc)
+            renderDigitalCalc(priceCalc)
         }
         else if(thisFile.calc === "wide"){
             let formats = `
@@ -172,8 +172,41 @@ class file {
 
             toUseButtons.classList.remove("d-none");
             accordionOptions.classList.remove("d-none");
-            this.renderWideCalc(priceCalc)
+            renderWideCalc(priceCalc)
+        } else if(thisFile.calc === "photo"){
+            let formats = `
+                    <div class="btn" toFile="photo1">photo1</div>
+                    <div class="btn" toFile="photo2">photo2</div>
+                    <div class="btn" toFile="photo3">photo3</div>
+                    <div class="btn" toFile="A4">А4</div>
+                    <div class="btn" toFile="custom">Свій розмір</div>
+                        `;
+            formatButtons.innerHTML = formats;
+
+
+            toUseButtons.classList.add("d-none");
+            accordionOptions.classList.add("d-none");
+
+            colorButtons.classList.add("d-none")
+            sidesButtons.classList.add("d-none")
+            paperButtons.classList.add("d-none")
+
+            destinyButtons.innerHTML = ""
+            roundCornerButtons.classList.add("d-none")
+            holesButtons.classList.add("d-none")
+            bigButtons.classList.add("d-none")
+            laminationButtons.classList.add("d-none")
+            bindingSelectButtons.classList.add("d-none")
+            bindingButtons.classList.add("d-none")
+            cowerButtons.classList.add("d-none")
+            frontLiningButtons.classList.add("d-none")
+            backLiningButtons.classList.add("d-none")
+            stickerCutting.classList.add("d-none")
+            stickerCuttingThis.classList.add("d-none")
+            backLiningText.classList.add("d-none")
         }
+
+
         Array.prototype.slice.call(formatButtons.children).forEach(e => {
             e.addEventListener("click", function () {
                 thisFile.format = e.getAttribute("toFile")
@@ -242,15 +275,25 @@ class file {
             }
         }
         else {
-            imgInServer.setAttribute("src", "")
-            containerForImgInServer.classList.add("d-none")
-            containerForPdfInServer.classList.remove("d-none")
-            if(!this.url2.pdf || lastFileId !== thisFile._id){
-                pdfjsLib.getDocument("/files/totest/file1.pdf").then((pdf) => {
-                    this.url2.pdf = pdf
-                    render();
-                })
+            // imgInServer.setAttribute("src", "")
+            containerForImgInServer.classList.remove("d-none")
+            containerForPdfInServer.classList.add("d-none")
+
+            let image = new Image();
+            image.onload = function(){
+                imgInServer.setAttribute("src", image.src)
+                renderListAndCard()
             }
+            image.src = "/files/totest/file-1.png";
+            document.querySelector("#page_count").innerText = 1
+
+
+            // if(!this.url2.pdf || lastFileId !== thisFile._id){
+            //     pdfjsLib.getDocument("/files/totest/file-1.png").then((pdf) => {
+            //         this.url2.pdf = pdf
+            //         render();
+            //     })
+            // }
         }
         renderListAndCard()
         if(thisFile.url2.pdf){
@@ -362,515 +405,6 @@ class file {
         else {
             this.x = sizes.y
             this.y = sizes.x
-        }
-    }
-
-    renderDigitalCalc(priceCalc){
-        if(this.format === "A4" || this.format === "A3"){
-            this.realCount = this._count*this.countInFile
-            let paperPrice = getPriceFromCountPaper(thisFile.destiny)
-            let laminationPrice = getPriceFromCount(thisFile.lamination, "Ламінування", thisFile.format)
-            if(!isNaN(paperPrice) && paperPrice !== undefined){
-                priceCalc = paperPrice*this.realCount
-            }
-            if(!isNaN(laminationPrice) && laminationPrice !== undefined){
-                let lamPrice = laminationPrice*this.realCount
-                priceCalc = priceCalc + lamPrice
-            }
-        }
-        else {
-            let sss = Math.ceil(this._count*this.countInFile / getHowInASheet())
-            this.realCount = sss
-            let paperPrice = getPriceFromCountPaper(thisFile.destiny)
-            let laminationPrice = getPriceFromCount(thisFile.lamination, "Ламінування", thisFile.format)
-            if(!isNaN(paperPrice) && paperPrice !== undefined){
-                priceCalc = paperPrice*sss;
-            }
-            if(!isNaN(laminationPrice) && laminationPrice !== undefined){
-                let lamPrice = laminationPrice*sss
-                priceCalc = priceCalc + lamPrice;
-            }
-        }
-        let bigPrice = getPriceFromCount(thisFile.big, "згиби")*this.allPaperCount
-        let holesPrice = getPriceFromCount(thisFile.holes, "отвір")*this.allPaperCount
-        let roundCornerPrice = getPriceFromCount(thisFile.roundCorner, "кути")*this.allPaperCount
-        let cowerPrice = getPriceFromCount(thisFile.cower, "обкладинка")*this.allPaperCount
-
-
-
-        let bindingPrice = getBindingFromPaperCount("брошурування").filter(e => e[0] === this.binding)
-
-        priceCalc = priceCalc + bigPrice
-        priceCalc = priceCalc + holesPrice
-        priceCalc = priceCalc + roundCornerPrice
-        priceCalc = priceCalc + cowerPrice
-        if(bindingPrice[0]){
-            priceCalc = priceCalc + bindingPrice[0][1]
-        }
-        console.log(priceCalc);
-        price.value = priceCalc
-
-        destinyButtons.innerHTML = ""
-        roundCornerButtons.innerHTML = ""
-        roundCornerButtons.classList.remove("d-none")
-        holesButtons.innerHTML = ""
-        holesButtons.classList.remove("d-none")
-        bigButtons.innerHTML = ""
-        bigButtons.classList.remove("d-none")
-        laminationButtons.innerHTML = ""
-        laminationButtons.classList.remove("d-none")
-        bindingSelectButtons.innerHTML = ""
-        bindingSelectButtons.classList.remove("d-none")
-        bindingButtons.innerHTML = ""
-        bindingButtons.classList.remove("d-none")
-        cowerButtons.innerHTML = ""
-        cowerButtons.classList.remove("d-none")
-        frontLiningButtons.innerHTML = ""
-        frontLiningButtons.classList.remove("d-none")
-        backLiningButtons.innerHTML = ""
-        backLiningButtons.classList.remove("d-none")
-
-        stickerCutting.innerHTML = ""
-        stickerCutting.classList.remove("d-none")
-        stickerCuttingThis.innerHTML = ""
-        stickerCuttingThis.classList.remove("d-none")
-
-        backLiningText.innerText = ""
-        backLiningText.classList.remove("d-none")
-        paperButtons.innerHTML = ""
-        if(getVariantsFromNameInData("на чому друк") !== undefined){
-            getVariantsFromNameInData("на чому друк").forEach(e => {
-                if(e[0][0] !== "!"){
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.setAttribute("toFile", e[0])
-                    elem.addEventListener("click", function () {
-                        thisFile.paper = elem.getAttribute("toFile")
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.paper){
-                        elem.classList.add("btnm-act")
-                    }
-                    paperButtons.appendChild(elem)
-                }
-            })
-        }
-
-
-        if(getVariantsFromNameInData(thisFile.paper) !== undefined){
-            getVariantsFromNameInData(thisFile.paper).forEach(e => {
-                if(e[0][0] !== "!"){
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.addEventListener("click", function () {
-                        thisFile.destiny = elem.innerText
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.destiny){
-                        elem.classList.add("btnm-act")
-                    }
-                    destinyButtons.appendChild(elem)
-                }
-            })
-        }
-        if(this.paper === "на папері"){
-            accordionOptions.classList.remove("d-none")
-            thisFile.stickerCutting = undefined
-            thisFile.stickerCuttingThis = undefined
-
-
-            if(getVariantsFromNameInData("згиби") !== undefined){
-                if(this.big === undefined){
-                    this.big = "без згинання"
-                }
-                getVariantsFromNameInData("згиби").forEach(e => {
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.addEventListener("click", function () {
-                        thisFile.big = elem.innerText
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.big){
-                        elem.classList.add("btnm-act")
-                    }
-                    bigButtons.appendChild(elem)
-                })
-            }
-            if(getVariantsFromNameInData("отвір") !== undefined){
-                if(this.holes === undefined){
-                    this.holes = "без отворів"
-                }
-                getVariantsFromNameInData("отвір").forEach(e => {
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.addEventListener("click", function () {
-                        thisFile.holes = elem.innerText
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.holes){
-                        elem.classList.add("btnm-act")
-                    }
-                    holesButtons.appendChild(elem)
-                })
-            }
-            if(getVariantsFromNameInData("кути") !== undefined){
-                if(this.roundCorner === undefined){
-                    this.roundCorner = "без обрізки кутів"
-                }
-                getVariantsFromNameInData("кути").forEach(e => {
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.addEventListener("click", function () {
-                        thisFile.roundCorner = elem.innerText
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.roundCorner){
-                        elem.classList.add("btnm-act")
-                    }
-                    roundCornerButtons.appendChild(elem)
-                })
-            }
-
-
-            if(getVariantsFromNameInData("ламінування") !== undefined){
-                if(this.lamination === undefined){
-                    this.lamination = "без ламінації"
-                }
-                getVariantsFromNameInData("ламінування").forEach(e => {
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.addEventListener("click", function () {
-                        thisFile.lamination = elem.innerText
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.lamination){
-                        elem.classList.add("btnm-act")
-                    }
-                    laminationButtons.appendChild(elem)
-                })
-            }
-            if(getBindingFromPaperCount("брошурування") !== undefined){
-                if(this.binding === undefined){
-                    this.binding = "без брошурування"
-                }
-                getBindingFromPaperCount("брошурування").forEach(e => {
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    if(e[0] === "на пластикову" || e[0] === "на металеву" || e[0] === "прошивка дипломних робіт"){
-                        elem.addEventListener("click", function () {
-                            thisFile.bindingSelect = undefined
-                            thisFile.cower = undefined
-                            thisFile.binding = elem.innerText
-                            thisFile.renderSettings()
-                        })
-                    }
-                    else {
-                        elem.addEventListener("click", function () {
-                            thisFile.binding = elem.innerText
-                            thisFile.bindingSelect = undefined
-                            thisFile.cower = undefined
-                            thisFile.renderSettings()
-                        })
-                    }
-                    if(e[0] === thisFile.binding){
-                        elem.classList.add("btnm-act")
-                    }
-                    bindingButtons.appendChild(elem)
-                })
-            }
-            if(getVariantsFromNameInData(this.binding) !== undefined){
-                getVariantsFromNameInData(this.binding).forEach(e => {
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.addEventListener("click", function () {
-                        thisFile.bindingSelect = elem.innerText
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.bindingSelect){
-                        elem.classList.add("btnm-act")
-                    }
-                    bindingSelectButtons.appendChild(elem)
-                })
-            }
-            if(this.binding === "на пластикову" || this.binding === "на металеву"){
-                backLiningText.classList.remove("nonDisplay");
-                frontLiningButtons.classList.remove("nonDisplay");
-                backLiningButtons.classList.remove("nonDisplay");
-                if(this.bindingSelect !== undefined){
-                    if(this.cower === undefined){
-                        this.cower = "без обкладинки"
-                    }
-                    if(getVariantsFromNameInData("обкладинка") !== undefined){
-                        if(this.cower === undefined){
-                            this.cower = "без обкладинки"
-                        }
-                        getVariantsFromNameInData("обкладинка").forEach(e => {
-                            let elem = document.createElement("div")
-                            elem.innerText = e[0]
-                            elem.classList.add("btn")
-                            elem.addEventListener("click", function () {
-                                thisFile.cower = elem.innerText
-                                thisFile.renderSettings()
-                            })
-                            if(e[0] === thisFile.cower){
-                                elem.classList.add("btnm-act")
-                            }
-                            cowerButtons.appendChild(elem)
-                        })
-                    }
-
-                    backLiningText.innerText = "з задньою подкладкою"
-                    if(this.frontLining === undefined){
-                        this.frontLining = "з прозорою лицьовою підкладкою"
-                    }
-                    if(getVariantsFromNameInData("лицьова підкладка") !== undefined){
-                        getVariantsFromNameInData("лицьова підкладка").forEach(e => {
-                            let elem = document.createElement("div")
-                            elem.innerText = e[0]
-                            elem.classList.add("btn")
-                            elem.addEventListener("click", function () {
-                                thisFile.frontLining = elem.innerText
-                                thisFile.renderSettings()
-                            })
-                            if(e[0] === thisFile.frontLining){
-                                elem.classList.add("btnm-act")
-                            }
-                            frontLiningButtons.appendChild(elem)
-                        })
-                    }
-                    if(this.backLining === undefined){
-                        this.backLining = ""
-                    }
-                    if(getVariantsFromNameInData("задньою підкладкою") !== undefined){
-                        getVariantsFromNameInData("задньою підкладкою").forEach(e => {
-                            let elem = document.createElement("div")
-                            elem.innerText = e[0]
-                            elem.classList.add("btn")
-                            elem.addEventListener("click", function () {
-                                thisFile.backLining = elem.innerText
-                                thisFile.renderSettings()
-                            })
-                            if(e[0] === thisFile.backLining){
-                                elem.classList.add("btnm-act")
-                            }
-                            backLiningButtons.appendChild(elem)
-                        })
-                    }
-
-                }
-            }
-        }
-        else if(this.paper === "на самоклейці"){
-            accordionOptions.classList.remove("d-none")
-            thisFile.lamination = undefined
-            thisFile.bindingSelect = undefined
-            thisFile.binding = undefined
-            thisFile.cower = undefined
-            thisFile.frontLining = undefined
-            thisFile.backLining = undefined
-            thisFile.big = undefined
-            thisFile.holes = undefined
-            thisFile.roundCorner = undefined
-
-            if(getVariantsFromNameInData("порізка самоклейки") !== undefined){
-                if(this.stickerCutting === undefined){
-                    this.stickerCutting = "без порізки"
-                }
-                getVariantsFromNameInData("порізка самоклейки").forEach(e => {
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.addEventListener("click", function () {
-                        thisFile.stickerCutting = elem.innerText
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.stickerCutting){
-                        elem.classList.add("btnm-act")
-                    }
-                    stickerCutting.appendChild(elem)
-                })
-            }
-
-            if(getVariantsFromNameInData(this.stickerCutting) !== undefined){
-                // if(this.stickerCuttingThis === undefined){
-                //     this.stickerCuttingThis = "без порізки"
-                // }
-                getVariantsFromNameInData(this.stickerCutting).forEach(e => {
-                    let elem = document.createElement("div")
-                    elem.innerText = e[0]
-                    elem.classList.add("btn")
-                    elem.addEventListener("click", function () {
-                        thisFile.stickerCuttingThis = elem.innerText
-                        thisFile.renderSettings()
-                    })
-                    if(e[0] === thisFile.stickerCuttingThis){
-                        elem.classList.add("btnm-act")
-                    }
-                    stickerCuttingThis.appendChild(elem)
-                })
-            }
-
-        }
-        else {
-            accordionOptions.classList.add("d-none")
-            thisFile.lamination = undefined
-            thisFile.bindingSelect = undefined
-            thisFile.binding = undefined
-            thisFile.cower = undefined
-            thisFile.frontLining = undefined
-            thisFile.backLining = undefined
-            thisFile.big = undefined
-            thisFile.holes = undefined
-            thisFile.roundCorner = undefined
-            thisFile.stickerCutting = undefined
-        }
-    }
-
-    renderWideCalc(priceCalc){
-        toUseButtons.innerHTML = ""
-        if(getVariantsFromNameInData("Використання") !== undefined){
-            toUseButtons.classList.remove("d-none")
-            getVariantsFromNameInData("Використання").forEach(e => {
-                let elem = document.createElement("div")
-                elem.innerText = e[0]
-                elem.classList.add("btn")
-                elem.addEventListener("click", function () {
-                    thisFile.touse = elem.innerText
-                    thisFile.renderSettings()
-                })
-                if(e[0] === thisFile.touse){
-                    elem.classList.add("btnm-act")
-                }
-                toUseButtons.appendChild(elem)
-            })
-        }
-        destinyButtons.innerHTML = ""
-        if(getVariantsFromNameInData(thisFile.touse) !== undefined){
-            destinyButtons.classList.remove("d-none")
-            getVariantsFromNameInData(thisFile.touse).forEach(e => {
-                let elem = document.createElement("div")
-                elem.innerText = e[0]
-                elem.classList.add("btn")
-                elem.addEventListener("click", function () {
-                    thisFile.destiny = elem.innerText
-                    thisFile.renderSettings()
-                })
-                if(e[0] === thisFile.destiny){
-                    elem.classList.add("btnm-act")
-                }
-                destinyButtons.appendChild(elem)
-            })
-        }
-        destinyThisButtons.innerHTML = ""
-        if(getVariantsFromNameInData(thisFile.destiny) !== undefined){
-            destinyThisButtons.classList.remove("d-none")
-            getVariantsFromNameInData(thisFile.destiny).forEach(e => {
-                let elem = document.createElement("div")
-                elem.innerText = e[0]
-                elem.classList.add("btn")
-                elem.addEventListener("click", function () {
-                    thisFile.destinyThis = elem.innerText
-                    thisFile.renderSettings()
-                })
-                if(e[0] === thisFile.destinyThis){
-                    elem.classList.add("btnm-act")
-                }
-                destinyThisButtons.appendChild(elem)
-            })
-        }
-
-
-        luvers.innerHTML = ""
-        bannerVarit.innerHTML = ""
-        floorLamination.innerHTML = ""
-        widthLamination.innerHTML = ""
-        if(getVariantsFromNameInData(`Доп ${thisFile.destiny}`) !== undefined){
-            luvers.classList.remove("d-none")
-            bannerVarit.classList.remove("d-none")
-            floorLamination.classList.remove("d-none")
-            widthLamination.classList.remove("d-none")
-            getVariantsFromNameInData(`Доп ${thisFile.destiny}`).forEach(e => {
-                if(e[0] === "Встановлення люверсов"){
-                    let variants = getVariantsFromNameInData(`Встановлення люверсов`);
-                    if(variants !== undefined){
-                        variants.forEach(option => {
-                            let elem = document.createElement("div")
-                            elem.innerText = option[0]
-                            elem.classList.add("btn")
-                            elem.addEventListener("click", function () {
-                                thisFile.luvers = elem.innerText
-                                thisFile.renderSettings()
-                            })
-                            if(option[0] === thisFile.luvers){
-                                elem.classList.add("btnm-act")
-                            }
-                            luvers.appendChild(elem)
-                        })
-                    }
-                }
-                if(e[0] === "Проварювання банера"){
-                    let variants = getVariantsFromNameInData(`Проварювання банера`);
-                    if(variants !== undefined){
-                        variants.forEach(option => {
-                            let elem = document.createElement("div")
-                            elem.innerText = option[0]
-                            elem.classList.add("btn")
-                            elem.addEventListener("click", function () {
-                                thisFile.bannerVarit = elem.innerText
-                                thisFile.renderSettings()
-                            })
-                            if(option[0] === thisFile.bannerVarit){
-                                elem.classList.add("btnm-act")
-                            }
-                            bannerVarit.appendChild(elem)
-                        })
-                    }
-                }
-                if(e[0] === "Напольне ламінування"){
-                    let variants = getVariantsFromNameInData(`Напольне ламінування`);
-                    if(variants !== undefined){
-                        variants.forEach(option => {
-                            let elem = document.createElement("div")
-                            elem.innerText = option[0]
-                            elem.classList.add("btn")
-                            elem.addEventListener("click", function () {
-                                thisFile.floorLamination = elem.innerText
-                                thisFile.renderSettings()
-                            })
-                            if(option[0] === thisFile.floorLamination){
-                                elem.classList.add("btnm-act")
-                            }
-                            floorLamination.appendChild(elem)
-                        })
-                    }
-                }
-                if(e[0] === "Ламінування"){
-                    let variants = getVariantsFromNameInData(`Ламінування`);
-                    if(variants !== undefined){
-                        variants.forEach(option => {
-                            let elem = document.createElement("div")
-                            elem.innerText = option[0]
-                            elem.classList.add("btn")
-                            elem.addEventListener("click", function () {
-                                thisFile.widthLamination = elem.innerText
-                                thisFile.renderSettings()
-                            })
-                            if(option[0] === thisFile.widthLamination){
-                                elem.classList.add("btnm-act")
-                            }
-                            widthLamination.appendChild(elem)
-                        })
-                    }
-                }
-            })
         }
     }
 }

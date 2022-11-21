@@ -289,3 +289,6 @@ body{
     border-bottom: solid #a8a8a8;
     margin-top: 4px;
 }
+.notValid {
+    background: red;
+}

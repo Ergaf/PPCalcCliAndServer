@@ -41,6 +41,7 @@
     "pdf-img-convert": "^1.0.6",
     "pdf2pic": "^2.1.4",
     "pdfjs-dist": "^3.0.279",
-    "read-excel-file": "^5.5.3"
+    "read-excel-file": "^5.5.3",
+    "tiff-to-png": "^2.0.2"
   }
 }

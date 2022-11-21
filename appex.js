@@ -24,6 +24,8 @@ const fsEx = require('fs-extra');
 //         console.log("Подключение к серверу MySQL успешно установлено");
 //     }
 // });
+const ConvertTiff = require('tiff-to-png');
+
 
 let tableMain;
 readXlsxFile(fs.createReadStream(__dirname + "/data/tableMain.xlsx")).then((rows) => {
@@ -144,6 +146,44 @@ app.post("/upload2", function (req, res) {
         fstream.on('close', function () {
             try {
                 processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, "wide")
+            } catch (e) {
+                console.log(e);
+                res.send(e)
+            }
+        });
+    });
+});
+app.post("/upload3", function (req, res) {
+    let fstream;
+    req.pipe(req.busboy);
+    req.busboy.on('file', function (fieldname, file, filename) {
+        let filenameToNorm = utf8.decode(filename.filename)
+        console.log("Uploading: " + filenameToNorm);
+
+        let folder = __dirname + `/files/${req.cookies.to}`
+        try {
+            if (!fs.existsSync(folder)){
+                fs.mkdirSync(folder)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+        let idForFile = Date.now().toString()
+        let folder1 = __dirname + `/files/${req.cookies.to}/${idForFile}`
+        try {
+            if (!fs.existsSync(folder1)){
+                fs.mkdirSync(folder1)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+
+        let filePath = path.join(__dirname + `/files/${req.cookies.to}/${idForFile}/${filenameToNorm}`);
+        fstream = fs.createWriteStream(filePath);
+        file.pipe(fstream);
+        fstream.on('close', function () {
+            try {
+                processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, "photo")
             } catch (e) {
                 console.log(e);
                 res.send(e)
@@ -404,6 +444,9 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
     else if(mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.presentationml.presentation"){
         docToPdf(filePath, cookies, filenameToNorm, res, id, calcType)
     }
+    else if(mime.getType(filePath) === "image/tiff"){
+        tiffToPng(filePath, cookies, filenameToNorm, res, id, calcType)
+    }
     else {
         let ress = {
             url: `/files/totest/errorNoFormat.png`,
@@ -662,6 +705,46 @@ function getFilesForAdminView(req, res, url){
         readdirInfo.push(reddirUnit)
         res.send(readdirInfo)
     }
+}
+
+async function tiffToPng(filePath, cookies, filenameToNorm, res, id, calcType) {
+    //need install the imagemagick
+    let folder = __dirname + `/files/${cookies}/${id}/png`
+    try {
+        if (!fs.existsSync(folder)){
+            await fs.mkdirSync(folder)
+        }
+    } catch (err) {
+        console.error(err)
+    }
+
+    let options = {
+        logLevel: 1
+    };
+
+    let converter = new ConvertTiff(options);
+    let location = __dirname + `/files/${cookies}/${id}/png`;
+
+    converter.convertOne(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`, location)
+        .then(({converted, error}) => {
+            let ress = {
+                url: `/files/${cookies}/${id}/png/%d.png`,
+            }
+            cookieStore.forEach(e => {
+                if (e.cookie === cookies) {
+                    let order = {
+                        calc: calcType,
+                        id: id,
+                        name: filenameToNorm,
+                        url: ress,
+                        format: "A4",
+                        countInFile: 1
+                    }
+                    e.orders.push(order)
+                    res.send(order)
+                }
+            })
+        });
 }
 
 // async function toPng(outputPath, cookies, filenameToNorm, res, id) {

@@ -107,18 +107,14 @@
 
     <div class="settingsContainer d-flex d-none">
         <div class="fileSettingsContainer">
-            <div class="d-flex justify-content-center settingElem d-none" id="selectButtonCalc">
+            <div class="d-flex justify-content-center settingElem" id="selectButtonCalc">
                 <div id="digitalCalcSelect" class="btn" toFile="digital">digital</div>
                 <div id="widelCalcSelect" class="btn" toFile="wide">wide</div>
+                <div id="photoCalcSelect" class="btn" toFile="photo">photo</div>
             </div>
             <div class="optionsContainer">
                 <div class="d-flex justify-content-center settingElem" id="formatButtons">
-                    <div class="btn" toFile="A7">A7</div>
-                    <div class="btn" toFile="A6">A6</div>
-                    <div class="btn" toFile="A5">A5</div>
-                    <div class="btn" toFile="A4">A4</div>
-                    <div class="btn" toFile="A3">A3</div>
-                    <div class="btn" toFile="custom">Свій розмір</div>
+
                 </div>
                 <div class="btn-toolbar mb-3 settingElem" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="input-group m-auto">
@@ -280,7 +276,7 @@
             </div>
         </div>
 
-        <div>
+        <div class="d-none">
             <progress id="progressbar" value="0" max="100" style="width: 100%"></progress>
         </div>
 
@@ -319,12 +315,16 @@
             <div class="modal-footer">
                 <!--                <button type="button" class="btnm" data-bs-dismiss="modal">Назад</button>-->
                 <div type="button" id="nonUpload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>
-                <div type="button" id="upload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ</div>
+                <div type="button" id="upload" class="btn">ПРОРАХУВАТИ</div>
             </div>
             </form>
         </div>
     </div>
 </div>
+<script src="js/renders/renderDigitalCalc.js" charset="utf-8"></script>
+<script src="js/renders/renderWideCalc.js" charset="utf-8"></script>
+<script src="js/renders/renderPhotoCalc.js" charset="utf-8"></script>
+<script src="js/jquery-3.6.1.min.js" charset="utf-8"></script>
 <script src="js/pdf.js" charset="utf-8"></script>
 <!--<script src="js/pdf.js.map" charset="utf-8"></script>-->
 <script src="js/pdfRender.js" charset="utf-8"></script>

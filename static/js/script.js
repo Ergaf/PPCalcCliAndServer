@@ -18,6 +18,7 @@ const fileClassCalcToModal = document.querySelector("#fileClassCalcToModal");
 const toUseButtons = document.querySelector("#toUseButtons");
 const destinyThisButtons = document.querySelector("#destinyThisButtons");
 const toHomeButton = document.querySelector("#toHomeButton");
+const photoPrint = document.querySelector("#photoPrint");
 
 const luvers = document.querySelector("#luvers");
 const bannerVarit = document.querySelector("#bannerVarit");
@@ -37,10 +38,16 @@ toHomeButton.addEventListener("click", function () {
 })
 
 digitalPrint.addEventListener("click", event => {
+    imgInp.classList.remove("notValid")
     fileClassCalcToModal.innerHTML = "digital"
 })
 widescreenPrint.addEventListener("click", event => {
+    imgInp.classList.remove("notValid")
     fileClassCalcToModal.innerHTML = "wide"
+})
+photoPrint.addEventListener("click", event => {
+    imgInp.classList.remove("notValid")
+    fileClassCalcToModal.innerHTML = "photo"
 })
 // const digitalCalcButton = document.querySelector("#digitalCalcButton");
 // const digitalCalcButtonNotFile = document.querySelector("#digitalCalcButtonNotFile");
@@ -76,16 +83,17 @@ widescreenPrint.addEventListener("click", event => {
 
 const digitalCalcSelect = document.querySelector("#digitalCalcSelect");
 const widelCalcSelect = document.querySelector("#widelCalcSelect");
+const photoCalcSelect = document.querySelector("#photoCalcSelect");
 digitalCalcSelect.addEventListener("click", event => {
-    widelCalcSelect.classList.remove("btnm-act")
-    digitalCalcSelect.classList.add("btnm-act")
     thisFile.calc = digitalCalcSelect.getAttribute("toFile")
     thisFile.renderSettings()
 })
 widelCalcSelect.addEventListener("click", event => {
-    widelCalcSelect.classList.add("btnm-act")
-    digitalCalcSelect.classList.remove("btnm-act")
     thisFile.calc = widelCalcSelect.getAttribute("toFile")
+    thisFile.renderSettings()
+})
+photoCalcSelect.addEventListener("click", event => {
+    thisFile.calc = photoCalcSelect.getAttribute("toFile")
     thisFile.renderSettings()
 })
 
@@ -139,7 +147,16 @@ nonUpload.addEventListener("click", function () {
         })
 })
 upload.addEventListener("click", function () {
-    uploadFile(imgInp)
+    console.log(imgInp.value);
+    if(imgInp.value){
+        uploadFile(imgInp)
+        imgInp.classList.remove("notValid")
+        $("#exampleModal").modal("hide")
+        // data-bs-dismiss="modal"
+    } else {
+        event.preventDefault()
+        imgInp.classList.add("notValid")
+    }
 })
 
 // document.querySelector("#digitalCalcButton").addEventListener("click", e => {
@@ -162,19 +179,51 @@ function uploadFile(fileInput) {
         };
         let fd = new FormData();
         fd.append('file', fileInput.files[0], fileInput.files[0].name)
-        axios.post("/upload", fd, config)
-            .then(e => {
-                mainDisplay.classList.add("d-none")
-                digitalPrintingContainer.classList.remove("d-none")
-                let file1 = new file(e.data.name, e.data.id)
-                file1.url = e.data.url
-                file1.format = e.data.format
-                file1.countInFile = e.data.countInFile
-                allFiles.push(file1)
-                file1.createFileContainer()
-                file1.pick({target: file1.container})
-                // document.querySelector("#download").classList.add("d-none")
-            })
+        if(fileClassCalcToModal.innerHTML === "digital"){
+            axios.post("/upload1", fd, config)
+                .then(e => {
+                    mainDisplay.classList.add("d-none")
+                    digitalPrintingContainer.classList.remove("d-none")
+                    let file1 = new file(e.data.name, e.data.id)
+                    file1.url = e.data.url
+                    file1.format = e.data.format
+                    file1.countInFile = e.data.countInFile
+                    allFiles.push(file1)
+                    file1.createFileContainer()
+                    file1.pick({target: file1.container})
+                    // document.querySelector("#download").classList.add("d-none")
+                })
+        }
+        else if(fileClassCalcToModal.innerHTML === "wide"){
+            axios.post("/upload2", fd, config)
+                .then(e => {
+                    mainDisplay.classList.add("d-none")
+                    digitalPrintingContainer.classList.remove("d-none")
+                    let file1 = new file(e.data.name, e.data.id)
+                    file1.url = e.data.url
+                    file1.format = e.data.format
+                    file1.countInFile = e.data.countInFile
+                    allFiles.push(file1)
+                    file1.createFileContainer()
+                    file1.pick({target: file1.container})
+                    // document.querySelector("#download").classList.add("d-none")
+                })
+        }
+        else if(fileClassCalcToModal.innerHTML === "photo"){
+            axios.post("/upload3", fd, config)
+                .then(e => {
+                    mainDisplay.classList.add("d-none")
+                    digitalPrintingContainer.classList.remove("d-none")
+                    let file1 = new file(e.data.name, e.data.id)
+                    file1.url = e.data.url
+                    file1.format = e.data.format
+                    file1.countInFile = e.data.countInFile
+                    allFiles.push(file1)
+                    file1.createFileContainer()
+                    file1.pick({target: file1.container})
+                    // document.querySelector("#download").classList.add("d-none")
+                })
+        }
     }
 }
 
