@@ -52,25 +52,26 @@ function renderListAndCard() {
 
         imgInServer.style = ''
 
+        let cardWidth = cardSizeW*100/x;
+
         if(imgCoef >= coef){
+            // 100 * coef / imgCoef
             let newImgCoef = 100 * coef / imgCoef
+            // let newImgCoef =  coef / imgCoef
+            // imgInServer.style.width = width * newImgCoef+"%"
             imgInServer.style.width = newImgCoef+"%"
         }
         else {
+            //100+"vh"
             imgInServer.style.width = 100+"%"
         }
-
         if(pdfCoef >= coef){
             let newPdfCoef = 100 * coef / pdfCoef
             pdfRenderer.style.width = newPdfCoef+"%"
-            // containerForPdfInServer.style.width = newPdfCoef+"%"
         }
         else {
             pdfRenderer.style.width = 100+"%"
-            // containerForPdfInServer.style.width = 100+"%"
         }
-
-        let cardWidth = cardSizeW*100/x;
 
         if(coef < 1){
 
@@ -114,6 +115,10 @@ function renderListAndCard() {
             containerForPdfInServer.style.transform = `rotate(${thisFile.rotateImgFromNav}deg)`
         }
 
+        // list1.style.width = width+"vh"
+        // list1.style.minWidth = width+"vh"
+        // list1.style.height = etalonForRender+"vh"
+        // list1.style.minHeight = etalonForRender+"vh"
         list1.style.width = width+"vh"
         list1.style.minWidth = width+"vh"
         list1.style.height = etalonForRender+"vh"
@@ -135,6 +140,7 @@ function renderListAndCard() {
         prev.style.opacity = "0"
         next.style.opacity = "0"
     }
+    // document.body.append(containerForImgInServer);
 }
 
 prev.addEventListener("click", function () {
@@ -157,3 +163,44 @@ listAndCardClass.queryListAndCard()
 
 const navPanelClass = new navPanelCl()
 navPanelClass.queryNavPanel()
+
+// const imgInListClass = new imgInList()
+// imgInListClass.queryImgInList()
+
+
+// containerForImgInServer.onmousedown = function(e) {
+//     let shiftX = e.clientX - containerForImgInServer.getBoundingClientRect().left;
+//     let shiftY = e.clientY - containerForImgInServer.getBoundingClientRect().top;
+//
+//     containerForImgInServer.style.position = 'absolute';
+//     containerForImgInServer.style.zIndex = 1000;
+//     document.body.append(containerForImgInServer);
+//
+//
+//     moveAt(e.pageX, e.pageY);
+//     // переносит мяч на координаты (pageX, pageY),
+//     // дополнительно учитывая изначальный сдвиг относительно указателя мыши
+//     function moveAt(pageX, pageY) {
+//         containerForImgInServer.style.left = pageX - shiftX + 'px';
+//         containerForImgInServer.style.top = pageY - shiftY + 'px';
+//     }
+//     function onMouseMove(e) {
+//         moveAt(e.pageX, e.pageY);
+//     }
+//
+//
+//     // передвигаем мяч при событии mousemove
+//     document.addEventListener('mousemove', onMouseMove);
+//
+//     // отпустить мяч, удалить ненужные обработчики
+//     document.onmouseup = function() {
+//         // list1.append(containerForImgInServer);
+//
+//         document.removeEventListener('mousemove', onMouseMove);
+//         containerForImgInServer.onmouseup = null;
+//     };
+//
+// };
+// containerForImgInServer.ondragstart = function() {
+//     return false;
+// };
