@@ -63,9 +63,11 @@ function renderListAndCard() {
         if(pdfCoef >= coef){
             let newPdfCoef = 100 * coef / pdfCoef
             pdfRenderer.style.width = newPdfCoef+"%"
+            // containerForPdfInServer.style.width = newPdfCoef+"%"
         }
         else {
             pdfRenderer.style.width = 100+"%"
+            // containerForPdfInServer.style.width = 100+"%"
         }
 
         let cardWidth = cardSizeW*100/x;
@@ -87,8 +89,8 @@ function renderListAndCard() {
 
             list1.style.transform = "rotate(90deg)"
             // list1.style.transform = `${list1.style.transform}; rotate(90deg)`
-            containerForImgInServer.style.transform = "rotate(-90deg)"
-            containerForPdfInServer.style.transform = "rotate(-90deg)"
+            containerForImgInServer.style.transform = `rotate(${thisFile.rotateImgFromNav-90}deg)`
+            containerForPdfInServer.style.transform = `rotate(${thisFile.rotateImgFromNav-90}deg)`
 
 
             if(imgCoef >= coef1){
@@ -100,10 +102,16 @@ function renderListAndCard() {
 
             if(pdfCoef >= coef1){
                 pdfRenderer.style.width = newPdfCoef*coef+"%"
+                // containerForPdfInServer.style.width = newPdfCoef*coef+"%"
             }
             else {
                 pdfRenderer.style.width = 100/coef1+"%"
+                // containerForPdfInServer.style.width = 100/coef1+"%"
             }
+        }
+        else {
+            containerForImgInServer.style.transform = `rotate(${thisFile.rotateImgFromNav}deg)`
+            containerForPdfInServer.style.transform = `rotate(${thisFile.rotateImgFromNav}deg)`
         }
 
         list1.style.width = width+"vh"

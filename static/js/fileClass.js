@@ -33,7 +33,10 @@ class file {
     bannerVarit;
     floorLamination;
     widthLamination;
+
+    rotateImgFromNav;
     constructor (name, id) {
+        this.rotateImgFromNav = 0;
         this._name = name;
         this._id = id;
         this._count = 1
@@ -178,9 +181,9 @@ class file {
             renderWideCalc(priceCalc)
         } else if(thisFile.calc === "photo"){
             let formats = `
-                    <div class="btn" toFile="photo1">photo1</div>
-                    <div class="btn" toFile="photo2">photo2</div>
-                    <div class="btn" toFile="photo3">photo3</div>
+                    <div class="btn" toFile="10х15">10х15</div>
+                    <div class="btn" toFile="15х21">15х21</div>
+                    <div class="btn" toFile="13х18">13х18</div>
                     <div class="btn" toFile="A4">А4</div>
                     <div class="btn" toFile="custom">Свій розмір</div>
                         `;

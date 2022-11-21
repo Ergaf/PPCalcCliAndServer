@@ -98,7 +98,6 @@ function renderWideCalc(priceCalc){
                 }
             }
             if(e[0] === "Напольне ламінування"){
-
                 let variants = getVariantsFromNameInData(`Напольне ламінування`);
                 if(variants !== undefined){
                     if(thisFile.floorLamination === undefined){

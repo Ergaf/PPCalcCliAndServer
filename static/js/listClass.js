@@ -95,13 +95,17 @@ class listAndCard {
 
 class navPanelCl {
     item;
+    dragItem;
     constructor () {
 
     }
     queryNavPanel() {
         this.item = document.querySelector('#navPanel');
+        // this.item = $('#navPanel')
         // this.item.style.transform = "scale(1)"
-        this.item.onmousedown = this.dragAndDrop.bind( this);
+        this.dragItem = document.querySelector("#navDrag");
+        this.dragItem.onmousedown = this.dragAndDrop.bind( this);
+        // this.item.onmousedown = this.dragAndDrop.bind( this);
         // this.item.onmousewheel = this.onWheel.bind( this);
     }
 

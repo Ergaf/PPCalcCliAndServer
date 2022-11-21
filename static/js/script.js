@@ -1,4 +1,6 @@
 const upload = document.querySelector("#upload")
+const download = document.querySelector("#download")
+const modalCloseButton = document.querySelector("#modalCloseButton")
 const nonUpload = document.querySelector("#nonUpload")
 const addFileButton = document.querySelector("#addFileButton");
 const list = document.querySelector(".list");
@@ -19,12 +21,29 @@ const toUseButtons = document.querySelector("#toUseButtons");
 const destinyThisButtons = document.querySelector("#destinyThisButtons");
 const toHomeButton = document.querySelector("#toHomeButton");
 const photoPrint = document.querySelector("#photoPrint");
-
 const luvers = document.querySelector("#luvers");
 const bannerVarit = document.querySelector("#bannerVarit");
 const floorLamination = document.querySelector("#floorLamination");
 const widthLamination = document.querySelector("#widthLamination");
+const rotateLeft = document.querySelector("#rotateLeft");
+const rotateRight = document.querySelector("#rotateRight");
+const openEditor = document.querySelector("#openEditor");
+const rotateNormal = document.querySelector("#rotateNormal");
+rotateLeft.addEventListener("click", function () {
+    thisFile.rotateImgFromNav = thisFile.rotateImgFromNav - 90
+    renderListAndCard()
+})
+rotateRight.addEventListener("click", function () {
+    thisFile.rotateImgFromNav = thisFile.rotateImgFromNav + 90
+    renderListAndCard()
+})
+openEditor.addEventListener("click", function () {
 
+})
+rotateNormal.addEventListener("click", function () {
+    thisFile.rotateImgFromNav = 0
+    renderListAndCard()
+})
 
 
 
@@ -36,17 +55,23 @@ toHomeButton.addEventListener("click", function () {
     digitalPrintingContainer.classList.add("d-none")
     mainDisplay.classList.remove("d-none")
 })
-
-digitalPrint.addEventListener("click", event => {
+function activateModal(){
     imgInp.classList.remove("notValid")
+    document.querySelector("#uploadLoad").classList.add("d-none");
+    upload.classList.remove("d-none");
+    nonUpload.classList.remove("d-none");
+    progressbar.value = 0
+}
+digitalPrint.addEventListener("click", event => {
+    activateModal()
     fileClassCalcToModal.innerHTML = "digital"
 })
 widescreenPrint.addEventListener("click", event => {
-    imgInp.classList.remove("notValid")
+    activateModal()
     fileClassCalcToModal.innerHTML = "wide"
 })
 photoPrint.addEventListener("click", event => {
-    imgInp.classList.remove("notValid")
+    activateModal()
     fileClassCalcToModal.innerHTML = "photo"
 })
 // const digitalCalcButton = document.querySelector("#digitalCalcButton");
@@ -150,7 +175,6 @@ upload.addEventListener("click", function () {
     if(imgInp.value){
         uploadFile(imgInp)
         imgInp.classList.remove("notValid")
-        $("#exampleModal").modal("hide")
         // data-bs-dismiss="modal"
     } else {
         event.preventDefault()
@@ -163,6 +187,9 @@ upload.addEventListener("click", function () {
 // })
 
 function uploadFile(fileInput) {
+    download.classList.remove("d-none");
+    mainDisplay.classList.add("d-none");
+    digitalPrintingContainer.classList.add("d-none");
     if(fileInput.files[0]){
         // document.querySelector("#download").classList.remove("d-none")
         let config = {
@@ -171,6 +198,11 @@ function uploadFile(fileInput) {
             onUploadProgress(progressEvent) {
                 const progress = progressEvent.loaded / progressEvent.total * 100
                 progressbar.value = progress
+                if(progress >= 100){
+                    document.querySelector("#uploadLoad").classList.remove("d-none");
+                    upload.classList.add("d-none");
+                    nonUpload.classList.add("d-none");
+                }
             },
             data: {
                 calc: fileClassCalcToModal.innerHTML
@@ -192,6 +224,15 @@ function uploadFile(fileInput) {
                     file1.createFileContainer()
                     file1.pick({target: file1.container})
                     // document.querySelector("#download").classList.add("d-none")
+
+                    document.querySelector("#uploadLoad").classList.add("d-none");
+                    upload.classList.remove("d-none");
+                    nonUpload.classList.remove("d-none");
+
+                    progressbar.value = 0
+                    download.classList.add("d-none");
+                    digitalPrintingContainer.classList.remove("d-none");
+                    $("#exampleModal").modal("hide")
                 })
         }
         else if(fileClassCalcToModal.innerHTML === "wide"){
@@ -208,6 +249,15 @@ function uploadFile(fileInput) {
                     file1.createFileContainer()
                     file1.pick({target: file1.container})
                     // document.querySelector("#download").classList.add("d-none")
+
+                    document.querySelector("#uploadLoad").classList.add("d-none");
+                    upload.classList.remove("d-none");
+                    nonUpload.classList.remove("d-none");
+
+                    progressbar.value = 0
+                    download.classList.add("d-none");
+                    digitalPrintingContainer.classList.remove("d-none");
+                    $("#exampleModal").modal("hide")
                 })
         }
         else if(fileClassCalcToModal.innerHTML === "photo"){
@@ -224,6 +274,15 @@ function uploadFile(fileInput) {
                     file1.createFileContainer()
                     file1.pick({target: file1.container})
                     // document.querySelector("#download").classList.add("d-none")
+
+                    document.querySelector("#uploadLoad").classList.add("d-none");
+                    upload.classList.remove("d-none");
+                    nonUpload.classList.remove("d-none");
+
+                    progressbar.value = 0
+                    download.classList.add("d-none");
+                    digitalPrintingContainer.classList.remove("d-none");
+                    $("#exampleModal").modal("hide")
                 })
         }
     }
@@ -301,13 +360,16 @@ fetch('https://script.googleusercontent.com/macros/echo?user_content_key=wLSQSat
         if(allFiles.length > 0){
             mainDisplay.classList.add("d-none")
             digitalPrintingContainer.classList.remove("d-none")
-            document.querySelector("#download").classList.add("d-none")
+            download.classList.add("d-none")
         }
         else {
             digitalPrintingContainer.classList.add("d-none")
-            document.querySelector("#download").classList.add("d-none")
+            download.classList.add("d-none")
             mainDisplay.classList.remove("d-none")
         }
+
+        // let toast = new bootstrap.Toast($("#liveToast"))
+        // toast.show()
     })
 
 fetch("/orders")
@@ -479,3 +541,11 @@ async function sendData(url, method, data) {
     });
     return await response.json(); // parses JSON response into native JavaScript objects
 }
+
+
+// var imageEditor = new tui.component.ImageEditor('#my-image-editor canvas', {
+//     cssMaxWidth: 1000, // Component default value: 1000
+//     cssMaxHeight: 800, // Component default value: 800
+// });
+//
+// imageEditor.loadImageFromURL('files/totest/file-1.png', 'My sample image');

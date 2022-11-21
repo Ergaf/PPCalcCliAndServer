@@ -112,7 +112,7 @@ app.post("/upload1", function (req, res) {
             try {
                 processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, "digital")
             } catch (e) {
-                console.log(e);
+                console.log(e.message);
                 res.send(e)
             }
         });
@@ -150,7 +150,7 @@ app.post("/upload2", function (req, res) {
             try {
                 processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, "wide")
             } catch (e) {
-                console.log(e);
+                console.log(e.message);
                 res.send(e)
             }
         });
@@ -188,7 +188,7 @@ app.post("/upload3", function (req, res) {
             try {
                 processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, "photo")
             } catch (e) {
-                console.log(e);
+                console.log(e.message);
                 res.send(e)
             }
         });
@@ -197,7 +197,7 @@ app.post("/upload3", function (req, res) {
 
 app.get("/files*", function (req, res) {
     let urll = req.url;
-    console.log(urll);
+    // console.log(`a request came for a file to url ${urll}`);
     sendRes(urll, getContentType(urll), res)
 });
 app.post("/orders", function (req, res) {
@@ -210,7 +210,7 @@ app.post("/orders", function (req, res) {
         }).on('end', () => {
             body = Buffer.concat(body).toString();
             body = JSON.parse(body)
-            console.log(body);
+            console.log(`add order without file, calc type: ${body.data.calc}`);
             if(req.cookies.to){
                 cookieStore.forEach(e => {
                     if(e.cookie === req.cookies.to){
@@ -235,7 +235,7 @@ app.post("/orders", function (req, res) {
             }
         })
     }catch (e) {
-        console.log(e);
+        console.log(e.message);
     }
 });
 app.get("/orders", function (req, res) {
@@ -276,14 +276,16 @@ app.delete("/orders", function (req, res) {
                                     // })
 
                                 } catch (e) {
-                                    console.log(e);
+                                    console.log(e.message);
                                 }
                                 try {
+                                    let order = c.orders[i]
                                     c.orders.splice(i, 1)
-                                    console.log('done');
+                                    console.log(`delete ${order.name} done`);
                                     res.send(body.id);
                                 } catch (e) {
-                                    console.log(e);
+                                    console.log(e.message);
+                                    res.send(e.message);
                                 }
                             }
                         }
@@ -294,7 +296,7 @@ app.delete("/orders", function (req, res) {
         })
     }
     catch (e) {
-        console.log(e);
+        console.log(e.message);
         res.send(e)
     }
 });
@@ -367,7 +369,7 @@ function sessionHave (req) {
 }
 
 async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
-    console.log(mime.getType(filePath));
+    console.log(`uploading file mime type: ${mime.getType(filePath)}, calcType: ${calcType}`);
     if(
         mime.getType(filePath) === "image/jpeg" ||
         mime.getType(filePath) === "image/x-png" ||
@@ -379,7 +381,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
                 await fs.mkdirSync(folder)
             }
         } catch (err) {
-            console.error(err)
+            console.error(err.message)
         }
         fs.createReadStream(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`)
             .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/notpdf/file`));
@@ -411,7 +413,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
                 await fs.mkdirSync(folder)
             }
         } catch (err) {
-            console.error(err)
+            console.error(err.message)
         }
         fs.createReadStream(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`)
             .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/pdf/file1.pdf`));
@@ -469,7 +471,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
                 try {
                     filesDelete(__dirname + `/files/${cookies}/${id}/`)
                 } catch (e) {
-                    console.log(e);
+                    console.log(e.message);
                 }
                 res.send(order)
             }
@@ -484,7 +486,7 @@ async function docToPdf(inputPath, cookies, filenameToNorm, res, id, calcType) {
             await fs.mkdirSync(folder)
         }
     } catch (err) {
-        console.error(err)
+        console.error(err.message)
     }
     const ext = '.pdf'
     const outputPath = __dirname + `/files/${cookies}/${id}/pdf/file1.pdf`;
@@ -555,6 +557,7 @@ async function getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputP
         })
 
     } catch (e) {
+        console.log(e.message);
         let ress = {
             url: `/files/${cookies}/${id}/pdf/file1.pdf`,
         }
@@ -589,7 +592,7 @@ app.post("/login", function (req, res) {
             res.send("1")
         })
     } catch (e) {
-        console.log(e);
+        console.log(e.message);
     }
 })
 
@@ -608,7 +611,7 @@ app.post("/getfiles", function (req, res) {
             getFilesForAdminView(req, res, body.to)
         })
     } catch (e) {
-        console.log(e);
+        console.log(e.message);
         let readdirInfo = []
         let reddirUnit = {
             error: e.toString()
@@ -663,7 +666,7 @@ app.post("/database", function (req, res){
 
         })
     } catch (err) {
-        console.log(err);
+        console.log(err.message);
     }
 })
 
@@ -700,7 +703,7 @@ function getFilesForAdminView(req, res, url){
             res.send(readdirInfo)
         }
     } catch (e) {
-        console.log(e);
+        console.log(e.message);
         let readdirInfo = []
         let reddirUnit = {
             error: e.toString()
@@ -746,7 +749,7 @@ async function tiffToPng(filePath, cookies, filenameToNorm, res, id, calcType) {
             }
         })
     } catch (e) {
-        console.log(e);
+        console.log(e.message);
         res.send(e)
     }
 }

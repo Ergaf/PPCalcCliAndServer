@@ -163,7 +163,8 @@ body{
     display: flex;
     justify-content: center;
     background: white;
-    overflow: auto;
+    /*overflow: auto;*/
+    transition: 0.5s;
 }
 .theCanvas {
     display: flex;
@@ -291,4 +292,15 @@ body{
 }
 .notValid {
     background: red;
+}
+.navDrag {
+    cursor: move;
+}
+
+.iconNavPanel {
+    width: 25px;
+    pointer-events: none;
+}
+.notMDr {
+    pointer-events: none;
 }

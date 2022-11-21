@@ -15,7 +15,7 @@
 </header>
 <div class="d-flex justify-content-center align-items-center download" id="download">
     <div class="spinner-grow" style="width: 7rem; height: 7rem;" role="status">
-        <span class="visually-hidden">Loading...</span>
+        <span class="visually-hidden">ОБРОБКА...</span>
     </div>
 </div>
 
@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <div class="download progress">
+    <div class="download progress d-none">
         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
              aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
              style="width: 100%"></div>
@@ -235,11 +235,11 @@
             <div class="listAndCard invisible m-auto" id="listAndCard">
                 <div class="list m-auto visible" id="list">
                     <div class="containerForImgInServer" id="containerForImgInServer">
-                        <img src="" alt="" class="imgInServer" id="imgInServer">
+                        <img src="" alt="" class="imgInServer notMDr" id="imgInServer">
                     </div>
 
                     <div class="containerForImgInServer" id="containerForPdfInServer">
-                        <div class="imgInServer" id="pdfInServer">
+                        <div class="imgInServer notMDr" id="pdfInServer">
                             <div id="my_pdf_viewer" class="myPdfViewer">
                                 <!--                                <div id="canvas_container">-->
                                 <div id="the-canvas" class="theCanvas">
@@ -254,11 +254,30 @@
             <img src="img/karta.png" alt="" class="imgKarta" id="imgKarta">
             <!--            </div>-->
             <div id="navPanel" class="navPanel d-flex flex-column position-absolute">
+<!--                <div class="input-group d-flex justify-content-center align-items-center">-->
+<!--                    <input type="range" class="form-range" id="customRange1">-->
+<!--                </div>-->
                 <div id="navigation_controls" class="input-group d-flex justify-content-center align-items-center">
+                    <div class="input-group-text gray navDrag" id="navDrag">
+                        <img src="img/dragArea.png" alt="d" class="iconNavPanel notMDr">
+                    </div>
                     <button id="page_count" class="input-group-text gray"></button>
-                    <button id="go_previous" class="input-group-text gray">-</button>
+                    <button id="go_previous" class="input-group-text gray d-none">-</button>
                     <input id="current_page" class="input-group-text gray" value="1" type="number"/>
-                    <button id="go_next" class="input-group-text gray">+</button>
+                    <button id="go_next" class="input-group-text gray d-none">+</button>
+
+                    <button id="rotateLeft" class="input-group-text gray">
+                        <img src="img/rotate_left.png" alt="=>" class="iconNavPanel notMDr">
+                    </button>
+                    <button id="rotateNormal" class="input-group-text gray">
+                        <img src="img/rotateNormal.png" alt="<=" class="iconNavPanel notMDr">
+                    </button>
+                    <button id="rotateRight" class="input-group-text gray">
+                        <img src="img/rotate_right.png" alt="<=" class="iconNavPanel notMDr">
+                    </button>
+                    <button id="openEditor" class="input-group-text gray">
+                        <img src="img/openEditor.png" alt="<=" class="iconNavPanel notMDr">
+                    </button>
                 </div>
                 <div id="zoom_controls" class="input-group d-flex justify-content-center align-items-center d-none">
                     <button id="zoom_in" class="input-group-text gray">+</button>
@@ -274,10 +293,6 @@
                     <div class="btn gray" id="next">></div>
                 </div>
             </div>
-        </div>
-
-        <div class="d-none">
-            <progress id="progressbar" value="0" max="100" style="width: 100%"></progress>
         </div>
 
 
@@ -297,12 +312,16 @@
     <!--    <iframe src="" frameborder="2" class="frame" id="iframe"></iframe>-->
 </footer>
 
+<!--<div id="my-image-editor" style="height: 800px">-->
+<!--    <canvas></canvas>-->
+<!--</div>-->
+
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="" id="exampleModalLabel">ДОДАТИ ФАЙЛ</div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" id="modalCloseButton" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form>
             <div class="modal-body">
@@ -311,16 +330,39 @@
                     <input type="file" class="form-control" id="imgInp" aria-describedby="inputGroupFileAddon04"
                            aria-label="Upload">
                 </div>
+                <div class="">
+                    <progress id="progressbar" value="0" max="100" style="width: 100%"></progress>
+                </div>
             </div>
             <div class="modal-footer">
                 <!--                <button type="button" class="btnm" data-bs-dismiss="modal">Назад</button>-->
                 <div type="button" id="nonUpload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>
                 <div type="button" id="upload" class="btn">ПРОРАХУВАТИ</div>
+                <div type="button" id="uploadLoad" class="btn d-none" disabled>
+                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                    ОБРОБКА...
+                </div>
             </div>
             </form>
         </div>
     </div>
 </div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+<!--            <img src="img/load.svg" class="rounded me-2" alt="...">-->
+            <strong class="me-auto">PrintPeaks</strong>
+            <small>just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Ціни завантажено з googlesheets.
+        </div>
+    </div>
+</div>
+
+
 <script src="js/renders/renderDigitalCalc.js" charset="utf-8"></script>
 <script src="js/renders/renderWideCalc.js" charset="utf-8"></script>
 <script src="js/renders/renderPhotoCalc.js" charset="utf-8"></script>
@@ -341,5 +383,10 @@
 <script src="js/cardRender.js" charset="utf-8"></script>
 <script src="js/ifsForThisTabl.js" charset="utf-8"></script>
 <script src="js/script.js" charset="utf-8"></script>
+
+<!--<script src="js/photoEditor/tui-code-snippet.js"></script>-->
+<!--<script src="js/photoEditor/fabric.min.js"></script>-->
+<!--<script src="js/photoEditor/src/js/imageEditor.js"></script>-->
+
 </body>
 </html>
