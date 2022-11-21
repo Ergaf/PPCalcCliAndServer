@@ -133,11 +133,11 @@ nonUpload.addEventListener("click", function () {
     };
     axios.post("/orders", config)
         .then(e => {
-            console.log(e);
+            console.log(e.data);
             let file1 = new file(e.data.name, e.data.id)
             file1.format = e.data.format
             file1.countInFile = e.data.countInFile
-            file1.calc = fileClassCalcToModal.innerHTML
+            file1.calc = e.data.calc
             allFiles.push(file1)
             file1.createFileContainer()
             file1.pick({target: file1.container})
@@ -147,7 +147,6 @@ nonUpload.addEventListener("click", function () {
         })
 })
 upload.addEventListener("click", function () {
-    console.log(imgInp.value);
     if(imgInp.value){
         uploadFile(imgInp)
         imgInp.classList.remove("notValid")
@@ -186,6 +185,7 @@ function uploadFile(fileInput) {
                     digitalPrintingContainer.classList.remove("d-none")
                     let file1 = new file(e.data.name, e.data.id)
                     file1.url = e.data.url
+                    file1.calc = e.data.calc
                     file1.format = e.data.format
                     file1.countInFile = e.data.countInFile
                     allFiles.push(file1)
@@ -201,6 +201,7 @@ function uploadFile(fileInput) {
                     digitalPrintingContainer.classList.remove("d-none")
                     let file1 = new file(e.data.name, e.data.id)
                     file1.url = e.data.url
+                    file1.calc = e.data.calc
                     file1.format = e.data.format
                     file1.countInFile = e.data.countInFile
                     allFiles.push(file1)
@@ -216,6 +217,7 @@ function uploadFile(fileInput) {
                     digitalPrintingContainer.classList.remove("d-none")
                     let file1 = new file(e.data.name, e.data.id)
                     file1.url = e.data.url
+                    file1.calc = e.data.calc
                     file1.format = e.data.format
                     file1.countInFile = e.data.countInFile
                     allFiles.push(file1)
@@ -293,7 +295,7 @@ fetch('https://script.googleusercontent.com/macros/echo?user_content_key=wLSQSat
                 }
             }
         })
-        console.log(data)
+        // console.log(data)
         prices = data
 
         if(allFiles.length > 0){

@@ -106,7 +106,7 @@ class navPanelCl {
     }
 
     dragAndDrop(e) {
-        e.preventDefault()
+        // e.preventDefault()
         // let drag = e.target.closest('.listAndCard');
         // let drag = e.target.closest(this.item);
 

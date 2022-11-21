@@ -7,6 +7,7 @@ class file {
     cower;
     paper;
     destiny;
+    destinyThis;
     binding;
     bindingSelect;
     lamination;
@@ -92,8 +93,10 @@ class file {
                 if(thisFile === this){
                     // document.querySelector(".settingsContainer").style.display = "none"
                     document.querySelector(".settingsContainer").classList.add("d-none")
-                    // digitalPrintingContainer.classList.add("d-none")
-                    // mainDisplay.classList.remove("d-none")
+                    if(allFiles.length < 2){
+                        digitalPrintingContainer.classList.add("d-none")
+                        mainDisplay.classList.remove("d-none")
+                    }
                 }
                 for (let i = 0; i < allFiles.length; i++){
                     if(allFiles[i]._id === this._id){
@@ -205,16 +208,12 @@ class file {
             stickerCuttingThis.classList.add("d-none")
             backLiningText.classList.add("d-none")
         }
-
-
         Array.prototype.slice.call(formatButtons.children).forEach(e => {
             e.addEventListener("click", function () {
                 thisFile.format = e.getAttribute("toFile")
                 thisFile.renderSettings()
             })
         });
-
-
         Array.prototype.slice.call(formatButtons.children).forEach(e => {
             if(e.getAttribute("toFile") === this.format){
                 e.classList.add("btnm-act")
@@ -247,7 +246,6 @@ class file {
                 e.classList.remove("btnm-act")
             }
         })
-
         if(thisFile.url){
             if(thisFile.url.img){
                 let image = new Image();
@@ -286,7 +284,6 @@ class file {
             }
             image.src = "/files/totest/file-1.png";
             document.querySelector("#page_count").innerText = 1
-
 
             // if(!this.url2.pdf || lastFileId !== thisFile._id){
             //     pdfjsLib.getDocument("/files/totest/file-1.png").then((pdf) => {
@@ -376,25 +373,6 @@ class file {
     //         // bindingSelect.appendChild(opt)
     //     })
     // }
-
-    renderOptions(thisFilePaper, thisFileProp, renderIn){
-        if(getVariantsFromNameInData(thisFile.paper) !== undefined){
-            getVariantsFromNameInData(thisFile.paper).forEach(e => {
-                let elem = document.createElement("div")
-                elem.innerText = e[0]
-                elem.classList.add("btn")
-                elem.addEventListener("click", function () {
-                    console.log(this[thisFileProp]);
-                    this[thisFileProp] = elem.innerText
-                    thisFile.renderSettings()
-                })
-                if(e[0] === this[thisFileProp]){
-                    elem.classList.add("btnm-act")
-                }
-                renderIn.appendChild(elem)
-            })
-        }
-    }
 
     getSize() {
         let sizes = getSizes()

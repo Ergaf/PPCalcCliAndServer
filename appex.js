@@ -24,7 +24,10 @@ const fsEx = require('fs-extra');
 //         console.log("Подключение к серверу MySQL успешно установлено");
 //     }
 // });
-const ConvertTiff = require('tiff-to-png');
+// const ConvertTiff = require('tiff-to-png');
+
+const { decode } = require("decode-tiff");
+const { PNG } = require("pngjs");
 
 
 let tableMain;
@@ -444,9 +447,9 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
     else if(mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.presentationml.presentation"){
         docToPdf(filePath, cookies, filenameToNorm, res, id, calcType)
     }
-    else if(mime.getType(filePath) === "image/tiff"){
-        tiffToPng(filePath, cookies, filenameToNorm, res, id, calcType)
-    }
+    // else if(mime.getType(filePath) === "image/tiff"){
+    //     tiffToPng(filePath, cookies, filenameToNorm, res, id, calcType)
+    // }
     else {
         let ress = {
             url: `/files/totest/errorNoFormat.png`,
@@ -718,33 +721,34 @@ async function tiffToPng(filePath, cookies, filenameToNorm, res, id, calcType) {
         console.error(err)
     }
 
-    let options = {
-        logLevel: 1
-    };
+    try {
+        const { width, height, data } = decode(fs.readFileSync(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`));
 
-    let converter = new ConvertTiff(options);
-    let location = __dirname + `/files/${cookies}/${id}/png`;
+        const png =  new PNG({ width, height });
+        png.data = data;
+        fs.writeFileSync(__dirname + `/files/${cookies}/${id}/png/file.png`, PNG.sync.write(png));
 
-    converter.convertOne(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`, location)
-        .then(({converted, error}) => {
-            let ress = {
-                url: `/files/${cookies}/${id}/png/%d.png`,
-            }
-            cookieStore.forEach(e => {
-                if (e.cookie === cookies) {
-                    let order = {
-                        calc: calcType,
-                        id: id,
-                        name: filenameToNorm,
-                        url: ress,
-                        format: "A4",
-                        countInFile: 1
-                    }
-                    e.orders.push(order)
-                    res.send(order)
+        let ress = {
+            url: `/files/${cookies}/${id}/png/file.png`,
+        }
+        cookieStore.forEach(e => {
+            if (e.cookie === cookies) {
+                let order = {
+                    calc: calcType,
+                    id: id,
+                    name: filenameToNorm,
+                    url: ress,
+                    format: "A4",
+                    countInFile: 1
                 }
-            })
-        });
+                e.orders.push(order)
+                res.send(order)
+            }
+        })
+    } catch (e) {
+        console.log(e);
+        res.send(e)
+    }
 }
 
 // async function toPng(outputPath, cookies, filenameToNorm, res, id) {

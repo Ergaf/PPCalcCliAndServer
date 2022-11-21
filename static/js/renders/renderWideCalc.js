@@ -15,9 +15,10 @@ function renderWideCalc(priceCalc){
 
     thisFile.realCount = thisFile._count*thisFile.countInFile
 
+    let mm = thisFile.x * thisFile.y
+    let m2kv = mm/1000000
+
     if(paper1 !== undefined){
-        let mm = thisFile.x * thisFile.y
-        let m2kv = mm/1000000
         if(paper2 !== undefined){
             for (let i = 0; i < paper2.length; i++) {
                 if(thisFile.destinyThis === paper2[i][0]){
@@ -32,63 +33,17 @@ function renderWideCalc(priceCalc){
                 }
             }
         }
-
-
-        price.value = priceCalc
     }
+
+    price.value = priceCalc
 
     toUseButtons.innerHTML = ""
-    if(getVariantsFromNameInData("Використання") !== undefined){
-        toUseButtons.classList.remove("d-none")
-        getVariantsFromNameInData("Використання").forEach(e => {
-            let elem = document.createElement("div")
-            elem.innerText = e[0]
-            elem.classList.add("btn")
-            elem.addEventListener("click", function () {
-                thisFile.touse = elem.innerText
-                thisFile.renderSettings()
-            })
-            if(e[0] === thisFile.touse){
-                elem.classList.add("btnm-act")
-            }
-            toUseButtons.appendChild(elem)
-        })
-    }
+    renderOptions("Використання", "touse", toUseButtons)
     destinyButtons.innerHTML = ""
-    if(getVariantsFromNameInData(thisFile.touse) !== undefined){
-        destinyButtons.classList.remove("d-none")
-        getVariantsFromNameInData(thisFile.touse).forEach(e => {
-            let elem = document.createElement("div")
-            elem.innerText = e[0]
-            elem.classList.add("btn")
-            elem.addEventListener("click", function () {
-                thisFile.destiny = elem.innerText
-                thisFile.renderSettings()
-            })
-            if(e[0] === thisFile.destiny){
-                elem.classList.add("btnm-act")
-            }
-            destinyButtons.appendChild(elem)
-        })
-    }
+    renderOptions(thisFile.touse, "destiny", destinyButtons)
     destinyThisButtons.innerHTML = ""
-    if(getVariantsFromNameInData(thisFile.destiny) !== undefined){
-        destinyThisButtons.classList.remove("d-none")
-        getVariantsFromNameInData(thisFile.destiny).forEach(e => {
-            let elem = document.createElement("div")
-            elem.innerText = e[0]
-            elem.classList.add("btn")
-            elem.addEventListener("click", function () {
-                thisFile.destinyThis = elem.innerText
-                thisFile.renderSettings()
-            })
-            if(e[0] === thisFile.destinyThis){
-                elem.classList.add("btnm-act")
-            }
-            destinyThisButtons.appendChild(elem)
-        })
-    }
-
+    renderOptions(thisFile.destiny, "destinyThis", destinyThisButtons)
+    destinyThisButtons.classList.remove("d-none")
 
     luvers.innerHTML = ""
     bannerVarit.innerHTML = ""
@@ -103,6 +58,9 @@ function renderWideCalc(priceCalc){
             if(e[0] === "Встановлення люверсов"){
                 let variants = getVariantsFromNameInData(`Встановлення люверсов`);
                 if(variants !== undefined){
+                    if(thisFile.luvers === undefined){
+                        thisFile.luvers = "без люверсов"
+                    }
                     variants.forEach(option => {
                         let elem = document.createElement("div")
                         elem.innerText = option[0]
@@ -121,6 +79,9 @@ function renderWideCalc(priceCalc){
             if(e[0] === "Проварювання банера"){
                 let variants = getVariantsFromNameInData(`Проварювання банера`);
                 if(variants !== undefined){
+                    if(thisFile.bannerVarit === undefined){
+                        thisFile.bannerVarit = "без проварювання"
+                    }
                     variants.forEach(option => {
                         let elem = document.createElement("div")
                         elem.innerText = option[0]
@@ -137,8 +98,12 @@ function renderWideCalc(priceCalc){
                 }
             }
             if(e[0] === "Напольне ламінування"){
+
                 let variants = getVariantsFromNameInData(`Напольне ламінування`);
                 if(variants !== undefined){
+                    if(thisFile.floorLamination === undefined){
+                        thisFile.floorLamination = "без ламінування"
+                    }
                     variants.forEach(option => {
                         let elem = document.createElement("div")
                         elem.innerText = option[0]
@@ -149,6 +114,10 @@ function renderWideCalc(priceCalc){
                         })
                         if(option[0] === thisFile.floorLamination){
                             elem.classList.add("btnm-act")
+
+                            let PriceToSum = option[1] * m2kv * thisFile.realCount
+                            priceCalc = priceCalc + PriceToSum
+
                         }
                         floorLamination.appendChild(elem)
                     })
@@ -157,6 +126,9 @@ function renderWideCalc(priceCalc){
             if(e[0] === "Ламінування"){
                 let variants = getVariantsFromNameInData(`Ламінування`);
                 if(variants !== undefined){
+                    if(thisFile.widthLamination === undefined){
+                        thisFile.widthLamination = "без ламінування"
+                    }
                     variants.forEach(option => {
                         let elem = document.createElement("div")
                         elem.innerText = option[0]
@@ -167,6 +139,10 @@ function renderWideCalc(priceCalc){
                         })
                         if(option[0] === thisFile.widthLamination){
                             elem.classList.add("btnm-act")
+
+                            let PriceToSum = option[1] * m2kv * thisFile.realCount
+                            priceCalc = priceCalc + PriceToSum
+
                         }
                         widthLamination.appendChild(elem)
                     })
@@ -174,4 +150,5 @@ function renderWideCalc(priceCalc){
             }
         })
     }
+    price.value = priceCalc
 }
