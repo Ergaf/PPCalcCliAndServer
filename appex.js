@@ -79,6 +79,7 @@ app.use((req, res, next) => {
 app.use("/login", express.static(__dirname + "/admin/login"));
 app.use("/admin", express.static(__dirname + "/admin/admin"));
 app.use("/3dtest", express.static(__dirname + "/admin/3dtest"));
+app.use("/red", express.static(__dirname + "/admin/image-editor/examples"));
 
 app.post("/upload1", function (req, res) {
     let fstream;
@@ -221,12 +222,20 @@ app.post("/orders", function (req, res) {
                         if(body.data.calc === "wide"){
                             calcTypeFormat = "A1"
                         }
+                        if(body.data.calc === "photo"){
+                            calcTypeFormat = "A4"
+                        }
+                        let ress = {
+                            url: "/files/totest/file-1.png",
+                            img: true
+                        }
                         let order = {
                             calc: body.data.calc,
                             id: Date.now().toString(),
                             name : `БЕЗ ФАЙЛУ ${body.data.calc}`,
                             format: calcTypeFormat,
-                            countInFile: 1
+                            countInFile: 1,
+                            url: ress
                         }
                         e.orders.push(order)
                         res.send(JSON.stringify(order))

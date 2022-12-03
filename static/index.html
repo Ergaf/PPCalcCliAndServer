@@ -3,6 +3,14 @@
 <head>
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
+<!--    <link href="css/tui/tui-image-editor.css" rel="stylesheet" type="text/css">-->
+<!--    <link href="css/tui/service-basic.css" rel="stylesheet" type="text/css">-->
+    <link type="text/css" href="css/tui/service-basic.css" rel="stylesheet" />
+    <link
+            type="text/css"
+            href="css/tui/tui-color-picker.css"
+            rel="stylesheet"
+    />
     <!--    <link href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">-->
     <meta name="http-equiv" content="Content-type: text/html; charset=UTF-8">
     <meta charset="UTF-8">
@@ -42,7 +50,7 @@
 <!--            <div id="widescreenCalcButton" class="btn">Завантажити</div>-->
 <!--            <div id="widescreenCalcButtonNotFile" class="btn">Без файлу рахуватиму</div>-->
         </div>
-        <div class="card m-5 shadow-lg cursorPointer" id="photoPrint" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <div class="card m-5 shadow-lg cursorPointer" id="photoPrint">
             <img src="img/0137bcc2454a291d2141b4393782cdb3.gif" class="card-img-top" alt="...">
 <!--            <div class="card-body">-->
 <!--                <h5 class="card-title">Фото</h5>-->
@@ -238,7 +246,7 @@
             <div class="listAndCard invisible m-auto" id="listAndCard">
                 <div class="list m-auto visible" id="list">
                     <div class="containerForImgInServer" id="containerForImgInServer">
-                        <img src="" alt="" class="imgInServer" id="imgInServer">
+                        <img src="" alt="" class="imgInServer" id="imgInServer" draggable="false">
                     </div>
 
                     <div class="containerForImgInServer" id="containerForPdfInServer">
@@ -311,6 +319,19 @@
     </div>
 </div>
 
+<div class="photoCalc d-none" id="photoCalc">
+    <div class="btn" id="backInTui">Назад</div>
+
+    <div class="tuiControls" id="tuiControls">
+
+    </div>
+
+
+    <div class="tui-image-editor" id="tui-image-editor">
+
+    </div>
+</div>
+
 <footer>
     <!--    <iframe src="" frameborder="2" class="frame" id="iframe"></iframe>-->
 </footer>
@@ -374,6 +395,17 @@
 <script src="js/pdf.js" charset="utf-8"></script>
 <!--<script src="js/pdf.js.map" charset="utf-8"></script>-->
 <script src="js/pdfRender.js" charset="utf-8"></script>
+
+
+<script src="js/tuiimage/fabric-v4.2.0.js" charset="utf-8"></script>
+<script src="js/tuiimage/FileSaver.min.js" charset="utf-8"></script>
+<script src="js/tuiimage/tui-code-snippet.min.js" charset="utf-8"></script>
+<script src="js/tuiimage/tui-color-picker.min.js" charset="utf-8"></script>
+<script src="js/tuiimage/tui-image-editor.js" charset="utf-8"></script>
+<script src="js/tuiimage/exampleHtml.js" charset="utf-8"></script>
+<script src="js/tuiimage/service-basic.js" charset="utf-8"></script>
+<!--<script src="js/theme/white-theme.js" charset="utf-8"></script>-->
+<script src="js/tuiimage/index.js" charset="utf-8"></script>
 
 
 <script src="js/bootstrap.bundle.js" charset="utf-8"></script>

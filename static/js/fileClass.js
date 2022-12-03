@@ -285,7 +285,8 @@ class file {
                 imgInServer.setAttribute("src", image.src)
                 renderListAndCard()
             }
-            image.src = "/files/totest/file-1.png";
+            // image.src = "/files/totest/file-1.png";
+            image.src = thisFile.url.url;
             document.querySelector("#page_count").innerText = 1
 
             // if(!this.url2.pdf || lastFileId !== thisFile._id){

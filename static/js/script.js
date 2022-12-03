@@ -21,6 +21,7 @@ const toUseButtons = document.querySelector("#toUseButtons");
 const destinyThisButtons = document.querySelector("#destinyThisButtons");
 const toHomeButton = document.querySelector("#toHomeButton");
 const photoPrint = document.querySelector("#photoPrint");
+const photoCalc = document.querySelector("#photoCalc");
 const luvers = document.querySelector("#luvers");
 const bannerVarit = document.querySelector("#bannerVarit");
 const floorLamination = document.querySelector("#floorLamination");
@@ -51,10 +52,6 @@ toHomeButton.addEventListener("click", function () {
     digitalPrintingContainer.classList.add("d-none")
     mainDisplay.classList.remove("d-none")
 })
-toHomeButton.addEventListener("click", function () {
-    digitalPrintingContainer.classList.add("d-none")
-    mainDisplay.classList.remove("d-none")
-})
 function activateModal(){
     imgInp.classList.remove("notValid")
     document.querySelector("#uploadLoad").classList.add("d-none");
@@ -70,10 +67,22 @@ widescreenPrint.addEventListener("click", event => {
     activateModal()
     fileClassCalcToModal.innerHTML = "wide"
 })
-photoPrint.addEventListener("click", event => {
-    activateModal()
-    fileClassCalcToModal.innerHTML = "photo"
-})
+// photoPrint.addEventListener("click", event => {
+//     // activateModal()
+//     // fileClassCalcToModal.innerHTML = "photo"
+//     mainDisplay.classList.add("d-none");
+//     photoCalc.classList.remove("d-none");
+//
+// })
+// openEditor.addEventListener("click", event => {
+//     // activateModal()
+//     // fileClassCalcToModal.innerHTML = "photo"
+//     if(!thisFile.url2.pdf){
+//         mainDisplay.classList.add("d-none");
+//         photoCalc.classList.remove("d-none");
+//
+//     }
+// })
 // const digitalCalcButton = document.querySelector("#digitalCalcButton");
 // const digitalCalcButtonNotFile = document.querySelector("#digitalCalcButtonNotFile");
 // const widescreenCalcButton = document.querySelector("#widescreenCalcButton");
@@ -163,6 +172,7 @@ nonUpload.addEventListener("click", function () {
             file1.format = e.data.format
             file1.countInFile = e.data.countInFile
             file1.calc = e.data.calc
+            file1.url = e.data.url
             allFiles.push(file1)
             file1.createFileContainer()
             file1.pick({target: file1.container})
