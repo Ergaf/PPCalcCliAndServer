@@ -68,9 +68,17 @@ function renderListAndCard() {
         if(pdfCoef >= coef){
             let newPdfCoef = 100 * coef / pdfCoef
             pdfRenderer.style.width = newPdfCoef+"%"
+            // theCanvas.style.width = newPdfCoef+"%"
+            // containerForPdfInServer.style.width = newPdfCoef+"%"
+            // myPdfViewer.style.width = newPdfCoef+"%"
+            // pdfInServer.style.width = newPdfCoef+"%"
         }
         else {
             pdfRenderer.style.width = 100+"%"
+            // theCanvas.style.width = 100+"%"
+            // containerForPdfInServer.style.width = 100+"%"
+            // myPdfViewer.style.width = 100+"%"
+            // pdfInServer.style.width = 100+"%"
         }
 
         if(coef < 1){
@@ -103,11 +111,17 @@ function renderListAndCard() {
 
             if(pdfCoef >= coef1){
                 pdfRenderer.style.width = newPdfCoef*coef+"%"
+                // theCanvas.style.width = newPdfCoef*coef+"%"
                 // containerForPdfInServer.style.width = newPdfCoef*coef+"%"
+                // myPdfViewer.style.width = newPdfCoef*coef+"%"
+                // pdfInServer.style.width = newPdfCoef*coef+"%"
             }
             else {
                 pdfRenderer.style.width = 100/coef1+"%"
+                // theCanvas.style.width = 100/coef1+"%"
                 // containerForPdfInServer.style.width = 100/coef1+"%"
+                // myPdfViewer.style.width = 100/coef1+"%"
+                // pdfInServer.style.width = 100/coef1+"%"
             }
         }
         else {

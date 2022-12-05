@@ -196,6 +196,42 @@ app.post("/upload3", function (req, res) {
     });
 });
 
+app.post("/upload4", function (req, res) {
+    let fstream;
+    req.pipe(req.busboy);
+    req.busboy.on('file', function (idForFile, file, filename) {
+        console.log("Uploading: " + idForFile);
+        let folder1 = __dirname + `/files/${req.cookies.to}/${idForFile}/red`
+        try {
+            if (!fs.existsSync(folder1)){
+                fs.mkdirSync(folder1)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+
+        let filePath = path.join(__dirname + `/files/${req.cookies.to}/${idForFile}/red/file`);
+        fstream = fs.createWriteStream(filePath);
+        file.pipe(fstream);
+        fstream.on('close', function () {
+
+            console.log(`cookie : ${req.cookies.to}`);
+            if(req.cookies.to) {
+                cookieStore.forEach(e => {
+                    if (e.cookie === req.cookies.to) {
+                        e.orders.forEach(o => {
+                            if(o.id === idForFile){
+                                o.url.url = `/files/${req.cookies.to}/${idForFile}/red/file`;
+                                res.send(`/files/${req.cookies.to}/${idForFile}/red/file`);
+                            }
+                        })
+                    }
+                })
+            }
+        });
+    });
+});
+
 app.get("/files*", function (req, res) {
     let urll = req.url;
     // console.log(`a request came for a file to url ${urll}`);
@@ -227,7 +263,8 @@ app.post("/orders", function (req, res) {
                         }
                         let ress = {
                             url: "/files/totest/file-1.png",
-                            img: true
+                            img: true,
+                            red: false
                         }
                         let order = {
                             calc: body.data.calc,
@@ -397,7 +434,8 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
 
         let ress = {
             url: `/files/${cookies}/${id}/notpdf/file`,
-            img: true
+            img: true,
+            red: true
         }
         cookieStore.forEach(e => {
             if(e.cookie === cookies){

@@ -1,5 +1,5 @@
 let example = `
-       <div class="tui-image-editor-controls">
+       <div class="tui-image-editor-controls d-flex flex-row">
 <!--        <div class="header">-->
 <!--&lt;!&ndash;          <img class="logo" src="img/TOAST UI Component.png" />&ndash;&gt;-->
 <!--          <span class="name"> Editor</span>-->
@@ -11,33 +11,34 @@ let example = `
 <!--&lt;!&ndash;            <li class="menu-item border" id="btn-download">Download</li>&ndash;&gt;-->
 <!--          </ul>-->
 <!--        </div>-->
-        <ul class="menu">
-          <li class="menu-item disabled" id="btn-undo">Undo</li>
-          <li class="menu-item disabled" id="btn-redo">Redo</li>
-          <li class="menu-item" id="btn-clear-objects">ClearObjects</li>
-          <li class="menu-item" id="btn-remove-active-object">RemoveActiveObject</li>
-          <li class="menu-item" id="btn-crop">Crop</li>
-          <li class="menu-item" id="btn-flip">Flip</li>
-          <li class="menu-item" id="btn-rotation">Rotation</li>
-          <li class="menu-item" id="btn-draw-line">DrawLine</li>
-          <li class="menu-item" id="btn-draw-shape">Shape</li>
-          <li class="menu-item" id="btn-add-icon">Icon</li>
-          <li class="menu-item" id="btn-text">Text</li>
-          <li class="menu-item" id="btn-mask-filter">Mask</li>
-          <li class="menu-item" id="btn-image-filter">Filter</li>
+        <ul class="d-flex flex-column menu">
+          <li class="btn menu-item disabled" id="btn-undo">Undo(Назад)</li>
+          <li class="btn menu-item disabled" id="btn-redo">Redo(Вперед)</li>
+          <li class="menu-item btn" id="btn-clear-objects">ClearObjects</li>
+          <li class="menu-item btn" id="btn-remove-active-object">RemoveActiveObject</li>
+          <li class="menu-item btn" id="btn-crop">Crop</li>
+          <li class="menu-item btn" id="btn-flip">Flip</li>
+          <li class="menu-item btn" id="btn-rotation">Rotation</li>
+          <li class="menu-item btn" id="btn-draw-line">DrawLine</li>
+          <li class="menu-item btn" id="btn-draw-shape">Shape</li>
+          <li class="menu-item btn" id="btn-add-icon">Icon</li>
+          <li class="menu-item btn" id="btn-text">Text</li>
+          <li class="menu-item btn" id="btn-mask-filter">Mask</li>
+          <li class="menu-item btn" id="btn-image-filter">Filter</li>
         </ul>
         <div class="sub-menu-container" id="crop-sub-menu">
           <ul class="menu">
-            <li class="menu-item" id="btn-apply-crop">Apply</li>
-            <li class="menu-item" id="btn-cancel-crop">Cancel</li>
+            <li class="menu-item btn" id="btn-apply-crop">Apply</li>
+            <li class="menu-item btn d-none" id="btn-cancel-crop">Cancel</li>
+            <li class="menu-item btn close">Close</li>
           </ul>
         </div>
         <div class="sub-menu-container" id="flip-sub-menu">
           <ul class="menu">
-            <li class="menu-item" id="btn-flip-x">FlipX</li>
-            <li class="menu-item" id="btn-flip-y">FlipY</li>
-            <li class="menu-item" id="btn-reset-flip">Reset</li>
-            <li class="menu-item close">Close</li>
+            <li class="menu-item btn" id="btn-flip-x">FlipX</li>
+            <li class="menu-item btn" id="btn-flip-y">FlipY</li>
+            <li class="menu-item btn" id="btn-reset-flip">Reset</li>
+            <li class="menu-item btn close">Close</li>
           </ul>
         </div>
         <div class="sub-menu-container" id="rotation-sub-menu">

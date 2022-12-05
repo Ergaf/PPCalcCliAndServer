@@ -277,13 +277,13 @@
                     <input id="current_page" class="input-group-text gray" value="1" type="number"/>
                     <button id="go_next" class="input-group-text gray d-none">+</button>
 
-                    <button id="rotateLeft" class="input-group-text gray">
+                    <button id="rotateLeft" class="input-group-text gray d-none">
                         <img src="img/rotate_left.png" alt="=>" class="iconNavPanel notMDr">
                     </button>
-                    <button id="rotateNormal" class="input-group-text gray">
+                    <button id="rotateNormal" class="input-group-text gray d-none">
                         <img src="img/rotateNormal.png" alt="<=" class="iconNavPanel notMDr">
                     </button>
-                    <button id="rotateRight" class="input-group-text gray">
+                    <button id="rotateRight" class="input-group-text gray d-none">
                         <img src="img/rotate_right.png" alt="<=" class="iconNavPanel notMDr">
                     </button>
                     <button id="openEditor" class="input-group-text gray">
@@ -320,15 +320,22 @@
 </div>
 
 <div class="photoCalc d-none" id="photoCalc">
-    <div class="btn" id="backInTui">Назад</div>
-
-    <div class="tuiControls" id="tuiControls">
-
+    <div class="btn" id="backInPhotoCalcButton">Назад</div>
+    <div class="d-flex flex-row justify-content-center align-items-center">
+        <div class="btn">In memory</div>
+        <div class="btn">Google</div>
+        <div class="btn">Facebook/Insta</div>
     </div>
+</div>
 
-
-    <div class="tui-image-editor" id="tui-image-editor">
-
+<div class="photoRedactor d-none" id="photoRedactor">
+    <div class="d-flex flex-row">
+        <div class="btn" id="backInTui">Назад</div>
+        <div class="btn" id="saveChanges">Готово</div>
+    </div>
+    <div class="tuiContainer d-flex flex-row">
+        <div class="tuiControls" id="tuiControls"></div>
+        <div class="tui-image-editor" id="tui-image-editor"></div>
     </div>
 </div>
 
@@ -395,6 +402,9 @@
 <script src="js/pdf.js" charset="utf-8"></script>
 <!--<script src="js/pdf.js.map" charset="utf-8"></script>-->
 <script src="js/pdfRender.js" charset="utf-8"></script>
+
+
+<script src="js/photocalc/photoCalcIndex.js" charset="utf-8"></script>
 
 
 <script src="js/tuiimage/fabric-v4.2.0.js" charset="utf-8"></script>

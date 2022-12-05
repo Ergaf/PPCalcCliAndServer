@@ -358,6 +358,12 @@ class file {
             +this.holes
             +", "
             +this.roundCorner
+
+        if(thisFile.url.red){
+            openEditor.classList.remove('d-none')
+        } else {
+            openEditor.classList.add('d-none')
+        }
     }
 
     // destinyAppend() {
