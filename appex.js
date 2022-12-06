@@ -67,7 +67,9 @@ app.use((req, res, next) => {
         res.cookie('to', cookieId)
         let user = {
             cookie: cookieId,
-            orders: []
+            orders: [],
+            photoOrders: [],
+            activeOrders: []
         }
         cookieStore.push(user)
         res.send(cookieId)
@@ -81,12 +83,12 @@ app.use("/admin", express.static(__dirname + "/admin/admin"));
 app.use("/3dtest", express.static(__dirname + "/admin/3dtest"));
 app.use("/red", express.static(__dirname + "/admin/image-editor/examples"));
 
-app.post("/upload1", function (req, res) {
+app.post("/uploadFile", function (req, res) {
     let fstream;
     req.pipe(req.busboy);
     req.busboy.on('file', function (fieldname, file, filename) {
         let filenameToNorm = utf8.decode(filename.filename)
-        console.log("Uploading: " + filenameToNorm);
+        console.log("Uploading file: " + filenameToNorm);
 
         let folder = __dirname + `/files/${req.cookies.to}`
         try {
@@ -111,83 +113,7 @@ app.post("/upload1", function (req, res) {
         file.pipe(fstream);
         fstream.on('close', function () {
             try {
-                processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, "digital")
-            } catch (e) {
-                console.log(e.message);
-                res.send(e)
-            }
-        });
-    });
-});
-app.post("/upload2", function (req, res) {
-    let fstream;
-    req.pipe(req.busboy);
-    req.busboy.on('file', function (fieldname, file, filename) {
-        let filenameToNorm = utf8.decode(filename.filename)
-        console.log("Uploading: " + filenameToNorm);
-
-        let folder = __dirname + `/files/${req.cookies.to}`
-        try {
-            if (!fs.existsSync(folder)){
-                fs.mkdirSync(folder)
-            }
-        } catch (err) {
-            console.error(err)
-        }
-        let idForFile = Date.now().toString()
-        let folder1 = __dirname + `/files/${req.cookies.to}/${idForFile}`
-        try {
-            if (!fs.existsSync(folder1)){
-                fs.mkdirSync(folder1)
-            }
-        } catch (err) {
-            console.error(err)
-        }
-
-        let filePath = path.join(__dirname + `/files/${req.cookies.to}/${idForFile}/${filenameToNorm}`);
-        fstream = fs.createWriteStream(filePath);
-        file.pipe(fstream);
-        fstream.on('close', function () {
-            try {
-                processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, "wide")
-            } catch (e) {
-                console.log(e.message);
-                res.send(e)
-            }
-        });
-    });
-});
-app.post("/upload3", function (req, res) {
-    let fstream;
-    req.pipe(req.busboy);
-    req.busboy.on('file', function (fieldname, file, filename) {
-        let filenameToNorm = utf8.decode(filename.filename)
-        console.log("Uploading: " + filenameToNorm);
-
-        let folder = __dirname + `/files/${req.cookies.to}`
-        try {
-            if (!fs.existsSync(folder)){
-                fs.mkdirSync(folder)
-            }
-        } catch (err) {
-            console.error(err)
-        }
-        let idForFile = Date.now().toString()
-        let folder1 = __dirname + `/files/${req.cookies.to}/${idForFile}`
-        try {
-            if (!fs.existsSync(folder1)){
-                fs.mkdirSync(folder1)
-            }
-        } catch (err) {
-            console.error(err)
-        }
-
-        let filePath = path.join(__dirname + `/files/${req.cookies.to}/${idForFile}/${filenameToNorm}`);
-        fstream = fs.createWriteStream(filePath);
-        file.pipe(fstream);
-        fstream.on('close', function () {
-            try {
-                processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, "photo")
+                processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, fieldname)
             } catch (e) {
                 console.log(e.message);
                 res.send(e)
@@ -196,11 +122,10 @@ app.post("/upload3", function (req, res) {
     });
 });
 
-app.post("/upload4", function (req, res) {
+app.post("/uploadRedactedFile", function (req, res) {
     let fstream;
     req.pipe(req.busboy);
     req.busboy.on('file', function (idForFile, file, filename) {
-        console.log("Uploading: " + idForFile);
         let folder1 = __dirname + `/files/${req.cookies.to}/${idForFile}/red`
         try {
             if (!fs.existsSync(folder1)){
@@ -209,13 +134,11 @@ app.post("/upload4", function (req, res) {
         } catch (err) {
             console.error(err)
         }
-
         let filePath = path.join(__dirname + `/files/${req.cookies.to}/${idForFile}/red/file`);
         fstream = fs.createWriteStream(filePath);
         file.pipe(fstream);
         fstream.on('close', function () {
-
-            console.log(`cookie : ${req.cookies.to}`);
+            console.log(`cookie : ${req.cookies.to}, Uploading redacted file: ${idForFile}`);
             if(req.cookies.to) {
                 cookieStore.forEach(e => {
                     if (e.cookie === req.cookies.to) {
@@ -231,6 +154,67 @@ app.post("/upload4", function (req, res) {
         });
     });
 });
+
+//photoFiles ---------------------------------------------------------------------------
+// app.post("/uploadAllPhotoPrev", function (req, res) {
+//     let idForFile = Date.now().toString()
+//     let folder1 = __dirname + `/files/${req.cookies.to}`
+//     try {
+//         if (!fs.existsSync(folder1)){
+//             fs.mkdirSync(folder1)
+//         }
+//     } catch (err) {
+//         console.error(err)
+//     }
+//
+//     if(req.cookies.to){
+//         cookieStore.forEach(e => {
+//             if(e.cookie === req.cookies.to){
+//                 e.photoOrders.push()
+//             }
+//         })
+//     }
+//     res.send(idForFile)
+// })
+// app.post("/uploadAllPhoto", function (req, res) {
+//     let fstream;
+//     req.pipe(req.busboy);
+//     req.busboy.on('file', function (fieldname, file, filename) {
+//         let filenameToNorm = utf8.decode(filename.filename)
+//         console.log("Uploading file: " + filenameToNorm);
+//
+//         let folder = __dirname + `/files/${req.cookies.to}`
+//         try {
+//             if (!fs.existsSync(folder)){
+//                 fs.mkdirSync(folder)
+//             }
+//         } catch (err) {
+//             console.error(err)
+//         }
+//         let idForFile = Date.now().toString()
+//         let folder1 = __dirname + `/files/${req.cookies.to}/${idForFile}`
+//         try {
+//             if (!fs.existsSync(folder1)){
+//                 fs.mkdirSync(folder1)
+//             }
+//         } catch (err) {
+//             console.error(err)
+//         }
+//
+//         let filePath = path.join(__dirname + `/files/${req.cookies.to}/${idForFile}/${filenameToNorm}`);
+//         fstream = fs.createWriteStream(filePath);
+//         file.pipe(fstream);
+//         fstream.on('close', function () {
+//             try {
+//                 processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, fieldname)
+//             } catch (e) {
+//                 console.log(e.message);
+//                 res.send(e)
+//             }
+//         });
+//     });
+// })
+//----------------------------------------------------------------------------------------
 
 app.get("/files*", function (req, res) {
     let urll = req.url;
@@ -417,9 +401,12 @@ function sessionHave (req) {
 async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
     console.log(`uploading file mime type: ${mime.getType(filePath)}, calcType: ${calcType}`);
     if(
+        mime.getType(filePath) === "image/x-jpeg" ||
         mime.getType(filePath) === "image/jpeg" ||
         mime.getType(filePath) === "image/x-png" ||
-        mime.getType(filePath) === "image/png"
+        mime.getType(filePath) === "image/png" ||
+        mime.getType(filePath) === "image/x-jpg"||
+        mime.getType(filePath) === "image/jpg"
     ){
         let folder = __dirname + `/files/${cookies}/${id}/notPdf`
         try {

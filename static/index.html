@@ -320,11 +320,20 @@
 </div>
 
 <div class="photoCalc d-none" id="photoCalc">
-    <div class="btn" id="backInPhotoCalcButton">Назад</div>
     <div class="d-flex flex-row justify-content-center align-items-center">
-        <div class="btn">In memory</div>
-        <div class="btn">Google</div>
-        <div class="btn">Facebook/Insta</div>
+        <div class="btn" id="backInPhotoCalcButton">Назад</div>
+        <label class="btn" for="inMemory">In memory</label>
+        <input type="file" multiple accept=".jpg, .png" class="btn d-none" name="inMemory" id="inMemory"/>
+        <button class="btn" disabled>Google</button>
+        <button class="btn" disabled>Facebook/Insta</button>
+        <button class="btn" disabled>others....</button>
+    </div>
+    <div class="d-flex flex-row justify-content-center d-none" id="saveControls">
+        <div class="btn" id="saveAllUserPhoto">Готово(Загрузити)</div>
+        <div class="btn" id="deleteAllUserPhoto">Видалити усе</div>
+    </div>
+    <div class="row row-cols-5 align-items-start justify-content-center settingElem" id="containerForUserImg">
+
     </div>
 </div>
 
@@ -392,6 +401,11 @@
         </div>
     </div>
 </div>
+
+
+<script src="js/photocalc/userImageUnitClass.js" charset="utf-8"></script>
+
+
 
 
 <script src="js/renders/renderDigitalCalc.js" charset="utf-8"></script>
