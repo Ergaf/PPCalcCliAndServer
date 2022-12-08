@@ -125,20 +125,26 @@
 
                 </div>
                 <div class="btn-toolbar mb-3 settingElem" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="input-group m-auto">
+                    <div class="input-group d-flex align-items-center justify-content-center m-auto">
                         <input type="number" class="input-group-text white" id="sizeX">
                         <span class="input-group-text gray">мм</span>
                         <button class="btn input-group-text gray" id="orient">
-                            <img src="img/orient.png" class="orient" style="height: 20px" alt="">
+                            <img src="img/orient.png" style="height: 20px" alt="">
                         </button>
                         <input type="number" class="input-group-text white" id="sizeY">
                         <span class="input-group-text gray">мм</span>
+                        <span class="input-group-text gray">
+                            <img src="img/mouseScroll.png" style="height: 20px" alt="">
+                        </span>
                     </div>
                 </div>
                 <div class="btn-toolbar">
-                    <div class="input-group m-auto">
+                    <div class="input-group d-flex align-items-center justify-content-center m-auto">
                         <input type="number" id="countInt" class="input-group-text white">
                         <span class="input-group-text gray" id="primirnyk"></span>
+                        <span class="input-group-text gray">
+                            <img src="img/mouseScroll.png" style="height: 20px" alt="">
+                        </span>
                     </div>
                 </div>
                 <div class="d-flex justify-content-center settingElem" id="colorButtons">
@@ -273,6 +279,7 @@
                         <img src="img/dragArea.png" alt="d" class="iconNavPanel notMDr">
                     </div>
                     <button id="page_count" class="input-group-text gray"></button>
+                    <button class="input-group-text gray">стр.</button>
                     <button id="go_previous" class="input-group-text gray d-none">-</button>
                     <input id="current_page" class="input-group-text gray" value="1" type="number"/>
                     <button id="go_next" class="input-group-text gray d-none">+</button>
@@ -286,6 +293,9 @@
                     <button id="rotateRight" class="input-group-text gray d-none">
                         <img src="img/rotate_right.png" alt="<=" class="iconNavPanel notMDr">
                     </button>
+                    <span class="input-group-text gray">
+                        <img src="img/mouseScroll.png" style="height: 20px" alt="">
+                    </span>
                     <button id="openEditor" class="input-group-text gray">
                         <img src="img/openEditor.png" alt="<=" class="iconNavPanel notMDr">
                     </button>
@@ -344,7 +354,7 @@
     </div>
     <div class="tuiContainer d-flex flex-row">
         <div class="tuiControls" id="tuiControls"></div>
-        <div class="tui-image-editor" id="tui-image-editor"></div>
+        <div class="tui-image-editor m-auto mt-0" id="tui-image-editor"></div>
     </div>
 </div>
 
@@ -429,7 +439,7 @@
 <script src="js/tuiimage/exampleHtml.js" charset="utf-8"></script>
 <script src="js/tuiimage/service-basic.js" charset="utf-8"></script>
 <!--<script src="js/theme/white-theme.js" charset="utf-8"></script>-->
-<script src="js/tuiimage/index.js" charset="utf-8"></script>
+<script src="js/tuiimage/indexTui.js" charset="utf-8"></script>
 
 
 <script src="js/bootstrap.bundle.js" charset="utf-8"></script>

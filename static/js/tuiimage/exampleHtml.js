@@ -12,14 +12,14 @@ let example = `
 <!--          </ul>-->
 <!--        </div>-->
         <ul class="d-flex flex-column menu">
-          <li class="btn menu-item disabled" id="btn-undo">Undo(Назад)</li>
-          <li class="btn menu-item disabled" id="btn-redo">Redo(Вперед)</li>
-          <li class="menu-item btn" id="btn-clear-objects">ClearObjects</li>
-          <li class="menu-item btn" id="btn-remove-active-object">RemoveActiveObject</li>
-          <li class="menu-item btn" id="btn-crop">Crop</li>
-          <li class="menu-item btn" id="btn-flip">Flip</li>
-          <li class="menu-item btn" id="btn-rotation">Rotation</li>
-          <li class="menu-item btn" id="btn-draw-line">DrawLine</li>
+          <li class="btn menu-item disabled d-none" id="btn-undo">Undo(Назад)</li>
+          <li class="btn menu-item disabled d-none" id="btn-redo">Redo(Вперед)</li>
+          <li class="menu-item btn" id="btn-clear-objects"><img src="img/clean.png" style="height: 20px" alt=""></li>
+          <li class="menu-item btn" id="btn-remove-active-object"><img src="img/delIcon.png" style="height: 20px" alt=""></li>
+          <li class="menu-item btn" id="btn-crop"><img src="img/kadrirovanie.png" style="height: 20px" alt=""></li>
+          <li class="menu-item btn" id="btn-flip"><img src="img/mirrorIcon2.jpg" style="height: 20px" alt=""></li>
+          <li class="menu-item btn" id="btn-rotation">Поворот</li>
+          <li class="menu-item btn" id="btn-draw-line">Малювати</li>
           <li class="menu-item btn" id="btn-draw-shape">Shape</li>
           <li class="menu-item btn" id="btn-add-icon">Icon</li>
           <li class="menu-item btn" id="btn-text">Text</li>

@@ -62201,7 +62201,7 @@ var resize_command = {
 };
 factory_command.register(resize_command);
 /* harmony default export */ var command_resize = ((/* unused pure expression or super */ null && (resize_command)));
-;// CONCATENATED MODULE: ./src/index.js
+;// CONCATENATED MODULE: ./src/indexTui.js
 
 
  // commands

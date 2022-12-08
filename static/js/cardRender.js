@@ -57,14 +57,17 @@ function renderListAndCard() {
         if(imgCoef >= coef){
             // 100 * coef / imgCoef
             let newImgCoef = 100 * coef / imgCoef
+            console.log(imgCoef);
+            console.log(newImgCoef);
             // let newImgCoef =  coef / imgCoef
-            // imgInServer.style.width = width * newImgCoef+"%"
+            // imgInServer.style.width = width / newImgCoef+"%"
             imgInServer.style.width = newImgCoef+"%"
         }
         else {
             //100+"vh"
             imgInServer.style.width = 100+"%"
         }
+        //-----------------PDF-----------------------------------------------
         if(pdfCoef >= coef){
             let newPdfCoef = 100 * coef / pdfCoef
             pdfRenderer.style.width = newPdfCoef+"%"
@@ -82,8 +85,6 @@ function renderListAndCard() {
         }
 
         if(coef < 1){
-
-
             // etalonForRender = etalon*coef
             // width = width*coef
             let newImgCoef = 100 * coef / imgCoef

@@ -51,12 +51,15 @@ class userImageUnit {
                 console.log(e);
                 if(photoArrContainer.length > 0){
                     photoArrContainer.splice(0, 1)
+                    this.container.style.background = "rgb(193, 250, 141);"
                     if(photoArrContainer.length > 0){
                         photoArrContainer[0].uploadThis()
                     }
                 }
                 if(photoArrContainer.length === 0) {
+                    containerForUserImg.html("")
                     photoCalc.addClass("d-none");
+                    saveControls.addClass("d-none")
                     digitalPrintingContainer.classList.remove("d-none");
                 }
 

@@ -11,6 +11,7 @@
 }
 .tui-image-editor-controls {
   min-height: 250px;
+  width: 20vw;
 }
 .menu {
   padding: 0;
@@ -72,8 +73,8 @@
   display: none;
 }
 .tui-image-editor {
-  width: 95vw;
-  height: 95vh;
+  width: 50%;
+  /*height: 95vh;*/
 }
 .tui-image-editor-canvas-container {
   margin: 0 auto;

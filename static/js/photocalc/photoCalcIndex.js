@@ -61,6 +61,7 @@ inMemory.on('change', function () {
                     if(coef > 1){
                         widthAfterCoef = 100/coef
                     }
+                    console.log(coef);
                     console.log(widthAfterCoef);
                     let img = `<div class="d-flex flex-row justify-content-end mt-1 mb-1">
                                   <button type="button" close="true" class="btn-close" aria-label="Close"></button>

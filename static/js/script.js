@@ -323,8 +323,8 @@ fetch('https://script.googleusercontent.com/macros/echo?user_content_key=wLSQSat
             mainDisplay.classList.remove("d-none")
         }
 
-        // let toast = new bootstrap.Toast($("#liveToast"))
-        // toast.show()
+        let toast = new bootstrap.Toast($("#liveToast"))
+        toast.show()
     })
 
 fetch("/orders")

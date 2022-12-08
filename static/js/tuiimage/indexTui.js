@@ -1,4 +1,5 @@
 let backInTui = $('#backInTui');
+let tuiImageEditorForCss = document.querySelector("#tui-image-editor")
 backInTui.on("click", ev => {
     photoRedactor.classList.add("d-none");
     // mainDisplay.classList.remove("d-none");
@@ -14,8 +15,28 @@ openEditor.addEventListener("click", event => {
         imageEditor.loadImageFromURL(thisFile.url.url, 'SampleImage').then(function (sizeValue) {
             imageEditor.clearUndoStack();
             // console.log(sizeValue);
-        })
 
+            var imgg = new Image();
+            imgg.onload = function() {
+                let width = this.width;
+                let hight = this.height;
+
+                let coef = hight / width
+                if (coef < 1) {
+                    let widthAfterCoef = 40 / coef
+                    tuiImageEditorForCss.style.width = widthAfterCoef+"vw"
+                } else {
+                    let widthAfterCoef = 40 * coef
+                    tuiImageEditorForCss.style.width = widthAfterCoef+"vw"
+                }
+                console.log(coef);
+
+                tuiImageEditorForCss.style.height = 40+"vw"
+            }
+            imgg.src = thisFile.url.url;
+            // tuiImageEditorForCss.style.padding = "20vh"
+            // tuiImageEditor.classList.add("tui-image-editor");
+        })
     }
 })
 
