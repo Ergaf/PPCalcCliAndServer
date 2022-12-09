@@ -289,14 +289,14 @@ let countInt = document.querySelector("#countInt")
 let sizeX = document.querySelector("#sizeX")
 let sizeY = document.querySelector("#sizeY")
 let prices;
-fetch('https://script.googleusercontent.com/macros/echo?user_content_key=wLSQSatR6bZv9i8U5VtiOsa7GMSDGnnZijrnGFZE1_jwd1QJkdBz8Sl8ITa_TvVjVpf_ByOh6IcFuOZ7evsUSo_9NYtdFJYTm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnDbwAl7CMxVAiYx-XcQGm2-pK98VFRlg2L1Bgi9-N5lGP8ipd0KGqDVV0UksueULwVpami56uyJ4IxkRYgJm5B_wls8-MAHEtdz9Jw9Md8uu&lib=MKqsPpMpIdvM_NE9JC918gzq7P1CHZY8E')
-    // fetch('/getprices')
+// fetch('https://script.googleusercontent.com/macros/echo?user_content_key=wLSQSatR6bZv9i8U5VtiOsa7GMSDGnnZijrnGFZE1_jwd1QJkdBz8Sl8ITa_TvVjVpf_ByOh6IcFuOZ7evsUSo_9NYtdFJYTm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnDbwAl7CMxVAiYx-XcQGm2-pK98VFRlg2L1Bgi9-N5lGP8ipd0KGqDVV0UksueULwVpami56uyJ4IxkRYgJm5B_wls8-MAHEtdz9Jw9Md8uu&lib=MKqsPpMpIdvM_NE9JC918gzq7P1CHZY8E')
+    fetch('/getprices')
     .then(response => response.json())
     .then(json => {
         let x = 1
         let data = [];
         json.forEach(e => {
-            if (e[0] === '') {
+            if (e[0] === '' || e[0] === null) {
                 x = 1
             } else {
                 if (x === 1) {
@@ -310,7 +310,8 @@ fetch('https://script.googleusercontent.com/macros/echo?user_content_key=wLSQSat
                 }
             }
         })
-        // console.log(data)
+        // console.log(json);
+        console.log(data)
         prices = data
 
         if (allFiles.length > 0) {
@@ -345,6 +346,19 @@ fetch("/orders")
                 allFiles.push(file1)
                 file1.createFileContainer()
             })
+
+            if (allFiles.length > 0) {
+                mainDisplay.classList.add("d-none")
+                digitalPrintingContainer.classList.remove("d-none")
+                download.classList.add("d-none")
+            } else {
+                digitalPrintingContainer.classList.add("d-none")
+                download.classList.add("d-none")
+                mainDisplay.classList.remove("d-none")
+            }
+
+            // sliderInit()
+
         }
     })
 

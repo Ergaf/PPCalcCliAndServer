@@ -59,12 +59,13 @@ class file {
 
         Item.classList.add('btn');
         Item.classList.add('btn-sm');
+        Item.classList.add('slider-item');
         // Item.classList.add('btn-outline-dark');
         // Item.classList.add('align-items-center');
         Item.style.cssText = "display: flex; transition: 0.5s;"
         filesAllContainer.appendChild(Item);
         Item.onmousedown = this.pick.bind( this);
-        Item.innerHTML = this._name;
+        Item.innerText = this._name;
 
         let cancelButton = document.createElement('div');
         cancelButton.onmousedown = this.deleteThis.bind( this);

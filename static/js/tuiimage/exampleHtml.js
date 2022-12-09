@@ -188,9 +188,6 @@ let example = `
                     <td>
                       <label><input type="checkbox" id="input-check-invert" />Invert</label>
                     </td>
-                    <td>
-                      <label><input type="checkbox" id="input-check-sepia" />Sepia</label>
-                    </td>
                   </tr>
                   <tr>
                     <td>
@@ -199,20 +196,25 @@ let example = `
                     <td>
                       <label><input type="checkbox" id="input-check-blur" />Blur</label>
                     </td>
-                    <td>
-                      <label><input type="checkbox" id="input-check-sharpen" />Sharpen</label>
-                    </td>
                   </tr>
                   <tr>
                     <td>
                       <label><input type="checkbox" id="input-check-emboss" />Emboss</label>
                     </td>
                   </tr>
+                  <tr>
+                     <td>
+                       <label><input type="checkbox" id="input-check-sepia" />Sepia</label>
+                     </td>
+                     <td>
+                        <label><input type="checkbox" id="input-check-sharpen" />Sharpen</label>
+                     </td>
+                  </tr>
                 </tbody>
               </table>
             </li>
             <li class="menu-item align-left-top">
-              <p>
+              <div>
                 <label>
                   <input type="checkbox" id="input-check-remove-white" />
                   RemoveWhite
@@ -229,7 +231,7 @@ let example = `
                     max="255"
                   />
                 </label>
-              </p>
+              </div>
             </li>
             <li class="menu-item align-left-top">
               <p>

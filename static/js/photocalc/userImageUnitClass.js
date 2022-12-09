@@ -6,7 +6,8 @@ class userImageUnit {
     constructor(img) {
         this.container = document.createElement("div");
         this.container.classList.add("card");
-        this.container.style.cssText = "width: 19.5vw; height: 22.3vw;";
+        // this.container.classList.add("imgCard");
+        this.container.style.cssText = "width: 9.7vw; height: 11.3vw;";
         containerForUserImg.append(this.container);
         this.container.innerHTML = img;
         // this.progressBar = document.createElement("progress");

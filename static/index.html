@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    <link href="css/carousel/carousel.css" rel="stylesheet" type="text/css">
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
 <!--    <link href="css/tui/tui-image-editor.css" rel="stylesheet" type="text/css">-->
@@ -101,14 +103,35 @@
 
 <!----------------------------Цифровая печать калк------------------------------------------------>
 <div class="digitalPrinting d-none" id="digitalPrintingContainer">
-    <div class="FilesContainer">
-        <button class="btn btn-sm" id="toHomeButton">
-            To home
-        </button>
-        <button class="btn btn-sm" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            +
-        </button>
+    <div class="FilesContainerRelative position-relative">
+        <div class="FilesContainer position-absolute d-flex">
+            <button class="btn btn-sm" id="toHomeButton">
+                To home
+            </button>
+            <button class="btn btn-sm" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                +
+            </button>
+        </div>
     </div>
+
+<!--    <div class="slider-container">-->
+<!--        <div class="arrow-left d-none">-->
+<!--            <div class="arrow-bg">-->
+<!--                <div class="arrow"></div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="arrow-right d-none">-->
+<!--            <div class="arrow-bg">-->
+<!--                <div class="arrow"></div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; .slider-track - лента с фотографиями &ndash;&gt;-->
+<!--        <div class="FilesContainer slider-track">-->
+
+<!--        </div>-->
+<!--    </div>-->
+
+
     <!--    <label for="exampleColorInput" class="form-label">представление представляеться представительски</label>-->
     <!--    <input type="color" class="form-control form-control-color" id="exampleColorInput" value="#563d7c" title="Choose your color">-->
     <!--    <input type="range" class="form-range" id="customRange1">-->
@@ -401,21 +424,19 @@
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
     <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
-<!--            <img src="img/load.svg" class="rounded me-2" alt="...">-->
+<!--            <img src="img/load.svg" style="height: 22px; background: #d5d5d5" class="rounded me-2" alt="...">-->
             <strong class="me-auto">PrintPeaks</strong>
             <small>just now</small>
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">
-            Ціни завантажено з googlesheets.
+            Ціни завантажено з локал серверу.
         </div>
     </div>
 </div>
 
 
 <script src="js/photocalc/userImageUnitClass.js" charset="utf-8"></script>
-
-
 
 
 <script src="js/renders/renderDigitalCalc.js" charset="utf-8"></script>
@@ -429,6 +450,7 @@
 
 
 <script src="js/photocalc/photoCalcIndex.js" charset="utf-8"></script>
+<script src="js/carusel/carousel.js" charset="utf-8"></script>
 
 
 <script src="js/tuiimage/fabric-v4.2.0.js" charset="utf-8"></script>
