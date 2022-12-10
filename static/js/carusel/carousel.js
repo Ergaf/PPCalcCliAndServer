@@ -60,19 +60,23 @@ $('.FilesContainer').mousedown( function (e) {
 
         moveAt(e);
         function moveAt(e) {
-            // console.log("width "+carousel.getBoundingClientRect().left);
+            console.log("left "+carousel.getBoundingClientRect().left);
             // console.log(`raznica ${-carouselWidth + carouselContainerWidth}`);
             carousel.style.left = e.pageX - shiftX + 'px';
+            let homeBWidth = $('#homeB')[0].getBoundingClientRect().width
+            console.log(homeBWidth);
 
-
-            if(carousel.getBoundingClientRect().left >= 0){
+            if(carousel.getBoundingClientRect().left > 0){
+                console.log(1);
                 carousel.style.left = 0 + 'px';
             }
             if(carousel.getBoundingClientRect().left < -carouselWidth + carouselContainerWidth){
-                // console.log(carouselWidth - carouselContainerWidth);
+                console.log(2);
+                console.log(carouselWidth - carouselContainerWidth);
                 carousel.style.left = -carouselWidth + carouselContainerWidth + 'px';
             }
             if(0 <= -carouselWidth + carouselContainerWidth){
+                console.log(3);
                 carousel.style.left = 0 + 'px';
             }
         }

@@ -6,12 +6,23 @@ backInTui.on("click", ev => {
     digitalPrintingContainer.classList.remove("d-none");
 })
 
+// let imageEditor = new tui.ImageEditor('.tui-image-editor', {
+//     cssMaxWidth: 700,
+//     cssMaxHeight: 500,
+//     selectionStyle: {
+//         cornerSize: 20,
+//         rotatingPointOffset: 70,
+//     },
+// });
+
+
 openEditor.addEventListener("click", event => {
     // activateModal()
     if(!thisFile.url2.pdf && thisFile.url.url){
-        mainDisplay.classList.add("d-none");
-        photoRedactor.classList.remove("d-none");
-        digitalPrintingContainer.classList.add("d-none");
+        // mainDisplay.classList.add("d-none");
+        // photoRedactor.classList.remove("d-none");
+        // digitalPrintingContainer.classList.add("d-none");
+        $("#redactorModal").modal("show")
         imageEditor.loadImageFromURL(thisFile.url.url, 'SampleImage').then(function (sizeValue) {
             imageEditor.clearUndoStack();
             // console.log(sizeValue);
@@ -70,8 +81,9 @@ $('#saveChanges').on('click', function () {
                 // console.log(e);
                 thisFile.url.url = e.data
                 thisFile.renderSettings()
-                photoRedactor.classList.add('d-none');
-                digitalPrintingContainer.classList.remove("d-none");
+                $("#redactorModal").modal("hide")
+                // photoRedactor.classList.add('d-none');
+                // digitalPrintingContainer.classList.remove("d-none");
             })
     }
 });

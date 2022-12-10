@@ -103,15 +103,20 @@
 
 <!----------------------------Цифровая печать калк------------------------------------------------>
 <div class="digitalPrinting d-none" id="digitalPrintingContainer">
-    <div class="FilesContainerRelative slider-container position-relative">
-        <div class="FilesContainer slider-track position-absolute d-flex">
-            <button class="btn btn-sm" id="toHomeButton" style="white-space: nowrap">
-                To home
-            </button>
-            <button class="btn btn-sm" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                +
-            </button>
+    <div class="d-flex flex-row">
+        <div class="FilesContainerRelative slider-container position-relative">
+            <div class="FilesContainer slider-track position-absolute d-flex">
+
+            </div>
         </div>
+    </div>
+    <div class="d-flex flex-row" id="homeB">
+        <button class="btn btn-sm" id="toHomeButton" style="white-space: nowrap">
+            To home
+        </button>
+        <button class="btn btn-sm" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            +
+        </button>
     </div>
 
 <!--    <div class="slider-container">-->
@@ -371,14 +376,14 @@
 </div>
 
 <div class="photoRedactor d-none" id="photoRedactor">
-    <div class="d-flex flex-row">
-        <div class="btn" id="backInTui">Назад</div>
-        <div class="btn" id="saveChanges">Готово</div>
-    </div>
-    <div class="tuiContainer d-flex flex-row">
-        <div class="tuiControls" id="tuiControls"></div>
-        <div class="tui-image-editor m-auto mt-0" id="tui-image-editor"></div>
-    </div>
+<!--    <div class="d-flex flex-row">-->
+<!--        <div class="btn" id="backInTui">Назад</div>-->
+<!--        <div class="btn" id="saveChanges">Готово</div>-->
+<!--    </div>-->
+<!--    <div class="tuiContainer d-flex flex-row">-->
+<!--        <div class="tuiControls" id="tuiControls"></div>-->
+<!--        <div class="tui-image-editor m-auto mt-0" id="tui-image-editor"></div>-->
+<!--    </div>-->
 </div>
 
 <footer>
@@ -409,13 +414,48 @@
             </div>
             <div class="modal-footer">
                 <!--                <button type="button" class="btnm" data-bs-dismiss="modal">Назад</button>-->
+<!--                <div type="button" id="nonUpload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>-->
+<!--                <div type="button" id="upload" class="btn">ПРОРАХУВАТИ</div>-->
+<!--                <div type="button" id="uploadLoad" class="btn d-none" disabled>-->
                 <div type="button" id="nonUpload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>
                 <div type="button" id="upload" class="btn">ПРОРАХУВАТИ</div>
                 <div type="button" id="uploadLoad" class="btn d-none" disabled>
                     <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
                     ОБРОБКА...
                 </div>
+                </div>
             </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-xl" id="redactorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="" id="redactorModalLabel">Редагування зображення</div>
+                <button type="button" class="btn-close" id="redactorModalCloseButton" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div>
+                        <div class="tuiContainer d-flex flex-row">
+                            <div class="tuiControls" id="tuiControls"></div>
+                            <div class="tui-image-editor m-auto mt-0" id="tui-image-editor"></div>
+                        </div>
+                    </div>
+                    <div class="">
+                        <progress id="progressbarRedact" value="0" max="100" style="width: 100%"></progress>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!--                <button type="button" class="btnm" data-bs-dismiss="modal">Назад</button>-->
+                    <div class="d-flex flex-row">
+                        <div class="btn" id="backInTui">Назад</div>
+                        <div class="btn" id="saveChanges">Готово</div>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

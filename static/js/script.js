@@ -518,3 +518,7 @@ async function sendData(url, method, data) {
 // });
 //
 // imageEditor.loadImageFromURL('files/totest/file-1.png', 'My sample image');
+
+addEventListener("popstate",function(e){
+    alert('yeees!');
+},false);
