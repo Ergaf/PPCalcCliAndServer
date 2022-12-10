@@ -47,5 +47,54 @@ function sliderInit() {
 }
 
 $('.FilesContainer').mousedown( function (e) {
-    console.log(e.currentTarget.clientWidth);
+    let carousel = e.currentTarget
+    let carouselWidth = e.currentTarget.clientWidth
+    let carouselContainerWidth = $('.FilesContainerRelative')[0].clientWidth
+    // console.log(carouselWidth);
+    // console.log(carouselContainerWidth);
+    // document.body.appendChild(carousel);
+    // if(carouselWidth > carouselContainerWidth){
+        var coords = getCoords(carousel);
+        var shiftX = e.pageX - coords.left;
+        var shiftY = e.pageY - coords.top;
+
+        moveAt(e);
+        function moveAt(e) {
+            // console.log("width "+carousel.getBoundingClientRect().left);
+            // console.log(`raznica ${-carouselWidth + carouselContainerWidth}`);
+            carousel.style.left = e.pageX - shiftX + 'px';
+
+
+            if(carousel.getBoundingClientRect().left >= 0){
+                carousel.style.left = 0 + 'px';
+            }
+            if(carousel.getBoundingClientRect().left < -carouselWidth + carouselContainerWidth){
+                // console.log(carouselWidth - carouselContainerWidth);
+                carousel.style.left = -carouselWidth + carouselContainerWidth + 'px';
+            }
+            if(0 <= -carouselWidth + carouselContainerWidth){
+                carousel.style.left = 0 + 'px';
+            }
+        }
+
+        document.onmousemove = function(e) {
+            moveAt(e);
+        }
+        document.onmouseup = function() {
+            document.onmousemove = null;
+            carousel.onmouseup = null;
+        }
+
+        carousel.ondragstart = function() {
+            return false;
+        };
+
+        function getCoords(elem) {   // кроме IE8-
+            var box = elem.getBoundingClientRect();
+            return {
+                top: box.top + pageYOffset,
+                left: box.left + pageXOffset
+            };
+        }
+    // }
 })

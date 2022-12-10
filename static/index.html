@@ -103,9 +103,9 @@
 
 <!----------------------------Цифровая печать калк------------------------------------------------>
 <div class="digitalPrinting d-none" id="digitalPrintingContainer">
-    <div class="FilesContainerRelative position-relative">
-        <div class="FilesContainer position-absolute d-flex">
-            <button class="btn btn-sm" id="toHomeButton">
+    <div class="FilesContainerRelative slider-container position-relative">
+        <div class="FilesContainer slider-track position-absolute d-flex">
+            <button class="btn btn-sm" id="toHomeButton" style="white-space: nowrap">
                 To home
             </button>
             <button class="btn btn-sm" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -429,8 +429,8 @@
             <small>just now</small>
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-        <div class="toast-body">
-            Ціни завантажено з локал серверу.
+        <div class="toast-body" id="toastBody">
+
         </div>
     </div>
 </div>

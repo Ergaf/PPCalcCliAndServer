@@ -29,6 +29,7 @@ const rotateLeft = document.querySelector("#rotateLeft");
 const rotateRight = document.querySelector("#rotateRight");
 const openEditor = document.querySelector("#openEditor");
 const rotateNormal = document.querySelector("#rotateNormal");
+const toastBody = document.querySelector("#toastBody");
 rotateLeft.addEventListener("click", function () {
     thisFile.rotateImgFromNav = thisFile.rotateImgFromNav - 90
     renderListAndCard()
@@ -323,11 +324,10 @@ let prices;
             download.classList.add("d-none")
             mainDisplay.classList.remove("d-none")
         }
-
-        let toast = new bootstrap.Toast($("#liveToast"))
+        toastBody.innerText = "Ціни завантажено з локал серверу."
         toast.show()
     })
-
+let toast = new bootstrap.Toast($("#liveToast"))
 fetch("/orders")
     .then(response => response.json())
     .then(json => {

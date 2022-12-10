@@ -62,7 +62,7 @@ class file {
         Item.classList.add('slider-item');
         // Item.classList.add('btn-outline-dark');
         // Item.classList.add('align-items-center');
-        Item.style.cssText = "display: flex; transition: 0.5s;"
+        Item.style.cssText = "display: flex; transition: 0.5s; white-space: nowrap"
         filesAllContainer.appendChild(Item);
         Item.onmousedown = this.pick.bind( this);
         Item.innerText = this._name;
@@ -91,7 +91,8 @@ class file {
         this.container.classList.remove("btnm-act")
     }
     deleteThis() {
-        sendData("/orders", "DELETE", JSON.stringify({id: this._id})).then(e => {
+        sendData("/orders", "DELETE", JSON.stringify({id: this._id})).then((e, error) => {
+            console.log(error);
             console.log(e);
             if(e.toString() === this._id.toString()){
                 if(thisFile === this){
