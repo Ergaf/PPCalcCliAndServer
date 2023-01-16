@@ -95,8 +95,8 @@ var $selectBlendType = $('[name="select-blend-type"]');
 
 // Image editor
 var imageEditor = new tui.ImageEditor('.tui-image-editor', {
-  cssMaxWidth: 700,
-  cssMaxHeight: 400,
+  cssMaxWidth: 800,
+  cssMaxHeight: 450,
   selectionStyle: {
     cornerSize: 20,
     rotatingPointOffset: 70,
@@ -435,11 +435,11 @@ $btnResetFlip.on('click', function () {
 });
 
 $btnRotateClockwise.on('click', function () {
-  imageEditor.rotate(30);
+  imageEditor.rotate(90);
 });
 
 $btnRotateCounterClockWise.on('click', function () {
-  imageEditor.rotate(-30);
+  imageEditor.rotate(-90);
 });
 
 $inputRotationRange.on('mousedown', function () {

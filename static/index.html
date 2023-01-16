@@ -8,6 +8,7 @@
 <!--    <link href="css/tui/tui-image-editor.css" rel="stylesheet" type="text/css">-->
 <!--    <link href="css/tui/service-basic.css" rel="stylesheet" type="text/css">-->
     <link type="text/css" href="css/tui/service-basic.css" rel="stylesheet" />
+    <link type="text/css" href="css/tui/modal.css" rel="stylesheet" />
     <link
             type="text/css"
             href="css/tui/tui-color-picker.css"
@@ -34,33 +35,35 @@
     <div class="card-group">
         <div class="card m-5 shadow-lg cursorPointer" id="digitalPrint" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <img src="img/back-to-work-working.gif" class="card-img-top" alt="...">
-<!--            <div class="card-body">-->
-<!--                <h5 class="card-title">Цифра</h5>-->
-<!--                <p class="card-text">Бумажки бумажки бумажки бумажки бумажки</p>-->
-<!--            </div>-->
+            <div class="card-body">
+                <h5 class="card-title">Цифра</h5>
+                <p class="card-text">Бумажки бумажки бумажки бумажки бумажки</p>
+            </div>
 <!--            <input type="file" id="digitalCalcInput" class="form-control">-->
-<!--            <div id="digitalCalcButton" class="btn">Завантажити</div>-->
+            <div class="btn">Завантажити файл для цифрового друку</div>
+            <div class="btn">all this is BUTTON!</div>
 <!--            <div id="digitalCalcButtonNotFile" class="btn">Без файлу рахуватиму</div>-->
         </div>
         <div class="card m-5 shadow-lg cursorPointer" id="widescreenPrint" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <img src="img/print-arthur.gif" class="card-img-top" alt="...">
-<!--            <div class="card-body">-->
-<!--                <h5 class="card-title">Широкоформат</h5>-->
-<!--                <p class="card-text">Рулооооонииblbl......</p>-->
-<!--            </div>-->
+            <div class="card-body">
+                <h5 class="card-title">Широкоформат</h5>
+                <p class="card-text">Рулооооонииblbl......</p>
+            </div>
 <!--            <input type="file" id="widescreenCalcInput" class="form-control">-->
-<!--            <div id="widescreenCalcButton" class="btn">Завантажити</div>-->
+            <div class="btn">Завантажити файл для широкоформатного друку</div>
+            <div class="btn">all this is BUTTON!</div>
 <!--            <div id="widescreenCalcButtonNotFile" class="btn">Без файлу рахуватиму</div>-->
         </div>
         <div class="card m-5 shadow-lg cursorPointer" id="photoPrint">
             <img src="img/0137bcc2454a291d2141b4393782cdb3.gif" class="card-img-top" alt="...">
-<!--            <div class="card-body">-->
-<!--                <h5 class="card-title">Фото</h5>-->
-<!--                <p class="card-text">красиво..</p>-->
-<!--            </div>-->
+            <div class="card-body">
+                <h5 class="card-title">Фото</h5>
+                <p class="card-text">красиво..</p>
+            </div>
 <!--            <input type="file" id="photoCalcInput" class="form-control">-->
-<!--            <div id="photoCalcButton" class="btn">Завантажити</div>-->
-<!--            <div id="photoCalcButtonNotFile" class="btn">Без файлу рахуватиму</div>-->
+            <div id="photoCalcButton" class="btn">Завантажити фото для другу (спойлер)фото</div>
+            <div class="btn">all this is BUTTON!</div>
         </div>
     </div>
 
@@ -110,7 +113,7 @@
             </div>
         </div>
     </div>
-    <div class="d-flex flex-row" id="homeB">
+    <div class="d-flex flex-row position-absolute" id="homeB">
         <button class="btn btn-sm" id="toHomeButton" style="white-space: nowrap">
             To home
         </button>
@@ -143,7 +146,7 @@
 
     <div class="settingsContainer d-flex d-none">
         <div class="fileSettingsContainer">
-            <div class="d-flex justify-content-center settingElem" id="selectButtonCalc">
+            <div class="d-flex justify-content-center settingElem d-none" id="selectButtonCalc">
                 <div id="digitalCalcSelect" class="btn" toFile="digital">digital</div>
                 <div id="widelCalcSelect" class="btn" toFile="wide">wide</div>
                 <div id="photoCalcSelect" class="btn" toFile="photo">photo</div>
@@ -189,7 +192,7 @@
                 <div class="horizontalLine"></div>
                 <div class="row row-cols-3 align-items-center settingElem" id="destinyThisButtons"></div>
 
-                <div class="d-flex justify-content-center settingElem" id="paperButtons"></div>
+<!--                <div class="d-flex justify-content-center settingElem" id="paperButtons"></div>-->
 
 
                 <div class="d-flex justify-content-center">
@@ -214,6 +217,22 @@
                         <span class="input-group-text gray">грн.</span>
                     </div>
                 </div>
+                <div class="d-flex align-items-center justify-content-center mt-1">
+<!--                    <button id="openEditor" class="input-group-text gray btn-crop">-->
+<!--&lt;!&ndash;                        <img src="img/openEditor.png" alt="<=" class="iconNavPanel notMDr">&ndash;&gt;-->
+<!--                        Кадрувати зображення(прибрати білі поля, повернути)-->
+<!--                    </button>-->
+                    <button id="btnCrop" class="input-group-text gray btn-crop">
+                        <!--                        <img src="img/openEditor.png" alt="<=" class="iconNavPanel notMDr">-->
+                        Кадрувати зображення (прибрати білі поля)
+                    </button>
+                </div>
+<!--                <div class="d-flex align-items-center justify-content-center mt-1">-->
+<!--                    <button id="openEditorEffects" class="input-group-text gray">-->
+<!--                        &lt;!&ndash;                        <img src="img/openEditor.png" alt="<=" class="iconNavPanel notMDr">&ndash;&gt;-->
+<!--                        Редагувати зображення(еффекти та фільтри)-->
+<!--                    </button>-->
+<!--                </div>-->
                 <div class="accordion border" id="accordionOptions">
                     <div class="accordion-item">
                         <div class="d-flex justify-content-center" id="headingThree">
@@ -324,9 +343,6 @@
                     <span class="input-group-text gray">
                         <img src="img/mouseScroll.png" style="height: 20px" alt="">
                     </span>
-                    <button id="openEditor" class="input-group-text gray">
-                        <img src="img/openEditor.png" alt="<=" class="iconNavPanel notMDr">
-                    </button>
                 </div>
                 <div id="zoom_controls" class="input-group d-flex justify-content-center align-items-center d-none">
                     <button id="zoom_in" class="input-group-text gray">+</button>
@@ -439,12 +455,29 @@
             </div>
             <form>
                 <div class="modal-body">
-                    <div>
+                    <div class="tuiContainerInModal">
                         <div class="tuiContainer d-flex flex-row">
                             <div class="tuiControls" id="tuiControls"></div>
                             <div class="tui-image-editor m-auto mt-0" id="tui-image-editor"></div>
                         </div>
                     </div>
+
+                    <div class="d-flex flex-row justify-content-center align-items-center">
+                        <div class="d-none">
+                            <div class="btn" id="activateCrop">Вибрати зону</div>
+                            <div class="btn d-none" id="btnApplyCrop">Вирізати</div>
+                            <div class="btn d-none" id="btnCancelCrop">Відмінити зону</div>
+                        </div>
+<!--                        <div class="">-->
+<!--                            <div class="menu-item btn" id="btn-flip-x">FlipX</div>-->
+<!--                            <div class="menu-item btn" id="btn-flip-y">FlipY</div>-->
+<!--                        </div>-->
+<!--                        <div class="">-->
+<!--                            <div class="menu-item btn" id="btn-rotate-clockwise">Вліво (90%)</div>-->
+<!--                            <div class="menu-item btn" id="btn-rotate-counter-clockwise">Вправо (-90%)</div>-->
+<!--                        </div>-->
+                    </div>
+
                     <div class="">
                         <progress id="progressbarRedact" value="0" max="100" style="width: 100%"></progress>
                     </div>
@@ -452,7 +485,7 @@
                 <div class="modal-footer">
                     <!--                <button type="button" class="btnm" data-bs-dismiss="modal">Назад</button>-->
                     <div class="d-flex flex-row">
-                        <div class="btn" id="backInTui">Назад</div>
+                        <div class="btn" id="backInTui" data-bs-dismiss="modal">Назад</div>
                         <div class="btn" id="saveChanges">Готово</div>
                     </div>
                 </div>

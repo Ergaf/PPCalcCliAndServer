@@ -27,7 +27,7 @@ const floorLamination = document.querySelector("#floorLamination");
 const widthLamination = document.querySelector("#widthLamination");
 const rotateLeft = document.querySelector("#rotateLeft");
 const rotateRight = document.querySelector("#rotateRight");
-const openEditor = document.querySelector("#openEditor");
+// const openEditor = document.querySelector("#openEditor");
 const rotateNormal = document.querySelector("#rotateNormal");
 const toastBody = document.querySelector("#toastBody");
 rotateLeft.addEventListener("click", function () {
@@ -38,9 +38,9 @@ rotateRight.addEventListener("click", function () {
     thisFile.rotateImgFromNav = thisFile.rotateImgFromNav + 90
     renderListAndCard()
 })
-openEditor.addEventListener("click", function () {
-
-})
+// openEditor.addEventListener("click", function () {
+//
+// })
 rotateNormal.addEventListener("click", function () {
     thisFile.rotateImgFromNav = 0
     renderListAndCard()
@@ -351,6 +351,8 @@ fetch("/orders")
                 mainDisplay.classList.add("d-none")
                 digitalPrintingContainer.classList.remove("d-none")
                 download.classList.add("d-none")
+                console.log(allFiles[0]);
+                allFiles[0].pick({target: allFiles[0].container})
             } else {
                 digitalPrintingContainer.classList.add("d-none")
                 download.classList.add("d-none")

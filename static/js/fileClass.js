@@ -74,6 +74,7 @@ class file {
     }
 
     pick(e){
+        console.log(e.target);
         if(e.target === this.container || e.target === this.nameContainer){
             allFiles.forEach(e => {
                 if(e._id !== this._id){
@@ -361,10 +362,10 @@ class file {
             +", "
             +this.roundCorner
 
-        if(thisFile.url.red){
-            openEditor.classList.remove('d-none')
+        if(thisFile.url.red === true){
+            btnCrop.removeClass('d-none')
         } else {
-            openEditor.classList.add('d-none')
+            btnCrop.addClass('d-none')
         }
     }
 

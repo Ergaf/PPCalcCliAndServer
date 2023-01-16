@@ -1,5 +1,6 @@
 let main = document.querySelector("#main");
 let files = document.querySelector("#files");
+let toHome = document.querySelector("#toHome");
 let users = document.querySelector("#users");
 let prices = document.querySelector("#prices");
 // let functions = document.querySelector("#functions");
@@ -22,6 +23,10 @@ users.addEventListener('click', e => {
 // functions.addEventListener('click', function() {
 //     filesContainer.classList.add("d-none")
 // })
+
+toHome.addEventListener("click", function () {
+    errorAlert.classList.add("d-none")
+})
 
 
 async function sendData(url, method, data) {

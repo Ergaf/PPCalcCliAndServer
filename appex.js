@@ -420,6 +420,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
             .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/notpdf/file`));
 
         let ress = {
+            urlOriginal: `/files/${cookies}/${id}/notpdf/file`,
             url: `/files/${cookies}/${id}/notpdf/file`,
             img: true,
             red: true

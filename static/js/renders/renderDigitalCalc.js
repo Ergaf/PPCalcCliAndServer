@@ -114,9 +114,9 @@ function renderDigitalCalc(priceCalc){
                 }
                 else {
                     elem.addEventListener("click", function () {
-                        thisFile.binding = elem.innerText
                         thisFile.bindingSelect = undefined
                         thisFile.cower = undefined
+                        thisFile.binding = elem.innerText
                         thisFile.renderSettings()
                     })
                 }

@@ -280,7 +280,7 @@ function getBindingFromPaperCount(nameService) {
     let pricePaper = []
     if(price !== undefined){
         for (let i = 0; i < price.length; i++){
-            if(thisFile.allPaperCount >= price[i][2] && thisFile.allPaperCount <= price[i][3]){
+            if(thisFile.countInFile >= price[i][2] && thisFile.countInFile <= price[i][3]){
                 pricePaper.push(price[i])
                 // if(price[i][0] === name) {
                 //     pricePaper = price[i]
