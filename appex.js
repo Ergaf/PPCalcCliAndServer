@@ -39,7 +39,7 @@ readXlsxFile(fs.createReadStream(__dirname + "/data/tableMain.xlsx")).then((rows
 })
 
 //for pdfJs---------------------------------------------------------
-const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
+// const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
 // const util = require("util");
 // const stream = require("stream");
 // const CMAP_URL = "../../node_modules/pdfjs-dist/cmaps/";
