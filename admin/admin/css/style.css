@@ -57,3 +57,9 @@ iframe {
 .backgroundSecondary {
     background: #e2e3e5;
 }
+.trSession {
+    background: #ffffff;
+}
+.trSession:hover {
+    background: #eeeeee;
+}

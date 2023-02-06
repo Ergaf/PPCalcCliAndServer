@@ -10,9 +10,11 @@
     "fs-extra": "^11.1.0",
     "libreoffice-convert": "^1.4.1",
     "mime": "^3.0.0",
+    "mysql2": "^3.0.1",
     "node-poppler": "^6.1.1",
     "pngjs": "^6.0.0",
     "read-excel-file": "^5.5.3",
+    "sequelize": "^6.28.0",
     "utf8": "^3.0.0"
   }
 }

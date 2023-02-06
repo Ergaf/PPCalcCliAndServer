@@ -10,24 +10,39 @@ const mime = require('mime');
 const  { Poppler }  =  require ( "node-poppler" ) ;
 const readXlsxFile = require('read-excel-file/node');
 const fsEx = require('fs-extra');
-// const mysql = require('mysql');
-// const connection = mysql.createConnection({
-//     host     : 'localhost',
-//     // user     : 'e',
-//     // password : '1',
-// });
-// connection.connect(function(err){
-//     if (err) {
-//         return console.error("Ошибка: " + err.message);
-//     }
-//     else{
-//         console.log("Подключение к серверу MySQL успешно установлено");
-//     }
-// });
-// const ConvertTiff = require('tiff-to-png');
 
 const { decode } = require("decode-tiff");
 const { PNG } = require("pngjs");
+
+const mysql = require("mysql2");
+const configSQLConnection = {
+    host: "localhost",
+    user: "root",
+    database: "calc",
+    password: "1234"
+}
+// let connection = mysql.createConnection({
+//     host: "localhost",
+//     user: "root",
+//     database: "calc",
+//     password: "1234"
+// });
+
+// const user = ["Tom", 29];
+// const sql = "INSERT INTO users(name, age) VALUES(?, ?)";
+
+// connection.query(sql, user, function(err, results) {
+//     if(err) console.log(err);
+//     else console.log("Данные добавлены");
+// });
+
+// connection.query("SELECT * FROM users",
+//     function(err, results, fields) {
+//         console.log(err);
+//         console.log(results); // собственно данные
+//         // console.log(fields); // мета-данные полей
+//     });
+// connection.end();
 
 
 let tableMain;
@@ -60,24 +75,70 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/", express.static(__dirname + "/static"));
 app.use((req, res, next) => {
-    console.log(req.cookies.to);
-    // console.log(cookieStore);
-    if(!sessionHave(req)){
+    // console.log(req.cookies.to);
+    let connection = mysql.createConnection(configSQLConnection);
+    let data = "0"
+    if(!req.cookies.to){
         let cookieId = Date.now().toString()
         res.cookie('to', cookieId)
-        let user = {
-            cookie: cookieId,
-            orders: [],
-            photoOrders: [],
-            activeOrders: []
-        }
-        cookieStore.push(user)
-        res.send(cookieId)
+        data = cookieId
+        // next();
+    } else {
+        data = [req.cookies.to]
     }
-    else {
-        next();
-    }
+    let sql = "SELECT * from sessies WHERE sessie = ?";
+    connection.query(sql, data, function(err, results, fields) {
+            if(err) {
+                console.log(err);
+            }
+            if(results.length > 0){
+                // console.log(results[0].sessie); // собственно данные
+            }
+            if(results.length === 0){
+                let cookieId = Date.now().toString()
+                res.cookie('to', cookieId)
+
+                let session = [cookieId, req.header('user-agent'), req.ip, 0];
+
+                let sql = "INSERT INTO sessies(sessie, userAgent, ip, userid) VALUES(?, ?, ?, ?)";
+
+                let connection = mysql.createConnection(configSQLConnection);
+                connection.query(sql, session, function(err, results) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    else {
+                        console.log("Данные добавлены");
+                        next();
+                    }
+                });
+                connection.end();
+            }
+            else {
+                connection.end();
+                next();
+            }
+        });
 })
+// app.use((req, res, next) => {
+//     console.log(req.cookies.to);
+//
+//     if(!sessionHave(req)){
+//         let cookieId = Date.now().toString()
+//         res.cookie('to', cookieId)
+//         let user = {
+//             cookie: cookieId,
+//             orders: [],
+//             photoOrders: [],
+//             activeOrders: []
+//         }
+//         cookieStore.push(user)
+//         next();
+//     }
+//     else {
+//         next();
+//     }
+// })
 app.use("/login", express.static(__dirname + "/admin/login"));
 app.use("/admin", express.static(__dirname + "/admin/admin"));
 app.use("/3dtest", express.static(__dirname + "/admin/3dtest"));
@@ -216,6 +277,49 @@ app.post("/uploadRedactedFile", function (req, res) {
 // })
 //----------------------------------------------------------------------------------------
 
+app.get("/parameterCalc", function (req, res) {
+
+    let calc = req.query.calc;
+    let paper = req.query.paper;
+    let destiny = req.query.destiny;
+
+    if(req.cookies.to){
+        cookieStore.forEach(e => {
+            if(e.cookie === req.cookies.to){
+                let calcTypeFormat = "custom";
+                if(calc === "digital"){
+                    calcTypeFormat = "A4"
+                }
+                if(calc === "wide"){
+                    calcTypeFormat = "A1"
+                }
+                if(calc === "photo"){
+                    calcTypeFormat = "A4"
+                }
+                let ress = {
+                    url: "/files/totest/file-1.png",
+                    img: true,
+                    red: false
+                }
+                let order = {
+                    calc: calc,
+                    id: Date.now().toString(),
+                    name : `БЕЗ ФАЙЛУ ${calc}`,
+                    format: calcTypeFormat,
+                    countInFile: 1,
+                    url: ress,
+                    paper: paper,
+                    destiny: destiny
+                }
+                e.orders.push(order)
+
+                res.redirect("/")
+                // res.send(JSON.stringify(order))
+            }
+        })
+    }
+});
+
 app.get("/files*", function (req, res) {
     let urll = req.url;
     // console.log(`a request came for a file to url ${urll}`);
@@ -232,50 +336,110 @@ app.post("/orders", function (req, res) {
             body = Buffer.concat(body).toString();
             body = JSON.parse(body)
             console.log(`add order without file, calc type: ${body.data.calc}`);
-            if(req.cookies.to){
-                cookieStore.forEach(e => {
-                    if(e.cookie === req.cookies.to){
-                        let calcTypeFormat = "custom";
-                        if(body.data.calc === "digital"){
-                            calcTypeFormat = "A4"
-                        }
-                        if(body.data.calc === "wide"){
-                            calcTypeFormat = "A1"
-                        }
-                        if(body.data.calc === "photo"){
-                            calcTypeFormat = "A4"
-                        }
-                        let ress = {
-                            url: "/files/totest/file-1.png",
-                            img: true,
-                            red: false
-                        }
-                        let order = {
-                            calc: body.data.calc,
-                            id: Date.now().toString(),
-                            name : `БЕЗ ФАЙЛУ ${body.data.calc}`,
-                            format: calcTypeFormat,
-                            countInFile: 1,
-                            url: ress
-                        }
-                        e.orders.push(order)
-                        res.send(JSON.stringify(order))
+
+            let connection = mysql.createConnection(configSQLConnection);
+            let data = [body.data.calc, "БЕЗ ФАЙЛУ "+body.data.calc, `0`, req.cookies.to, 1, 0];
+            let sql = "INSERT INTO files(calc, name, path, session, img, red) VALUES(?, ?, ?, ?, ?, ?)";
+            connection.query(sql, data, function(err, results, fields){
+                if(err) {
+                    console.log(err);
+                }
+                else {
+                    // console.log(results);
+                    let ress = {
+                        url: "0",
+                        img: true,
+                        red: false
                     }
-                })
-            }
+                    let order = {
+                        calc: body.data.calc,
+                        id: results.insertId,
+                        name : `БЕЗ ФАЙЛУ ${body.data.calc}`,
+                        countInFile: 1,
+                        url: ress
+                    }
+
+                    res.send(order)
+                }
+            })
+            connection.end();
+
+            // if(req.cookies.to){
+            //     cookieStore.forEach(e => {
+            //         if(e.cookie === req.cookies.to){
+            //             let calcTypeFormat = "custom";
+            //             if(body.data.calc === "digital"){
+            //                 calcTypeFormat = "A4"
+            //             }
+            //             if(body.data.calc === "wide"){
+            //                 calcTypeFormat = "A1"
+            //             }
+            //             if(body.data.calc === "photo"){
+            //                 calcTypeFormat = "A4"
+            //             }
+            //             let ress = {
+            //                 url: "/files/totest/file-1.png",
+            //                 img: true,
+            //                 red: false
+            //             }
+            //             let order = {
+            //                 calc: body.data.calc,
+            //                 id: Date.now().toString(),
+            //                 name : `БЕЗ ФАЙЛУ ${body.data.calc}`,
+            //                 format: calcTypeFormat,
+            //                 countInFile: 1,
+            //                 url: ress
+            //             }
+            //             e.orders.push(order)
+            //             res.send(JSON.stringify(order))
+            //         }
+            //     })
+            // }
         })
     }catch (e) {
         console.log(e.message);
     }
 });
 app.get("/orders", function (req, res) {
-    if(req.cookies.to){
-        cookieStore.forEach(e => {
-            if(e.cookie === req.cookies.to){
-                res.send(JSON.stringify(e))
+    // if(req.cookies.to){
+    //     cookieStore.forEach(e => {
+    //         if(e.cookie === req.cookies.to){
+    //             res.send(JSON.stringify(e))
+    //         }
+    //     })
+    // }
+    let connection = mysql.createConnection(configSQLConnection);
+    let data = [req.cookies.to];
+    let sql = "SELECT * from files WHERE session = ?";
+    connection.query(sql, data, function(err, results, fields){
+        if(err) {
+            console.log(err);
+        }
+        else {
+            // console.log(results);
+            let files = [];
+            if(results.length > 0){
+                results.forEach(e => {
+                    let ress = {
+                        url: e.path,
+                        img: e.img,
+                        red: e.red
+                    }
+                    let order = {
+                        calc: e.calc,
+                        id: e.id,
+                        name : e.name,
+                        countInFile: 1,
+                        url: ress
+                    }
+                    files.push(order)
+                })
             }
-        })
-    }
+
+            res.send(files)
+        }
+    })
+    connection.end();
 });
 app.listen(port, function () {
     console.log(`server on port ${port}`);
@@ -290,38 +454,60 @@ app.delete("/orders", function (req, res) {
         }).on('end', () => {
             body = Buffer.concat(body).toString();
             body = JSON.parse(body)
-            if(req.cookies.to){
-                cookieStore.forEach(c => {
-                    if(c.cookie === req.cookies.to){
-                        for (let i = 0; i < c.orders.length; i++){
-                            if(c.orders[i].id === body.id){
-                                try {
-                                    filesDelete(__dirname + `/files/${c.cookie}/${c.orders[i].id}/`)
 
-
-                                    // fs.remove(__dirname + `/files/${c.cookie}/${c.orders[i].id}`).then(() => {
-                                    //     //готово
-                                    // }).catch(err => {
-                                    //     console.error(err)
-                                    // })
-
-                                } catch (e) {
-                                    console.log(e.message);
-                                }
-                                try {
-                                    let order = c.orders[i]
-                                    c.orders.splice(i, 1)
-                                    console.log(`delete ${order.name} done`);
-                                    res.send(body.id);
-                                } catch (e) {
-                                    console.log(e.message);
-                                    res.send(e.message);
-                                }
-                            }
-                        }
+            let connection = mysql.createConnection(configSQLConnection);
+            let data = [body.id];
+            let sql = "DELETE from files WHERE id = ?";
+            connection.query(sql, data, function(err, results, fields){
+                if(err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("delete file id "+data[0]);
+                    try {
+                        filesDelete(__dirname + `/files/${req.cookies.to}/${data[0]}/`)
+                    } catch (e) {
+                        console.log(e.message);
                     }
-                })
-            }
+                    res.send(JSON.stringify(data[0]))
+                }
+            })
+            connection.end();
+
+
+
+            // if(req.cookies.to){
+            //     cookieStore.forEach(c => {
+            //         if(c.cookie === req.cookies.to){
+            //             for (let i = 0; i < c.orders.length; i++){
+            //                 if(c.orders[i].id === body.id){
+            //                     try {
+            //                         filesDelete(__dirname + `/files/${c.cookie}/${c.orders[i].id}/`)
+            //
+            //
+            //                         // fs.remove(__dirname + `/files/${c.cookie}/${c.orders[i].id}`).then(() => {
+            //                         //     //готово
+            //                         // }).catch(err => {
+            //                         //     console.error(err)
+            //                         // })
+            //
+            //                     } catch (e) {
+            //                         console.log(e.message);
+            //                     }
+            //                     try {
+            //                         let order = c.orders[i]
+            //                         c.orders.splice(i, 1)
+            //                         console.log(`delete ${order.name} done`);
+            //                         res.send(body.id);
+            //                     } catch (e) {
+            //                         console.log(e.message);
+            //                         res.send(e.message);
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     })
+            // }
 
         })
     }
@@ -386,7 +572,7 @@ function sendRes(url, contentType, res) {
     })
 }
 
-function sessionHave (req) {
+async function sessionHave (req) {
     let have = false
     if(req.cookies.to){
         cookieStore.forEach(e => {
@@ -396,6 +582,24 @@ function sessionHave (req) {
         })
     }
     return have;
+}
+
+async function sqlTransaction(sql, data) {
+    let connection = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        database: "calc",
+        password: "1234"
+    });
+
+    connection.query(sql, data,
+        function(err, results, fields) {
+            console.log(err);
+            console.log(results); // собственно данные
+            return results;
+            // console.log(fields); // мета-данные полей
+        });
+    connection.end();
 }
 
 async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
@@ -570,23 +774,37 @@ async function getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputP
 
 
             //отправка назад со всем говном--------
-            let ress = {
-                url: `/files/${cookies}/${id}/pdf/file1.pdf`,
-            }
-            cookieStore.forEach(e => {
-                if(e.cookie === cookies){
-                    let order = {
-                        calc: calcType,
-                        id: id,
-                        name : filenameToNorm,
-                        url: ress,
-                        format: "A4",
-                        countInFile: numPages
-                    }
-                    e.orders.push(order)
-                    res.send(order)
+            let connection = mysql.createConnection(configSQLConnection);
+            let data = [calcType, filenameToNorm, `/files/${cookies}/${id}/pdf/file1.pdf`, cookies, numPages];
+            let sql = "INSERT INTO files(calc, name, path, session, countInFile) VALUES(?, ?, ?, ?, ?, ?)";
+            connection.query(sql, data, function(err, results, fields){
+                if(err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("Сессии просмотрели");
+                    console.log(results);
+                    // res.send(results)
                 }
             })
+
+            // let ress = {
+            //     url: `/files/${cookies}/${id}/pdf/file1.pdf`,
+            // }
+            // cookieStore.forEach(e => {
+            //     if(e.cookie === cookies){
+            //         let order = {
+            //             calc: calcType,
+            //             id: id,
+            //             name : filenameToNorm,
+            //             url: ress,
+            //             format: "A4",
+            //             countInFile: numPages
+            //         }
+            //         e.orders.push(order)
+            //         res.send(order)
+            //     }
+            // })
             //-----------------------------
 
         })
@@ -747,6 +965,58 @@ function getFilesForAdminView(req, res, url){
         res.send(readdirInfo)
     }
 }
+
+app.get("/getSessies", function (req, res){
+    let connection = mysql.createConnection(configSQLConnection);
+    let sql = "SELECT * FROM sessies"
+    connection.query(sql, function(err, results) {
+        if(err) {
+            console.log(err);
+        }
+        else {
+            console.log("Сессии просмотрели");
+            res.send(results)
+        }
+    });
+})
+
+app.delete("/getSessies", function (req, res){
+    let body = [];
+    try {
+        req.on('error', (err) => {
+            console.error(err);
+        }).on('data', (chunk) => {
+            body.push(chunk);
+        }).on('end', () => {
+            body = Buffer.concat(body).toString();
+            body = JSON.parse(body)
+            console.log(body);
+
+            if(body.do === "showAll"){
+                getFilesForAdminView(req, res, `/data/database`)
+            }
+            else {
+                res.send("1")
+            }
+
+        })
+    } catch (err) {
+        console.log(err.message);
+    }
+
+
+    let connection = mysql.createConnection(configSQLConnection);
+    let sql = "SELECT * FROM sessies"
+    connection.query(sql, function(err, results) {
+        if(err) {
+            console.log(err);
+        }
+        else {
+            console.log("Session");
+            res.send(results)
+        }
+    });
+})
 
 async function tiffToPng(filePath, cookies, filenameToNorm, res, id, calcType) {
     //need install the imagemagick

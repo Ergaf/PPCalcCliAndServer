@@ -324,7 +324,7 @@ let prices;
             download.classList.add("d-none")
             mainDisplay.classList.remove("d-none")
         }
-        toastBody.innerText = "Ціни завантажено з локал серверу."
+        toastBody.innerText = "Ціни завантажено з Google."
         toast.show()
     })
 let toast = new bootstrap.Toast($("#liveToast"))
@@ -332,17 +332,19 @@ fetch("/orders")
     .then(response => response.json())
     .then(json => {
         console.log(json);
-        if (json.orders) {
-            if (json.orders.length !== 0) {
+        if (json) {
+            if (json.length !== 0) {
                 // mainDisplay.classList.add("d-none")
                 // digitalPrintingContainer.classList.remove("d-none")
             }
-            json.orders.forEach(o => {
+            json.forEach(o => {
                 let file1 = new file(o.name, o.id)
                 file1.url = o.url
                 file1.format = o.format
                 file1.calc = o.calc
                 file1.countInFile = o.countInFile
+                file1.paper = o.paper
+                file1.destiny = o.destiny
                 allFiles.push(file1)
                 file1.createFileContainer()
             })

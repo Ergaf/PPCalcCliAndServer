@@ -3,6 +3,8 @@ let dataBaseContainer = document.querySelector("#dataBaseContainer")
 let bd = document.querySelector("#bd")
 bd.addEventListener("click", e => {
     filesContainer.classList.add("d-none")
+    tabl2.classList.remove("d-none")
+    tabl1.classList.remove("d-none")
     dataBaseTableHeaderContainer.classList.remove("d-none")
     dataBaseContainer.classList.remove("d-none")
     dataBaseContainer.innerHtml = ""

@@ -13,7 +13,7 @@ function renderDigitalCalc(priceCalc){
     }
     else {
         let sss = Math.ceil(thisFile._count*thisFile.countInFile / getHowInASheet())
-        this.realCount = sss
+        thisFile.realCount = sss
         let paperPrice = getPriceFromCountPaper(thisFile.destiny)
         let laminationPrice = getPriceFromCount(thisFile.lamination, "Ламінування", thisFile.format)
         if(!isNaN(paperPrice) && paperPrice !== undefined){
@@ -40,8 +40,18 @@ function renderDigitalCalc(priceCalc){
     if(bindingPrice[0]){
         priceCalc = priceCalc + bindingPrice[0][1]
     }
-    price.value = priceCalc
+    thisFile.price = priceCalc
 
+    if(thisFile.promo){
+        if(thisFile.promo.status === "accepted"){
+            let percent = thisFile.price / 100 * thisFile.promo.percent
+            // thisFile.price = priceCalc - fivePercent
+            thisFile.price = thisFile.price - percent
+        }
+    }
+    price.value = thisFile.price
+
+    realCount.innerText = thisFile.realCount
     destinyButtons.innerHTML = ""
     roundCornerButtons.innerHTML = ""
     roundCornerButtons.classList.remove("d-none")

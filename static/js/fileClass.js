@@ -33,6 +33,7 @@ class file {
     bannerVarit;
     floorLamination;
     widthLamination;
+    price;
 
     rotateImgFromNav;
     constructor (name, id) {

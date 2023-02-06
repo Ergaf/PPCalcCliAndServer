@@ -194,6 +194,12 @@
 
 <!--                <div class="d-flex justify-content-center settingElem" id="paperButtons"></div>-->
 
+                <div  class="d-flex justify-content-center">
+                    <span class="input-group-text gray">Промо-код:</span>
+                    <input type="text" class="input-group-text gray promo" id="promo">
+                    <button id="promoAccept">accept</button>
+                    <div id="acceptedValid"></div>
+                </div>
 
                 <div class="d-flex justify-content-center">
                     <div class="input-group d-flex justify-content-center d-none">
@@ -201,7 +207,7 @@
                         <input type="number" class="input-group-text gray" id="countInFile" disabled>
                         <span class="input-group-text gray">шт.</span>
                     </div>
-                    <div class="input-group d-flex justify-content-center d-none">
+                    <div class="input-group d-flex justify-content-center">
                         <span class="input-group-text gray">Кількість затраченного:</span>
                         <input type="number" class="input-group-text gray" id="realCount" disabled>
                         <span class="input-group-text gray">шт.</span>
@@ -278,21 +284,21 @@
 
 
 
-                <!--                <div class="input-group d-flex justify-content-center">-->
-                <!--                    <span class="input-group-text gray">Кількість затраченного:</span>-->
-                <!--                    <input type="number" class="input-group-text gray" id="realCount" disabled>-->
-                <!--                    <span class="input-group-text gray">шт.</span>-->
-                <!--                </div>-->
-                <!--                <div class="input-group d-flex justify-content-center">-->
-                <!--                    <span class="input-group-text gray">Підсумоково аркушів:</span>-->
-                <!--                    <input type="number" class="input-group-text gray" id="allPaper" disabled>-->
-                <!--                    <span class="input-group-text gray">грн.</span>-->
-                <!--                </div>-->
-                <!--                <div class="input-group d-flex justify-content-center">-->
-                <!--                    <span class="input-group-text gray">Ціна:</span>-->
-                <!--                    <input type="number" class="input-group-text gray price" id="price" disabled>-->
-                <!--                    <span class="input-group-text gray">грн.</span>-->
-                <!--                </div>-->
+<!--                                <div class="input-group d-flex justify-content-center">-->
+<!--                                    <span class="input-group-text gray">Кількість затраченного:</span>-->
+<!--                                    <input type="number" class="input-group-text gray" id="realCount" disabled>-->
+<!--                                    <span class="input-group-text gray">шт.</span>-->
+<!--                                </div>-->
+<!--                                <div class="input-group d-flex justify-content-center">-->
+<!--                                    <span class="input-group-text gray">Підсумоково аркушів:</span>-->
+<!--                                    <input type="number" class="input-group-text gray" id="allPaper" disabled>-->
+<!--                                    <span class="input-group-text gray">грн.</span>-->
+<!--                                </div>-->
+<!--                                <div class="input-group d-flex justify-content-center">-->
+<!--                                    <span class="input-group-text gray">Ціна:</span>-->
+<!--                                    <input type="number" class="input-group-text gray price" id="price" disabled>-->
+<!--                                    <span class="input-group-text gray">грн.</span>-->
+<!--                                </div>-->
             </div>
         </div>
         <div class="fileViewContainer overflow-hidden">
@@ -510,6 +516,7 @@
 
 
 <script src="js/photocalc/userImageUnitClass.js" charset="utf-8"></script>
+<script src="js/promo.js" charset="utf-8"></script>
 
 
 <script src="js/renders/renderDigitalCalc.js" charset="utf-8"></script>

@@ -72,6 +72,7 @@
                 <li id="users"><a href="#" class="nav-link px-2 text-dark">Користувачі</a></li>
                 <li id="prices"><a href="#" class="nav-link px-2 text-dark">Послуги(поки що таблиця)</a></li>
                 <li id="bd"><a href="#" class="nav-link px-2 text-dark">DataBase View Test</a></li>
+                <li id="sessions"><a href="#" class="nav-link px-2 text-dark">Active Sessions</a></li>
                 <li><a href="#" class="nav-link px-2 text-dark">Що за фігня?..</a></li>
             </ul>
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
@@ -133,7 +134,7 @@
     <div class="alert alert-danger d-none" role="alert" id="errorAlert"></div>
 </div>
 
-<div>
+<div id="tabl1" class="d-none">
     <table class="table table-sm">
         <thead>
         <tr id="pricesTableHeaderContainer">
@@ -146,7 +147,7 @@
     </table>
 </div>
 
-<div>
+<div id="tabl2" class="d-none">
     <table class="table table-sm">
         <thead>
         <tr id="dataBaseTableHeaderContainer">
@@ -157,6 +158,27 @@
 
         </tbody>
     </table>
+</div>
+
+<div class="sessionsContainer d-none" id="sessionsContainer">
+    <h2>Active Sessions</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+            <tr>
+                <th scope="col">increment</th>
+                <th scope="col">sessie ID</th>
+                <th scope="col">userAgent</th>
+                <th scope="col">ip</th>
+                <th scope="col">user ID</th>
+                <th scope="col">del</th>
+            </tr>
+            </thead>
+            <tbody id="tbodySessions">
+
+            </tbody>
+        </table>
+    </div>
 </div>
 
 
@@ -242,6 +264,8 @@
     </footer>
 </div>
 
+
+<script src="js/sessions.js"></script>
 
 <script src="js/highcharts.js"></script>
 <script src="js/script.js"></script>

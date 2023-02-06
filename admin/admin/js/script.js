@@ -26,6 +26,10 @@ users.addEventListener('click', e => {
 
 toHome.addEventListener("click", function () {
     errorAlert.classList.add("d-none")
+    filesContainer.classList.add("d-none")
+    sessionsContainer.classList.add("d-none")
+    tabl2.classList.add("d-none")
+    tabl1.classList.add("d-none")
 })
 
 

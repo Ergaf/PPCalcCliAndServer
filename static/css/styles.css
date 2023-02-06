@@ -308,3 +308,7 @@ body{
 .notMDr {
     pointer-events: none;
 }
+
+.promo {
+    width: 200px;
+}
