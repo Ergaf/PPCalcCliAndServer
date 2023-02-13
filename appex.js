@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const http = require('http')
+const https = require('https')
 const utf8 = require('utf8');
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -69,6 +71,11 @@ libre.convertAsync = require('util').promisify(libre.convert);
 const port = 5555;
 const cookieStore = []
 
+// app.use((req, res, next) => {
+//     console.log(req.ip);
+//     next();
+// })
+
 app.use(busboy());
 app.use(cookieParser('govnobliat'));
 app.use(express.urlencoded({ extended: true }));
@@ -78,6 +85,7 @@ app.use((req, res, next) => {
     // console.log(req.cookies.to);
     let connection = mysql.createConnection(configSQLConnection);
     let data = "0"
+    // console.log(req.url);
     if(!req.cookies.to){
         let cookieId = Date.now().toString()
         res.cookie('to', cookieId)
@@ -99,16 +107,14 @@ app.use((req, res, next) => {
                 res.cookie('to', cookieId)
 
                 let session = [cookieId, req.header('user-agent'), req.ip, 0];
-
                 let sql = "INSERT INTO sessies(sessie, userAgent, ip, userid) VALUES(?, ?, ?, ?)";
-
                 let connection = mysql.createConnection(configSQLConnection);
                 connection.query(sql, session, function(err, results) {
                     if(err) {
                         console.log(err);
                     }
                     else {
-                        console.log("Данные добавлены");
+                        console.log("Сессия "+cookieId+" добавлена");
                         next();
                     }
                 });
@@ -118,7 +124,7 @@ app.use((req, res, next) => {
                 connection.end();
                 next();
             }
-        });
+    });
 })
 // app.use((req, res, next) => {
 //     console.log(req.cookies.to);
@@ -283,41 +289,56 @@ app.get("/parameterCalc", function (req, res) {
     let paper = req.query.paper;
     let destiny = req.query.destiny;
 
-    if(req.cookies.to){
-        cookieStore.forEach(e => {
-            if(e.cookie === req.cookies.to){
-                let calcTypeFormat = "custom";
-                if(calc === "digital"){
-                    calcTypeFormat = "A4"
-                }
-                if(calc === "wide"){
-                    calcTypeFormat = "A1"
-                }
-                if(calc === "photo"){
-                    calcTypeFormat = "A4"
-                }
-                let ress = {
-                    url: "/files/totest/file-1.png",
-                    img: true,
-                    red: false
-                }
-                let order = {
-                    calc: calc,
-                    id: Date.now().toString(),
-                    name : `БЕЗ ФАЙЛУ ${calc}`,
-                    format: calcTypeFormat,
-                    countInFile: 1,
-                    url: ress,
-                    paper: paper,
-                    destiny: destiny
-                }
-                e.orders.push(order)
+    let data = [calc, "БЕЗ ФАЙЛУ "+calc, `0`, req.cookies.to, 1, 0, paper, destiny];
+    let sql = "INSERT INTO files(calc, name, path, session, img, red, paper, destiny) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+    let connection = mysql.createConnection(configSQLConnection);
+    connection.query(sql, data, function(err, results) {
+        if(err) {
+            console.log(err);
+        }
+        else {
+            console.log("БЕЗ ФАЙЛУ "+results.insertId+" добавлена");
 
-                res.redirect("/")
-                // res.send(JSON.stringify(order))
-            }
-        })
-    }
+            res.redirect("/");
+
+        }
+    });
+
+    // if(req.cookies.to){
+    //     cookieStore.forEach(e => {
+    //         if(e.cookie === req.cookies.to){
+    //             let calcTypeFormat = "custom";
+    //             if(calc === "digital"){
+    //                 calcTypeFormat = "A4"
+    //             }
+    //             if(calc === "wide"){
+    //                 calcTypeFormat = "A1"
+    //             }
+    //             if(calc === "photo"){
+    //                 calcTypeFormat = "A4"
+    //             }
+    //             let ress = {
+    //                 url: "/files/totest/file-1.png",
+    //                 img: true,
+    //                 red: false
+    //             }
+    //             let order = {
+    //                 calc: calc,
+    //                 id: Date.now().toString(),
+    //                 name : `БЕЗ ФАЙЛУ ${calc}`,
+    //                 format: calcTypeFormat,
+    //                 countInFile: 1,
+    //                 url: ress,
+    //                 paper: paper,
+    //                 destiny: destiny
+    //             }
+    //             e.orders.push(order)
+    //
+    //             res.redirect("/")
+    //             // res.send(JSON.stringify(order))
+    //         }
+    //     })
+    // }
 });
 
 app.get("/files*", function (req, res) {
@@ -430,7 +451,9 @@ app.get("/orders", function (req, res) {
                         id: e.id,
                         name : e.name,
                         countInFile: 1,
-                        url: ress
+                        url: ress,
+                        paper: e.paper,
+                        destiny: e.destiny
                     }
                     files.push(order)
                 })
@@ -441,9 +464,34 @@ app.get("/orders", function (req, res) {
     })
     connection.end();
 });
-app.listen(port, function () {
-    console.log(`server on port ${port}`);
-})
+
+// let options = {
+//     key: fs.readFileSync(__dirname + "/data/Закрытый ключ.txt"),
+//     cert: fs.readFileSync(__dirname + "/data/Сертификат.txt"),
+// };
+// let server = https.createServer(app).listen(port, function(){
+//     console.log("Express server listening on port " + port);
+// });
+
+// const httpServer = http.createServer(app);
+const httpsServer = http.createServer({
+    key: fs.readFileSync(__dirname + "/data/sert/www_calc_printpeaks_com_ua.ca-bundle"),
+    cert: fs.readFileSync(__dirname + "/data/sert/www_calc_printpeaks_com_ua.crt"),
+}, app);
+
+// httpServer.listen(80, () => {
+//     console.log('HTTP Server running on port 80');
+// });
+
+httpsServer.listen(port, () => {
+    console.log('HTTPS Server running on port '+port);
+});
+
+
+// app.listen(port, function () {
+//     console.log(`server on port ${port}`);
+// })
+
 app.delete("/orders", function (req, res) {
     let body = [];
     try {
