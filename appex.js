@@ -157,37 +157,65 @@ app.post("/uploadFile", function (req, res) {
         let filenameToNorm = utf8.decode(filename.filename)
         console.log("Uploading file: " + filenameToNorm);
 
-        let folder = __dirname + `/files/${req.cookies.to}`
-        try {
-            if (!fs.existsSync(folder)){
-                fs.mkdirSync(folder)
+        let data = [fieldname, filenameToNorm, `0`, req.cookies.to, 1, 0];
+        let sql = "INSERT INTO files(calc, name, path, session, img, red) VALUES(?, ?, ?, ?, ?, ?)";
+        let connection = mysql.createConnection(configSQLConnection);
+        connection.query(sql, data, function(err, results) {
+            if(err) {
+                console.log(err);
             }
-        } catch (err) {
-            console.error(err)
-        }
-        let idForFile = Date.now().toString()
-        let folder1 = __dirname + `/files/${req.cookies.to}/${idForFile}`
-        try {
-            if (!fs.existsSync(folder1)){
-                fs.mkdirSync(folder1)
-            }
-        } catch (err) {
-            console.error(err)
-        }
-
-        let filePath = path.join(__dirname + `/files/${req.cookies.to}/${idForFile}/${filenameToNorm}`);
-        fstream = fs.createWriteStream(filePath);
-        file.pipe(fstream);
-        fstream.on('close', function () {
-            try {
-                processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, fieldname)
-            } catch (e) {
-                console.log(e.message);
-                res.send(e)
+            else {
+                console.log("ФАЙЛ "+results.insertId+" "+filenameToNorm+" добавлен");
+                afterFileLoad(req, res, results, filenameToNorm, fstream, fieldname, file);
             }
         });
+        connection.end();
     });
 });
+function afterFileLoad(req, res, results, filenameToNorm, fstream, fieldname, file) {
+    let folder = __dirname + `/files/${req.cookies.to}`
+    try {
+        if (!fs.existsSync(folder)){
+            fs.mkdirSync(folder)
+        }
+    } catch (err) {
+        console.error(err)
+    }
+    let folder1 = __dirname + `/files/${req.cookies.to}/${results.insertId}`
+    try {
+        if (!fs.existsSync(folder1)){
+            fs.mkdirSync(folder1)
+        }
+    } catch (err) {
+        console.error(err)
+    }
+
+    let filePath = path.join(__dirname + `/files/${req.cookies.to}/${results.insertId}/${filenameToNorm}`);
+    fstream = fs.createWriteStream(filePath);
+    file.pipe(fstream);
+    fstream.on('close', function () {
+        try {
+            // let data = [results.insertId, filePath]
+            // let sql = "UPDATE files SET (path) WHERE id = ? VALUES(?)";
+            // let connection = mysql.createConnection(configSQLConnection);
+            // connection.query(sql, data, function(err, results) {
+            //     if(err) {
+            //         console.log(err);
+            //     }
+            //     else {
+            //         console.log("ФАЙЛ "+results.insertId+" "+filenameToNorm+" обновлен");
+            //         processing(filePath, req.cookies.to, filenameToNorm, res, results.insertId, fieldname)
+            //     }
+            // });
+            // connection.end();
+
+            processing(filePath, req.cookies.to, filenameToNorm, res, results.insertId, fieldname)
+        } catch (e) {
+            console.log(e.message);
+            res.send(e)
+        }
+    });
+}
 
 app.post("/uploadRedactedFile", function (req, res) {
     let fstream;
@@ -289,7 +317,7 @@ app.get("/parameterCalc", function (req, res) {
     let paper = req.query.paper;
     let destiny = req.query.destiny;
 
-    let data = [calc, "БЕЗ ФАЙЛУ "+calc, `0`, req.cookies.to, 1, 0, paper, destiny];
+    let data = [calc, "БЕЗ ФАЙЛУ "+calc, `/files/data/nofile.jpg`, req.cookies.to, 1, 0, paper, destiny];
     let sql = "INSERT INTO files(calc, name, path, session, img, red, paper, destiny) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
     let connection = mysql.createConnection(configSQLConnection);
     connection.query(sql, data, function(err, results) {
@@ -303,7 +331,7 @@ app.get("/parameterCalc", function (req, res) {
 
         }
     });
-
+    connection.end();
     // if(req.cookies.to){
     //     cookieStore.forEach(e => {
     //         if(e.cookie === req.cookies.to){
@@ -359,7 +387,7 @@ app.post("/orders", function (req, res) {
             console.log(`add order without file, calc type: ${body.data.calc}`);
 
             let connection = mysql.createConnection(configSQLConnection);
-            let data = [body.data.calc, "БЕЗ ФАЙЛУ "+body.data.calc, `0`, req.cookies.to, 1, 0];
+            let data = [body.data.calc, "БЕЗ ФАЙЛУ "+body.data.calc, `/files/data/nofile.jpg`, req.cookies.to, 1, 0];
             let sql = "INSERT INTO files(calc, name, path, session, img, red) VALUES(?, ?, ?, ?, ?, ?)";
             connection.query(sql, data, function(err, results, fields){
                 if(err) {
@@ -368,7 +396,7 @@ app.post("/orders", function (req, res) {
                 else {
                     // console.log(results);
                     let ress = {
-                        url: "0",
+                        url: `/files/data/nofile.jpg`,
                         img: true,
                         red: false
                     }
@@ -441,10 +469,18 @@ app.get("/orders", function (req, res) {
             let files = [];
             if(results.length > 0){
                 results.forEach(e => {
+                    let img = false
+                    let red = false
+                    if(e.img === 1){
+                        img = true;
+                    }
+                    if(e.red === 1){
+                        red = true;
+                    }
                     let ress = {
                         url: e.path,
-                        img: e.img,
-                        red: e.red
+                        img: img,
+                        red: red
                     }
                     let order = {
                         calc: e.calc,
@@ -474,9 +510,14 @@ app.get("/orders", function (req, res) {
 // });
 
 // const httpServer = http.createServer(app);
+// const httpsServer = http.createServer({
+//     key: fs.readFileSync(__dirname + "/data/sert/www_calc_printpeaks_com_ua.ca-bundle"),
+//     cert: fs.readFileSync(__dirname + "/data/sert/www_calc_printpeaks_com_ua.crt"),
+// }, app);
+
 const httpsServer = http.createServer({
-    key: fs.readFileSync(__dirname + "/data/sert/www_calc_printpeaks_com_ua.ca-bundle"),
-    cert: fs.readFileSync(__dirname + "/data/sert/www_calc_printpeaks_com_ua.crt"),
+    key: fs.readFileSync(__dirname + "/data/s1/crt.txt"),
+    cert: fs.readFileSync(__dirname + "/data/s1/key.txt"),
 }, app);
 
 // httpServer.listen(80, () => {
@@ -671,14 +712,21 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
         fs.createReadStream(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`)
             .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/notpdf/file`));
 
-        let ress = {
-            urlOriginal: `/files/${cookies}/${id}/notpdf/file`,
-            url: `/files/${cookies}/${id}/notpdf/file`,
-            img: true,
-            red: true
-        }
-        cookieStore.forEach(e => {
-            if(e.cookie === cookies){
+        let data = [`/files/${cookies}/${id}/notpdf/file`, 1, 1, id]
+        let sql = "UPDATE files SET path=?, img=?, red=? WHERE id = ?";
+        let connection = mysql.createConnection(configSQLConnection);
+        connection.query(sql, data, function(err, results) {
+            if(err) {
+                console.log(err);
+            }
+            else {
+                console.log("ФАЙЛ "+id+" "+filenameToNorm+" обновлен");
+                let ress = {
+                    urlOriginal: `/files/${cookies}/${id}/notpdf/file`,
+                    url: `/files/${cookies}/${id}/notpdf/file`,
+                    img: true,
+                    red: true
+                }
                 let order = {
                     calc: calcType,
                     id: id,
@@ -687,10 +735,24 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
                     format: "A4",
                     countInFile: 1
                 }
-                e.orders.push(order)
                 res.send(order)
             }
-        })
+        });
+        connection.end();
+        // cookieStore.forEach(e => {
+        //     if(e.cookie === cookies){
+        //         let order = {
+        //             calc: calcType,
+        //             id: id,
+        //             name : filenameToNorm,
+        //             url: ress,
+        //             format: "A4",
+        //             countInFile: 1
+        //         }
+        //         e.orders.push(order)
+        //         res.send(order)
+        //     }
+        // })
     }
     else if(mime.getType(filePath) === "application/pdf"){
         // toPng(filePath, cookies, filenameToNorm, res, id)
@@ -706,11 +768,18 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
             .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/pdf/file1.pdf`));
 
         // getInfoInPdf(filePath, cookies, filenameToNorm, res, id, __dirname + `/files/${cookies}/${id}/pdf/file1.pdf`)
-        let ress = {
-            url: `/files/${cookies}/${id}/pdf/file1.pdf`,
-        }
-        cookieStore.forEach(e => {
-            if(e.cookie === cookies){
+        let data = [`/files/${cookies}/${id}/pdf/file1.pdf`, 0, 0, id]
+        let sql = "UPDATE files SET path=?, img=?, red=? WHERE id = ?";
+        let connection = mysql.createConnection(configSQLConnection);
+        connection.query(sql, data, function(err, results) {
+            if(err) {
+                console.log(err);
+            }
+            else {
+                console.log("ФАЙЛ "+id+" "+filenameToNorm+" обновлен");
+                let ress = {
+                    url: `/files/${cookies}/${id}/pdf/file1.pdf`,
+                }
                 let order = {
                     calc: calcType,
                     id: id,
@@ -719,10 +788,27 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType){
                     format: "A4",
                     countInFile: 1
                 }
-                e.orders.push(order)
                 res.send(order)
             }
-        })
+        });
+        connection.end();
+        // let ress = {
+        //     url: `/files/${cookies}/${id}/pdf/file1.pdf`,
+        // }
+        // cookieStore.forEach(e => {
+        //     if(e.cookie === cookies){
+        //         let order = {
+        //             calc: calcType,
+        //             id: id,
+        //             name : filenameToNorm,
+        //             url: ress,
+        //             format: "A4",
+        //             countInFile: 1
+        //         }
+        //         e.orders.push(order)
+        //         res.send(order)
+        //     }
+        // })
     }
     else if(mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
         docToPdf(filePath, cookies, filenameToNorm, res, id, calcType)
