@@ -912,10 +912,10 @@ $inputRangeColorFilterValue.on('change', function () {
 // Etc..
 
 // Load sample image
-imageEditor.loadImageFromURL('/files/totest/errorNoFormat.png', 'SampleImage').then(function (sizeValue) {
-  console.log(sizeValue);
-  imageEditor.clearUndoStack();
-});
+// imageEditor.loadImageFromURL('/files/totest/errorNoFormat.png', 'SampleImage').then(function (sizeValue) {
+//   console.log(sizeValue);
+//   imageEditor.clearUndoStack();
+// });
 
 // IE9 Unselectable
 $('.menu').on('selectstart', function () {

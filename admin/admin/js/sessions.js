@@ -23,7 +23,7 @@ sessions.addEventListener("click", function (){
                             <td>${o.ip}</td>
                             <td>${o.userid}</td>
                             <td>
-                                <button class="btn btn-danger">close</button>
+                                <button class="btn btn-danger" sesId="${o.id}" onclick=del(event.target)>close</button>
                             </td>         
 `;
             tr.innerHTML = innerHTML;
@@ -31,3 +31,13 @@ sessions.addEventListener("click", function (){
         })
     })
 })
+
+function del(target) {
+    // console.log(target.getAttribute("sesId"));
+    sendData("/getSessies", "DELETE", JSON.stringify(target.getAttribute("sesId"))).then(e => {
+        console.log(e);
+        if(e.toString() === target.getAttribute("sesId").toString()){
+            target.parentElement.parentElement.remove()
+        }
+    })
+}
