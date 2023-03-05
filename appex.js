@@ -95,6 +95,8 @@ app.use((req, res, next) => {
             }
             if(results.length > 0){
                 // console.log(results); // собственно данные
+                req.userRole = results[0].userid
+                req.sessionId = results[0].id
                 next();
             }
             if(results.length === 0){
@@ -125,25 +127,17 @@ app.use((req, res, next) => {
     });
     connection.end();
 });
-// app.use((req, res, next) => {
-//     console.log(req.cookies.to);
-//
-//     if(!sessionHave(req)){
-//         let cookieId = Date.now().toString()
-//         res.cookie('to', cookieId)
-//         let user = {
-//             cookie: cookieId,
-//             orders: [],
-//             photoOrders: [],
-//             activeOrders: []
-//         }
-//         cookieStore.push(user)
-//         next();
-//     }
-//     else {
-//         next();
-//     }
-// })
+app.use((req, res, next) => {
+    if(req.userRole !== 1){
+        if(req.url === "/admin/" || req.url === "/admin"){
+            res.redirect("/login")
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
+})
 app.use("/", express.static(__dirname + "/static"));
 app.use("/login", express.static(__dirname + "/admin/login"));
 app.use("/admin", express.static(__dirname + "/admin/admin"));
@@ -157,8 +151,8 @@ app.post("/uploadFile", function (req, res) {
         let filenameToNorm = utf8.decode(filename.filename)
         console.log("Uploading file: " + filenameToNorm);
 
-        let data = [fieldname, "Йде обробка: "+filenameToNorm, `/files/data/processing.jpg`, req.cookies.to, 1, 0];
-        let sql = "INSERT INTO files(calc, name, path, session, img, red) VALUES(?, ?, ?, ?, ?, ?)";
+        let data = [fieldname, "A4", "Йде обробка: "+filenameToNorm, `/files/data/processing.jpg`, req.cookies.to, 1, 0];
+        let sql = "INSERT INTO files(calc, format, name, path, session, img, red) VALUES(?, ?, ?, ?, ?, ?, ?)";
         let connection = mysql.createConnection(configSQLConnection);
         connection.query(sql, data, function(err, results) {
             if(err) {
@@ -236,74 +230,14 @@ app.post("/uploadRedactedFile", function (req, res) {
     });
 });
 
-//photoFiles ---------------------------------------------------------------------------
-// app.post("/uploadAllPhotoPrev", function (req, res) {
-//     let idForFile = Date.now().toString()
-//     let folder1 = __dirname + `/files/${req.cookies.to}`
-//     try {
-//         if (!fs.existsSync(folder1)){
-//             fs.mkdirSync(folder1)
-//         }
-//     } catch (err) {
-//         console.error(err)
-//     }
-//
-//     if(req.cookies.to){
-//         cookieStore.forEach(e => {
-//             if(e.cookie === req.cookies.to){
-//                 e.photoOrders.push()
-//             }
-//         })
-//     }
-//     res.send(idForFile)
-// })
-// app.post("/uploadAllPhoto", function (req, res) {
-//     let fstream;
-//     req.pipe(req.busboy);
-//     req.busboy.on('file', function (fieldname, file, filename) {
-//         let filenameToNorm = utf8.decode(filename.filename)
-//         console.log("Uploading file: " + filenameToNorm);
-//
-//         let folder = __dirname + `/files/${req.cookies.to}`
-//         try {
-//             if (!fs.existsSync(folder)){
-//                 fs.mkdirSync(folder)
-//             }
-//         } catch (err) {
-//             console.error(err)
-//         }
-//         let idForFile = Date.now().toString()
-//         let folder1 = __dirname + `/files/${req.cookies.to}/${idForFile}`
-//         try {
-//             if (!fs.existsSync(folder1)){
-//                 fs.mkdirSync(folder1)
-//             }
-//         } catch (err) {
-//             console.error(err)
-//         }
-//
-//         let filePath = path.join(__dirname + `/files/${req.cookies.to}/${idForFile}/${filenameToNorm}`);
-//         fstream = fs.createWriteStream(filePath);
-//         file.pipe(fstream);
-//         fstream.on('close', function () {
-//             try {
-//                 processing(filePath, req.cookies.to, filenameToNorm, res, idForFile, fieldname)
-//             } catch (e) {
-//                 console.log(e.message);
-//                 res.send(e)
-//             }
-//         });
-//     });
-// })
-//----------------------------------------------------------------------------------------
-
 app.get("/parameterCalc", function (req, res) {
     let calc = req.query.calc;
     let paper = req.query.paper;
     let destiny = req.query.destiny;
+    let format = req.query.format;
 
-    let data = [calc, "БЕЗ ФАЙЛУ "+calc, `/files/data/nofile.jpg`, req.cookies.to, 1, 0, paper, destiny];
-    let sql = "INSERT INTO files(calc, name, path, session, img, red, paper, destiny) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+    let data = [calc, "A4", "БЕЗ ФАЙЛУ "+calc, `/files/data/nofile.jpg`, req.cookies.to, 1, 0, paper, destiny, format];
+    let sql = "INSERT INTO files(calc, format, name, path, session, img, red, paper, destiny, format) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     let connection = mysql.createConnection(configSQLConnection);
     connection.query(sql, data, function(err, results) {
         if(err) {
@@ -336,8 +270,8 @@ app.post("/orders", function (req, res) {
             console.log(`add order without file, calc type: ${body.data.calc}`);
 
             let connection = mysql.createConnection(configSQLConnection);
-            let data = [body.data.calc, "БЕЗ ФАЙЛУ "+body.data.calc, `/files/data/nofile.jpg`, req.cookies.to, 1, 0];
-            let sql = "INSERT INTO files(calc, name, path, session, img, red) VALUES(?, ?, ?, ?, ?, ?)";
+            let data = [body.data.calc, "A4", "БЕЗ ФАЙЛУ "+body.data.calc, `/files/data/nofile.jpg`, req.cookies.to, 1, 0];
+            let sql = "INSERT INTO files(calc, format, name, path, session, img, red) VALUES(?, ?, ?, ?, ?, ?, ?)";
             connection.query(sql, data, function(err, results, fields){
                 if(err) {
                     console.log(err);
@@ -353,6 +287,7 @@ app.post("/orders", function (req, res) {
                         calc: body.data.calc,
                         id: results.insertId,
                         name : `БЕЗ ФАЙЛУ ${body.data.calc}`,
+                        format: "A4",
                         countInFile: 1,
                         url: ress
                     }
@@ -392,15 +327,9 @@ app.get("/orders", function (req, res) {
                         img: img,
                         red: red
                     }
-                    let order = {
-                        calc: e.calc,
-                        id: e.id,
-                        name : e.name,
-                        countInFile: 1,
-                        url: ress,
-                        paper: e.paper,
-                        destiny: e.destiny
-                    }
+                    let order = e
+                    order.url = ress
+                    order.countInFile = 1
                     files.push(order)
                 })
             }
@@ -718,35 +647,75 @@ app.post("/login", function (req, res) {
             body = Buffer.concat(body).toString();
             body = JSON.parse(body)
             console.log(body);
-            res.send("1")
+
+            let data = [body.login];
+            let connection = mysql.createConnection(configSQLConnection);
+            let sql = "SELECT * FROM users WHERE mail = ?"
+            connection.query(sql, data,function(err, results) {
+                if(err) {
+                    console.log(err);
+                }
+                else {
+                    // console.log("Сессии просмотрели");
+                    if(results.length > 0){
+                        if(results[0].pass === body.pass){
+                            logIn(req, res, results);
+                        } else {
+                            res.send({err: "pass"})
+                        }
+                    } else {
+                        res.send({err: "login"})
+                    }
+                }
+            });
+            connection.end();
         })
     } catch (e) {
         console.log(e.message);
     }
 })
+function logIn(req, res, results){
+    let data = [results[0].id, req.sessionId];
+    let connection = mysql.createConnection(configSQLConnection);
+    let sql = "UPDATE sessies SET userid=? WHERE id = ?"
+    connection.query(sql, data,function(err, results) {
+        if(err) {
+            console.log(err);
+        }
+        else {
+            // console.log("Сессии просмотрели");
+            res.send({err: "no"})
+        }
+    });
+    connection.end();
+}
 
 app.post("/getfiles", function (req, res) {
-    let body = [];
-    try {
-        req.on('error', (err) => {
-            console.error(err);
-        }).on('data', (chunk) => {
-            body.push(chunk);
-        }).on('end', () => {
-            body = Buffer.concat(body).toString();
-            body = JSON.parse(body)
-            body.to = `files${body.to}`;
-            console.log(`${body.to}`);
-            getFilesForAdminView(req, res, body.to)
-        })
-    } catch (e) {
-        console.log(e.message);
-        let readdirInfo = []
-        let reddirUnit = {
-            error: e.toString()
+    if(req.userRole !== 1){
+        res.sendStatus(401)
+    } else {
+        let body = [];
+        try {
+            req.on('error', (err) => {
+                console.error(err);
+            }).on('data', (chunk) => {
+                body.push(chunk);
+            }).on('end', () => {
+                body = Buffer.concat(body).toString();
+                body = JSON.parse(body)
+                body.to = `files${body.to}`;
+                console.log(`${body.to}`);
+                getFilesForAdminView(req, res, body.to)
+            })
+        } catch (e) {
+            console.log(e.message);
+            let readdirInfo = []
+            let reddirUnit = {
+                error: e.toString()
+            }
+            readdirInfo.push(reddirUnit)
+            res.send(readdirInfo)
         }
-        readdirInfo.push(reddirUnit)
-        res.send(readdirInfo)
     }
 })
 
@@ -775,27 +744,31 @@ function getStatsInFile(path) {
 }
 
 app.post("/database", function (req, res){
-    let body = [];
-    try {
-        req.on('error', (err) => {
-            console.error(err);
-        }).on('data', (chunk) => {
-            body.push(chunk);
-        }).on('end', () => {
-            body = Buffer.concat(body).toString();
-            body = JSON.parse(body)
-            console.log(body);
+    if(req.userRole !== 1){
+        res.sendStatus(401)
+    } else {
+        let body = [];
+        try {
+            req.on('error', (err) => {
+                console.error(err);
+            }).on('data', (chunk) => {
+                body.push(chunk);
+            }).on('end', () => {
+                body = Buffer.concat(body).toString();
+                body = JSON.parse(body)
+                console.log(body);
 
-            if(body.do === "showAll"){
-                getFilesForAdminView(req, res, `/data/database`)
-            }
-            else {
-                res.send("1")
-            }
+                if(body.do === "showAll"){
+                    getFilesForAdminView(req, res, `/data/database`)
+                }
+                else {
+                    res.send("1")
+                }
 
-        })
-    } catch (err) {
-        console.log(err.message);
+            })
+        } catch (err) {
+            console.log(err.message);
+        }
     }
 })
 
@@ -843,159 +816,58 @@ function getFilesForAdminView(req, res, url){
 }
 
 app.get("/getSessies", function (req, res){
-    let connection = mysql.createConnection(configSQLConnection);
-    let sql = "SELECT * FROM sessies"
-    connection.query(sql, function(err, results) {
-        if(err) {
-            console.log(err);
-        }
-        else {
-            console.log("Сессии просмотрели");
-            res.send(results)
-        }
-    });
+    if(req.userRole !== 1){
+        res.sendStatus(401)
+    } else {
+        let connection = mysql.createConnection(configSQLConnection);
+        let sql = "SELECT * FROM sessies"
+        connection.query(sql, function(err, results) {
+            if(err) {
+                console.log(err);
+            }
+            else {
+                console.log("Сессии просмотрели");
+                res.send(results)
+            }
+        });
+        connection.end();
+    }
 })
 
 app.delete("/getSessies", function (req, res){
-    let body = [];
-    try {
-        req.on('error', (err) => {
-            console.error(err);
-        }).on('data', (chunk) => {
-            body.push(chunk);
-        }).on('end', () => {
-            body = Buffer.concat(body).toString();
-            body = JSON.parse(body)
-            console.log(body);
+    if(req.userRole !== 1){
+        res.sendStatus(401)
+    } else {
+        let body = [];
+        try {
+            req.on('error', (err) => {
+                console.error(err);
+            }).on('data', (chunk) => {
+                body.push(chunk);
+            }).on('end', () => {
+                body = Buffer.concat(body).toString();
+                body = JSON.parse(body)
+                console.log(body);
 
-            let connection = mysql.createConnection(configSQLConnection);
-            let data = [body];
-            let sql = "DELETE from sessies WHERE id = ?";
-            connection.query(sql, data, function(err, results, fields){
-                if(err) {
-                    console.log(err);
-                }
-                else {
-                    console.log("session "+body+" deleted by admin");
-                    res.send(body)
-                }
+                let connection = mysql.createConnection(configSQLConnection);
+                let data = [body];
+                let sql = "DELETE from sessies WHERE id = ?";
+                connection.query(sql, data, function(err, results, fields){
+                    if(err) {
+                        console.log(err);
+                    }
+                    else {
+                        console.log("session "+body+" deleted by admin");
+                        res.send(body)
+                    }
+                })
+                connection.end();
             })
-            connection.end();
-        })
-    } catch (err) {
-        console.log(err.message);
+        } catch (err) {
+            console.log(err.message);
+        }
     }
 })
-
-async function tiffToPng(filePath, cookies, filenameToNorm, res, id, calcType) {
-    //need install the imagemagick
-    let folder = __dirname + `/files/${cookies}/${id}/png`
-    try {
-        if (!fs.existsSync(folder)){
-            await fs.mkdirSync(folder)
-        }
-    } catch (err) {
-        console.error(err)
-    }
-    try {
-        const { width, height, data } = decode(fs.readFileSync(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`));
-
-        const png =  new PNG({ width, height });
-        png.data = data;
-        fs.writeFileSync(__dirname + `/files/${cookies}/${id}/png/file.png`, PNG.sync.write(png));
-
-        let ress = {
-            url: `/files/${cookies}/${id}/png/file.png`,
-        }
-        cookieStore.forEach(e => {
-            if (e.cookie === cookies) {
-                let order = {
-                    calc: calcType,
-                    id: id,
-                    name: filenameToNorm,
-                    url: ress,
-                    format: "A4",
-                    countInFile: 1
-                }
-                e.orders.push(order)
-                res.send(order)
-            }
-        })
-    } catch (e) {
-        console.log(e.message);
-        res.send(e)
-    }
-}
-
-// async function toPng(outputPath, cookies, filenameToNorm, res, id) {
-//     let folder = __dirname + `/files/${cookies}/${id}/png`
-//     try {
-//         if (!fs.existsSync(folder)){
-//             fs.mkdirSync(folder)
-//         }
-//     } catch (err) {
-//         console.error(err)
-//     }
-//     const file = outputPath;
-//     const poppler = new Poppler();
-//     const options = {
-//         firstPageToConvert: 1,
-//         lastPageToConvert: -1,
-//         pngFile: true,
-//     };
-//     const outputFile = __dirname + `/files/${cookies}/${id}/png/file`;
-//     const resz = await poppler.pdfToCairo(file, outputFile, options);
-//     console.log(resz);
-//     let readdir = fs.readdirSync(__dirname + `/files/${cookies}/${id}/png`)
-//     console.log(readdir);
-//     let pag = "1";
-//     if(readdir.length > 9){
-//         pag = "01";
-//     }
-//     if(readdir.length > 99){
-//         pag = "001";
-//     }
-//     let ress = {
-//         url: `${cookies}/${id}/png/`,
-//         count: readdir.length,
-//         pag: 0,
-//         readdir: readdir,
-//         ext: 2
-//     }
-//     cookieStore.forEach(e => {
-//         if(e.cookie === cookies){
-//             let order = {
-//                 id: id,
-//                 name : filenameToNorm,
-//                 url: ress,
-//                 format: "A4",
-//                 countInFile: readdir.length
-//             }
-//             e.orders.push(order)
-//             res.send(order)
-//         }
-//     })
-// }
-
-// app.post("/upload", function (req, res) {
-//     let fstream;
-//     req.pipe(req.busboy);
-//     req.busboy.on('file', function (fieldname, file, filename) {
-//         let filenameToNorm = utf8.decode(filename.filename)
-//         console.log("Uploading: " + filenameToNorm);
-//         fstream = fs.createWriteStream(__dirname + `/files/${req.cookies.to}-${filenameToNorm}`);
-//         file.pipe(fstream);
-//         fstream.on('close', function () {
-//             // res.header({'content-type': 'application/json'})
-//             res.header({'content-type': 'multipart/form-data'})
-//             // let response = fs.createReadStream(__dirname + `/files/${req.cookies.to}-${filenameToNorm}`);
-//             fs.readFile(__dirname + `/files/${req.cookies.to}-${filenameToNorm}`, (err, file) => {
-//                 res.send("1")
-//             })
-//         });
-//     });
-// });
-
 
 let options = {
     key: fs.readFileSync(__dirname + "/data/s2/key.txt"),

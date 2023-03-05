@@ -32,10 +32,10 @@ function renderListAndCard() {
         cardForEtalon.style.opacity = "1"
         prev.style.opacity = "1"
         next.style.opacity = "1"
-        let etalon = 88;
+        let etalon = 65;
         let coef = y/x
         let width = etalon/coef;
-        let etalonForRender = 88
+        let etalonForRender = 65
 
         let cardWCoef = thisFile.x/cardSizeW
         cardForEtalon.style.width = width/cardWCoef+"vh"

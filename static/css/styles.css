@@ -136,26 +136,40 @@ body{
 /*        width: 99%;*/
 /*    }*/
 /*}*/
-/*@media (min-width: 1000px){*/
-/*    .settingsContainer {*/
-/*        flex-direction: column;*/
-/*    }*/
-/*    .fileSettingsContainer{*/
-/*        width: 99%;*/
-/*    }*/
-/*    .fileViewContainer {*/
-/*        width: 99%;*/
-/*    }*/
-/*}*/
 @media (min-width: 1000px){
     .settingsContainer {
         flex-direction: row;
     }
     .fileSettingsContainer{
-        width: 40%;
+        width: 55%;
     }
     .fileViewContainer {
-        width: 60%;
+        width: 45%;
+        height: 94vh;
+    }
+}
+@media (max-width: 1000px){
+    .settingsContainer {
+        flex-direction: column;
+    }
+    .fileSettingsContainer{
+        width: 100%;
+    }
+    .fileViewContainer {
+        width: 100%;
+        height: 65vh;
+    }
+    .btn {
+        font-size: 1.7em;
+    }
+    .gray {
+        font-size: 1.7em;
+    }
+    .slider-item {
+        height: 3.3rem;
+    }
+    .FilesContainerRelative {
+        height: 3.3rem;
     }
 }
 
@@ -194,7 +208,6 @@ body{
 .fileViewContainer {
     /*background: #ffffff;*/
     display: flex;
-    height: 94vh;
     overflow: hidden;
     z-index: 0;
 }

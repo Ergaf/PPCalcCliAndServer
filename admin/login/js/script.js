@@ -9,6 +9,17 @@ submitButton.addEventListener("click", function () {
     }
     sendData("/login", "POST", JSON.stringify(data)).then(e => {
         console.log(e);
+        if(e.err === "login"){
+            floatingInput.classList.add("is-invalid")
+            floatingPassword.classList.remove("is-invalid")
+        } else if (e.err === "pass"){
+            floatingInput.classList.remove("is-invalid")
+            floatingPassword.classList.add("is-invalid")
+        } else if (e.err === "no"){
+            floatingInput.parentElement.classList.remove("is-invalid")
+            floatingPassword.parentElement.classList.remove("is-invalid")
+            document.location.href = '/admin'
+        }
     })
 })
 

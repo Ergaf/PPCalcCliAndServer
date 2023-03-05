@@ -502,7 +502,8 @@ async function sendData(url, method, data) {
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'charset': 'utf-8',
             // 'Content-Type': 'application/octate-stream'
             // 'Content-Type': 'multipart/form-data'
             // 'Content-Type': 'application/x-www-form-urlencoded',
