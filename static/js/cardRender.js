@@ -57,8 +57,8 @@ function renderListAndCard() {
         if(imgCoef >= coef){
             // 100 * coef / imgCoef
             let newImgCoef = 100 * coef / imgCoef
-            console.log(imgCoef);
-            console.log(newImgCoef);
+            // console.log(imgCoef);
+            // console.log(newImgCoef);
             // let newImgCoef =  coef / imgCoef
             // imgInServer.style.width = width / newImgCoef+"%"
             imgInServer.style.width = newImgCoef+"%"

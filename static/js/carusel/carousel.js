@@ -63,7 +63,7 @@ $('.FilesContainer').mousedown( function (e) {
             // console.log("left "+carousel.getBoundingClientRect().left);
             // console.log(`raznica ${-carouselWidth + carouselContainerWidth}`);
             carousel.style.left = e.pageX - shiftX + 'px';
-            let homeBWidth = $('#homeB')[0].getBoundingClientRect().width
+            // let homeBWidth = $('#homeB')[0].getBoundingClientRect().width
             // console.log(homeBWidth);
 
             if(carousel.getBoundingClientRect().left > 0){
@@ -72,7 +72,7 @@ $('.FilesContainer').mousedown( function (e) {
             }
             if(carousel.getBoundingClientRect().left < -carouselWidth + carouselContainerWidth){
                 // console.log(2);
-                console.log(carouselWidth - carouselContainerWidth);
+                // console.log(carouselWidth - carouselContainerWidth);
                 carousel.style.left = -carouselWidth + carouselContainerWidth + 'px';
             }
             if(0 <= -carouselWidth + carouselContainerWidth){

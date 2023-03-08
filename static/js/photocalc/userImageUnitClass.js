@@ -62,6 +62,8 @@ class userImageUnit {
                     photoCalc.addClass("d-none");
                     saveControls.addClass("d-none")
                     digitalPrintingContainer.classList.remove("d-none");
+                    toHomeButton.classList.remove("d-none");
+                    toFilesButton.classList.add("d-none");
                 }
 
                 let file1 = new file(e.data.name, e.data.id)

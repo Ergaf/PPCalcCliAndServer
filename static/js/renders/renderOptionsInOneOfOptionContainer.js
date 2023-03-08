@@ -5,13 +5,25 @@ function renderOptions(varOfServFromTable, thisFileProp, renderIn){
             if(e[0][0] !== "!"){
                 let elem = document.createElement("div")
                 elem.innerText = e[0]
+                elem.setAttribute("toFile", e[0]);
                 elem.classList.add("btn")
                 elem.addEventListener("click", function () {
-                    Object.defineProperty(thisFile, thisFileProp, {
-                        value: elem.innerText,
-                        writable: true
-                    });
-                    thisFile.renderSettings()
+                    let data = {
+                        id: thisFile._id,
+                        parameter: thisFileProp,
+                        value: elem.getAttribute("toFile")
+                    }
+                    sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
+                        if(o.status === "ok"){
+                            Object.defineProperty(thisFile, thisFileProp, {
+                                value: elem.getAttribute("toFile"),
+                                writable: true
+                            });
+                            thisFile.renderSettings()
+                        } else {
+                            showError(o)
+                        }
+                    })
                 })
                 if(e[0] === Object.getOwnPropertyDescriptor(thisFile, thisFileProp).value){
                     // elem.classList.add("btnm-act");

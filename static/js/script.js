@@ -20,6 +20,7 @@ const fileClassCalcToModal = document.querySelector("#fileClassCalcToModal");
 const toUseButtons = document.querySelector("#toUseButtons");
 const destinyThisButtons = document.querySelector("#destinyThisButtons");
 const toHomeButton = document.querySelector("#toHomeButton");
+const toFilesButton = document.querySelector("#toFilesButton");
 const photoRedactor = document.querySelector("#photoRedactor");
 const luvers = document.querySelector("#luvers");
 const bannerVarit = document.querySelector("#bannerVarit");
@@ -48,8 +49,19 @@ rotateNormal.addEventListener("click", function () {
 
 
 toHomeButton.addEventListener("click", function () {
-    digitalPrintingContainer.classList.add("d-none")
-    mainDisplay.classList.remove("d-none")
+    digitalPrintingContainer.classList.add("d-none");
+    mainDisplay.classList.remove("d-none");
+    toHomeButton.classList.add("d-none");
+    if(allFiles.length > 0){
+        toFilesButton.classList.remove("d-none");
+    }
+})
+toFilesButton.addEventListener("click", function () {
+    digitalPrintingContainer.classList.remove("d-none")
+    mainDisplay.classList.add("d-none");
+    toFilesButton.classList.add("d-none");
+    toHomeButton.classList.remove("d-none");
+    photoCalc.addClass('d-none');
 })
 
 function activateModal() {
@@ -59,14 +71,16 @@ function activateModal() {
     nonUpload.classList.remove("d-none");
     progressbar.value = 0
 }
-
+let calcType = ""
 digitalPrint.addEventListener("click", event => {
     activateModal()
     fileClassCalcToModal.innerHTML = "digital"
+    calcType = "digital"
 })
 widescreenPrint.addEventListener("click", event => {
     activateModal()
     fileClassCalcToModal.innerHTML = "wide"
+    calcType = "wide"
 })
 // photoPrint.addEventListener("click", event => {
 //     // activateModal()
@@ -138,38 +152,62 @@ let lastFileId;
 
 orient.addEventListener("click", function () {
     if (thisFile.format === "custom") {
-        let iks = thisFile.x
-        let igrik = thisFile.y
-        thisFile.x = igrik
-        thisFile.y = iks
+        let data = {
+            id: thisFile._id,
+            parameter: "x",
+            parameter2: "y",
+            // parameter3: "orient",
+            value: thisFile.y,
+            value2: thisFile.x,
+            // value3: false,
+        }
+        sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
+            if(o.status === "ok"){
+                thisFile.x = sizeY.value
+                thisFile.y = sizeX.value
+                // thisFile.orient = false
+                thisFile.renderSettings()
+            } else {
+                showError(o)
+            }
+        })
+        // let iks = thisFile.x
+        // let igrik = thisFile.y
+        // thisFile.x = igrik
+        // thisFile.y = iks
     }
-    thisFile.orient = !thisFile.orient
-    thisFile.renderSettings()
+    let data = {
+        id: thisFile._id,
+        parameter: "orient",
+        value: !thisFile.orient,
+    }
+    sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
+        if(o.status === "ok"){
+            thisFile.orient = !thisFile.orient
+            thisFile.renderSettings()
+        } else {
+            showError(o)
+        }
+    })
+
+
+    // thisFile.orient = !thisFile.orient
+    // thisFile.renderSettings()
 })
 
 addFileButton.addEventListener("click", function () {
-    // let data = {
-    //     do: "createNew"
-    // }
-    // sendData("/orders", "POST", JSON.stringify(data))
-    //     .then(e => {
-    //         console.log(e);
-    //         let file1 = new file(e.name)
-    //         file1._id = e.id
-    //         allFiles.push(file1)
-    //         file1.createFileContainer()
-    //     })
+
 })
 nonUpload.addEventListener("click", function () {
     let config = {
         data: {
-            calc: fileClassCalcToModal.innerHTML
+            calc: calcType
         },
     };
     axios.post("/orders", config)
         .then(e => {
-            console.log(e.data);
-            let file1 = new file(e.data.name, e.data.id)
+            // console.log(e.data);
+            let file1 = new file(e.data.name, e.data.id, e.data.count)
             file1.format = e.data.format
             file1.countInFile = e.data.countInFile
             file1.calc = e.data.calc
@@ -180,6 +218,8 @@ nonUpload.addEventListener("click", function () {
             document.querySelector(".settingsContainer").classList.remove("d-none")
             digitalPrintingContainer.classList.remove("d-none")
             mainDisplay.classList.add("d-none")
+            toHomeButton.classList.remove("d-none");
+            toFilesButton.classList.add("d-none");
         })
 })
 upload.addEventListener("click", function () {
@@ -205,7 +245,6 @@ function uploadFile(fileInput) {
         // document.querySelector("#download").classList.remove("d-none")
         let config = {
             headers: {'Content-Type': 'multipart/form-data'},
-            response_type: "arraybuffer",
             onUploadProgress(progressEvent) {
                 const progress = progressEvent.loaded / progressEvent.total * 100
                 progressbar.value = progress
@@ -216,20 +255,21 @@ function uploadFile(fileInput) {
                 }
             },
             data: {
-                calc: fileClassCalcToModal.innerHTML
+                calc: calcType
             },
         };
         let fd = new FormData();
-        fd.append(fileClassCalcToModal.innerHTML, fileInput.files[0], fileInput.files[0].name)
+        fd.append(calcType, fileInput.files[0], fileInput.files[0].name)
         axios.post("/uploadFile", fd, config)
             .then(e => {
                 mainDisplay.classList.add("d-none")
                 digitalPrintingContainer.classList.remove("d-none")
-                let file1 = new file(e.data.name, e.data.id)
+                let file1 = new file(e.data.name, e.data.id, e.data.count)
                 file1.url = e.data.url
                 file1.calc = e.data.calc
                 file1.format = e.data.format
                 file1.countInFile = e.data.countInFile
+                file1.canToOrder = e.data.canToOrder
                 allFiles.push(file1)
                 file1.createFileContainer()
                 file1.pick({target: file1.container})
@@ -242,6 +282,8 @@ function uploadFile(fileInput) {
                 progressbar.value = 0
                 download.classList.add("d-none");
                 digitalPrintingContainer.classList.remove("d-none");
+                toHomeButton.classList.remove("d-none");
+                toFilesButton.classList.add("d-none");
                 $("#exampleModal").modal("hide")
             })
     }
@@ -269,14 +311,36 @@ let text = document.querySelector("#text")
 let accordionOptions = document.querySelector("#accordionOptions")
 Array.prototype.slice.call(sidesButtons.children).forEach(e => {
     e.addEventListener("click", function () {
-        thisFile.sides = e.getAttribute("toFile")
-        thisFile.renderSettings()
+        let data = {
+            id: thisFile._id,
+            parameter: "sides",
+            value: e.getAttribute("toFile")
+        }
+        sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
+            if(o.status === "ok"){
+                thisFile.sides = e.getAttribute("toFile")
+                thisFile.renderSettings()
+            } else {
+                showError(o)
+            }
+        })
     })
 });
 Array.prototype.slice.call(colorButtons.children).forEach(e => {
     e.addEventListener("click", function () {
-        thisFile.color = e.getAttribute("toFile")
-        thisFile.renderSettings()
+        let data = {
+            id: thisFile._id,
+            parameter: "color",
+            value: e.getAttribute("toFile")
+        }
+        sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
+            if(o.status === "ok"){
+                thisFile.color = e.getAttribute("toFile")
+                thisFile.renderSettings()
+            } else {
+                showError(o)
+            }
+        })
     })
 })
 Array.prototype.slice.call(paperButtons.children).forEach(e => {
@@ -315,65 +379,103 @@ let prices;
         console.log(data)
         prices = data
 
-        if (allFiles.length > 0) {
-            mainDisplay.classList.add("d-none")
-            digitalPrintingContainer.classList.remove("d-none")
-            download.classList.add("d-none")
-        } else {
-            digitalPrintingContainer.classList.add("d-none")
-            download.classList.add("d-none")
-            mainDisplay.classList.remove("d-none")
-        }
-        toastBody.innerText = "Ціни завантажено з Google."
-        toast.show()
+        // toastBody.innerText = "Ціни завантажено з exel таблиці на Сервері."
+        // toast.show()
+
+        fetch("/orders")
+            .then(response => response.json())
+            .then(json => {
+                console.log(json);
+                if (json) {
+                    if (json.length !== 0) {
+                        // mainDisplay.classList.add("d-none")
+                        // digitalPrintingContainer.classList.remove("d-none")
+                    }
+                    json.forEach(o => {
+                        if(!o.orderid){
+                            let file1 = new file(o.name, o.id, o.count)
+                            file1.url = o.url
+                            file1.format = o.format
+                            file1.calc = o.calc
+                            file1.countInFile = o.countInFile
+                            file1.sides = o.sides;
+                            file1.color = o.color;
+                            file1.cower = o.cower;
+                            file1.paper = o.paper;
+                            file1.destiny = o.destiny;
+                            file1.destinyThis = o.destinyThis;
+                            file1.binding = o.binding;
+                            file1.bindingSelect = o.bindingSelect;
+                            file1.lamination = o.lamination;
+                            file1.roundCorner = o.roundCorner;
+                            file1.frontLining = o.frontLining;
+                            file1.backLining = o.backLining;
+                            file1.big = o.big;
+                            file1.holes = o.holes;
+                            file1.countInFile = o.countInFile;
+                            file1.allPaperCount = o.allPaperCount;
+                            file1.orient = o.orient;
+                            file1.stickerCutting = o.stickerCutting;
+                            file1.stickerCuttingThis = o.stickerCuttingThis;
+                            file1.x = o.x;
+                            file1.y = o.y;
+                            file1.url = o.url;
+                            file1.list = o.list;
+                            file1.calc = o.calc;
+                            file1.touse = o.touse;
+                            file1.luvers = o.luvers;
+                            file1.bannerVarit = o.bannerVarit;
+                            file1.floorLamination = o.floorLamination;
+                            file1.widthLamination = o.widthLamination;
+                            file1.price = o.price;
+                            file1.canToOrder = o.canToOrder;
+
+                            allFiles.push(file1)
+                            file1.createFileContainer()
+                        }
+                    })
+
+                    download.classList.add("d-none")
+
+                    if (allFiles.length > 0) {
+                        mainDisplay.classList.add("d-none")
+                        digitalPrintingContainer.classList.remove("d-none")
+                        toFilesButton.classList.add("d-none");
+                        toHomeButton.classList.remove("d-none");
+                        // console.log(allFiles[0]);
+                        allFiles[0].pick({target: allFiles[0].container})
+                    } else {
+                        mainDisplay.classList.remove("d-none")
+                        digitalPrintingContainer.classList.add("d-none")
+                        toFilesButton.classList.add("d-none");
+                        toHomeButton.classList.add("d-none");
+                    }
+                    // sliderInit()
+                }
+            })
     })
 let toast = new bootstrap.Toast($("#liveToast"))
-fetch("/orders")
-    .then(response => response.json())
-    .then(json => {
-        console.log(json);
-        if (json) {
-            if (json.length !== 0) {
-                // mainDisplay.classList.add("d-none")
-                // digitalPrintingContainer.classList.remove("d-none")
-            }
-            json.forEach(o => {
-                let file1 = new file(o.name, o.id)
-                file1.url = o.url
-                file1.format = o.format
-                file1.calc = o.calc
-                file1.countInFile = o.countInFile
-                file1.paper = o.paper
-                file1.destiny = o.destiny
-                allFiles.push(file1)
-                file1.createFileContainer()
-            })
-
-            if (allFiles.length > 0) {
-                mainDisplay.classList.add("d-none")
-                digitalPrintingContainer.classList.remove("d-none")
-                download.classList.add("d-none")
-                console.log(allFiles[0]);
-                allFiles[0].pick({target: allFiles[0].container})
-            } else {
-                digitalPrintingContainer.classList.add("d-none")
-                download.classList.add("d-none")
-                mainDisplay.classList.remove("d-none")
-            }
-
-            // sliderInit()
-
-        }
-    })
-
 let optContainer = document.querySelector(".optionsContainer")
 
 countInt.addEventListener("change", function () {
     if (countInt.value < 1) {
         countInt.value = 1
     }
-    thisFile._count = countInt.value
-    thisFile.renderSettings()
+    let data = {
+        id: thisFile._id,
+        parameter: "count",
+        value: countInt.value
+    }
+    sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
+        if(o.status === "ok"){
+            thisFile._count = countInt.value
+            thisFile.renderSettings()
+        } else {
+            showError(o)
+        }
+    })
+    // thisFile._count = countInt.value
+    // thisFile.renderSettings()
 })
 countInt.addEventListener("wheel", function () {
     event.preventDefault();
@@ -385,29 +487,59 @@ countInt.addEventListener("wheel", function () {
     }
     if (countInt.value < 1) {
         countInt.value = 1
+    } else {
+        let data = {
+            id: thisFile._id,
+            parameter: "count",
+            value: countInt.value
+        }
+        sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
+            if(o.status === "ok"){
+                thisFile._count = countInt.value
+                thisFile.renderSettings()
+            } else {
+                showError(o)
+            }
+        })
     }
-    thisFile._count = countInt.value
-    thisFile.renderSettings()
+    // thisFile._count = countInt.value
+    // thisFile.renderSettings()
 })
 
 sizeX.addEventListener("change", function () {
     if (sizeX.value < 45) {
         sizeX.value = 45
-    }
-    if (thisFile.calc === "digital") {
-        if (sizeX.value > 310) {
-            if (sizeY.value > 310) {
-                sizeY.value = 310
-            }
-            if (sizeX.value > 440) {
-                sizeX.value = 440
+    } else {
+        if (thisFile.calc === "digital") {
+            if (sizeX.value > 310) {
+                if (sizeY.value > 310) {
+                    sizeY.value = 310
+                }
+                if (sizeX.value > 440) {
+                    sizeX.value = 440
+                }
             }
         }
     }
-    thisFile.x = sizeX.value
-    thisFile.y = sizeY.value
-    thisFile.format = "custom"
-    thisFile.renderSettings()
+    let data = {
+        id: thisFile._id,
+        parameter: "x",
+        parameter2: "y",
+        parameter3: "format",
+        value: sizeX.value,
+        value2: sizeY.value,
+        value3: "custom"
+    }
+    sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
+        if(o.status === "ok"){
+            thisFile.x = sizeX.value
+            thisFile.y = sizeY.value
+            thisFile.format = "custom"
+            thisFile.renderSettings()
+        } else {
+            showError(o)
+        }
+    })
 })
 sizeX.addEventListener("wheel", function () {
     event.preventDefault();
@@ -430,10 +562,25 @@ sizeX.addEventListener("wheel", function () {
             }
         }
     }
-    thisFile.x = sizeX.value
-    thisFile.y = sizeY.value
-    thisFile.format = "custom"
-    thisFile.renderSettings()
+    let data = {
+        id: thisFile._id,
+        parameter: "x",
+        parameter2: "y",
+        parameter3: "format",
+        value: sizeX.value,
+        value2: sizeY.value,
+        value3: "custom"
+    }
+    sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
+        if(o.status === "ok"){
+            thisFile.x = sizeX.value
+            thisFile.y = sizeY.value
+            thisFile.format = "custom"
+            thisFile.renderSettings()
+        } else {
+            showError(o)
+        }
+    })
 })
 sizeY.addEventListener("change", function () {
     if (sizeY.value < 45) {
@@ -449,10 +596,25 @@ sizeY.addEventListener("change", function () {
             }
         }
     }
-    thisFile.y = sizeY.value
-    thisFile.x = sizeX.value
-    thisFile.format = "custom"
-    thisFile.renderSettings()
+    let data = {
+        id: thisFile._id,
+        parameter: "x",
+        parameter2: "y",
+        parameter3: "format",
+        value: sizeX.value,
+        value2: sizeY.value,
+        value3: "custom"
+    }
+    sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
+        if(o.status === "ok"){
+            thisFile.x = sizeX.value
+            thisFile.y = sizeY.value
+            thisFile.format = "custom"
+            thisFile.renderSettings()
+        } else {
+            showError(o)
+        }
+    })
 })
 sizeY.addEventListener("wheel", function () {
     event.preventDefault();
@@ -475,10 +637,25 @@ sizeY.addEventListener("wheel", function () {
             }
         }
     }
-    thisFile.y = sizeY.value
-    thisFile.x = sizeX.value
-    thisFile.format = "custom"
-    thisFile.renderSettings()
+    let data = {
+        id: thisFile._id,
+        parameter: "x",
+        parameter2: "y",
+        parameter3: "format",
+        value: sizeX.value,
+        value2: sizeY.value,
+        value3: "custom"
+    }
+    sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
+        if(o.status === "ok"){
+            thisFile.x = sizeX.value
+            thisFile.y = sizeY.value
+            thisFile.format = "custom"
+            thisFile.renderSettings()
+        } else {
+            showError(o)
+        }
+    })
 })
 
 let imgInp = document.querySelector("#imgInp")
@@ -527,3 +704,9 @@ async function sendData(url, method, data) {
 addEventListener("popstate",function(e){
     alert('yeees!');
 },false);
+
+
+function showError(error){
+    toastBody.innerText = `error: ${error.error}`
+    toast.show()
+}

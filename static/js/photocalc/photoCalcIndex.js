@@ -6,7 +6,33 @@ let containerForUserImg = $('#containerForUserImg');
 let saveControls = $('#saveControls');
 let saveAllUserPhoto = $('#saveAllUserPhoto');
 let deleteAllUserPhoto = $('#deleteAllUserPhoto');
+let notFilePhoto = $('#notFilePhoto');
 let photoArrContainer = [];
+
+notFilePhoto.on('click', function (){
+    let config = {
+        data: {
+            calc: "photo"
+        },
+    };
+    axios.post("/orders", config)
+        .then(e => {
+            // console.log(e.data);
+            let file1 = new file(e.data.name, e.data.id, e.data.count)
+            file1.format = e.data.format
+            file1.countInFile = e.data.countInFile
+            file1.calc = e.data.calc
+            file1.url = e.data.url
+            allFiles.push(file1)
+            file1.createFileContainer()
+            file1.pick({target: file1.container})
+            document.querySelector(".settingsContainer").classList.remove("d-none")
+            digitalPrintingContainer.classList.remove("d-none")
+            mainDisplay.classList.add("d-none")
+            toHomeButton.classList.remove("d-none");
+            toFilesButton.classList.add("d-none");
+        })
+})
 
 photoPrint.on('click', function() {
     photoCalc.removeClass('d-none');

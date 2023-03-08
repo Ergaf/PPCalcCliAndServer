@@ -18,9 +18,10 @@ sessions.addEventListener("click", function (){
             let tr = document.createElement("tr");
             tr.classList.add("trSession")
             let innerHTML = `<td>${o.id}</td>
-                            <td>${o.sessie}</td>
+                            <td>${o.session}</td>
                             <td>${o.userAgent}</td>
                             <td>${o.ip}</td>
+                            <td>${o.ip2}</td>
                             <td>${o.userid}</td>
                             <td>
                                 <button class="btn btn-danger" sesId="${o.id}" onclick=del(event.target)>close</button>

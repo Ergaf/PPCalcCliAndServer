@@ -36,11 +36,11 @@ class file {
     price;
 
     rotateImgFromNav;
-    constructor (name, id) {
+    constructor (name, id, count) {
         this.rotateImgFromNav = 0;
         this._name = name;
         this._id = id;
-        this._count = 1
+        this._count = count
         this.orient = false
         this.list = {
             scale: false,
@@ -75,7 +75,7 @@ class file {
     }
 
     pick(e){
-        console.log(e.target);
+        // console.log(e.target);
         if(e.target === this.container || e.target === this.nameContainer){
             allFiles.forEach(e => {
                 if(e._id !== this._id){
@@ -94,15 +94,17 @@ class file {
     }
     deleteThis() {
         sendData("/orders", "DELETE", JSON.stringify({id: this._id})).then((e, error) => {
-            console.log(error);
-            console.log(e);
+            // console.log(error);
+            // console.log(e);
             if(e.toString() === this._id.toString()){
                 if(thisFile === this){
                     // document.querySelector(".settingsContainer").style.display = "none"
                     document.querySelector(".settingsContainer").classList.add("d-none")
                     if(allFiles.length < 2){
-                        digitalPrintingContainer.classList.add("d-none")
-                        mainDisplay.classList.remove("d-none")
+                        digitalPrintingContainer.classList.add("d-none");
+                        mainDisplay.classList.remove("d-none");
+                        toFilesButton.classList.add("d-none");
+                        toHomeButton.classList.add("d-none");
                     }
                 }
                 for (let i = 0; i < allFiles.length; i++){
@@ -216,10 +218,23 @@ class file {
             backLiningText.classList.add("d-none")
         }
         Array.prototype.slice.call(formatButtons.children).forEach(e => {
-            e.addEventListener("click", function () {
-                thisFile.format = e.getAttribute("toFile")
-                thisFile.renderSettings()
-            })
+            if(e.getAttribute("toFile") !== "custom"){
+                e.addEventListener("click", function () {
+                    let data = {
+                        id: thisFile._id,
+                        parameter: "format",
+                        value: e.getAttribute("toFile")
+                    }
+                    sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
+                        if(o.status === "ok"){
+                            thisFile.format = e.getAttribute("toFile")
+                            thisFile.renderSettings()
+                        } else {
+                            showError(o)
+                        }
+                    })
+                })
+            }
         });
         Array.prototype.slice.call(formatButtons.children).forEach(e => {
             if(e.getAttribute("toFile") === this.format){

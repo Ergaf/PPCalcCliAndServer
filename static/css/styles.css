@@ -75,6 +75,7 @@ body{
 }
 .FilesContainer {
     display: flex;
+    /*background: #1a1e21;*/
     /*flex-direction: row-reverse;*/
     /*position: absolute;*/
     /*right: 4vw;*/
@@ -324,4 +325,8 @@ body{
 
 .promo {
     width: 200px;
+}
+
+.logoImg {
+    height: 45px;
 }
