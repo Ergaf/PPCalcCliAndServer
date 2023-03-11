@@ -81,54 +81,129 @@ app.use(busboy());
 app.use(cookieParser('govnobliat'));
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use("/", express.static(__dirname + "/static"));
+app.use("/login", express.static(__dirname + "/admin/login"));
 app.use((req, res, next) => {
-    // console.log(req.cookies.to);
+    if(req.url === "/orders"){
+        if(req.method === "GET"){
+            testHaveSessionOnGet(req, res, next);
+        } else if (req.method === "POST"){
+            testAdnAddSession(req, res, next);
+        }
+        else {
+            testHaveSession(req, res, next);
+        }
+    } else if (req.url === "/uploadFile"){
+        testAdnAddSession(req, res, next);
+    } else if(req.url === "/uploadRedactedFile"){
+        testHaveSession(req, res, next);
+    } else if(req.url === "/parameterCalc" && req.method === "GET"){
+        testAdnAddSession(req, res, next);
+    } else if(req.url === "/getSessies"){
+        testHaveSession(req, res, next);
+    } else if(req.url === "/getfiles"){
+        testHaveSession(req, res, next);
+    }
+
+    else {
+        next();
+    }
+})
+function testHaveSessionOnGet(req, res, next){
     let data = "0"
-    // console.log(req.url);
     if(req.cookies.to){
         data = [req.cookies.to]
     }
     let connection = mysql.createConnection(configSQLConnection);
     let sql = "SELECT * from sessions WHERE session = ?";
     connection.query(sql, data, function(err, results, fields) {
-            if(err) {
-                console.log(err);
-            }
-            if(results.length > 0){
-                // console.log(results); // собственно данные
-                req.userRole = results[0].userid
-                req.sessionId = results[0].id
-                next();
-            }
-            if(results.length === 0){
-                let lol = Date.now()
-                let cookieId = Date.now()+lol
-
-                let session = [cookieId.toString(), req.header('user-agent'), req.ip, 0];
-                let sql = "INSERT INTO sessions(session, userAgent, ip, userid) VALUES(?, ?, ?, ?)";
-                let connection1 = mysql.createConnection(configSQLConnection);
-                connection1.query(sql, session, function(err, results) {
-                    if(err) {
-                        console.log(err);
-                    }
-                    else {
-                        console.log("Сессия "+cookieId.toString()+" добавлена");
-                        res.cookie('to', cookieId.toString())
-                        // res.redirect(req.get('referer'));
-                        // res.redirect('current');
-                        next();
-                    }
-                });
-                connection1.end();
-            }
-            else {
-                // connection.end();
-                // console.log(results);
-                // next();
-            }
+        if(err) {
+            console.log(err);
+        }
+        if(results.length > 0){
+            req.userRole = results[0].userid
+            req.sessionId = results[0].id
+            req.sessionValue = req.cookies.to
+            next();
+        } else {
+            let orders = [];
+            res.send(orders);
+        }
     });
     connection.end();
-});
+}
+function testHaveSession(req, res, next){
+    let data = "0"
+    if(req.cookies.to){
+        data = [req.cookies.to]
+    }
+    let connection = mysql.createConnection(configSQLConnection);
+    let sql = "SELECT * from sessions WHERE session = ?";
+    connection.query(sql, data, function(err, results, fields) {
+        if(err) {
+            console.log(err);
+        }
+        if(results.length > 0){
+            // console.log(results); // собственно данные
+            req.userRole = results[0].userid
+            req.sessionId = results[0].id
+            req.sessionValue = req.cookies.to
+            next();
+        } else {
+            res.sendStatus(401);
+        }
+    });
+    connection.end();
+}
+function testAdnAddSession(req, res, next){
+    let data = "0"
+    if(req.cookies.to){
+        data = [req.cookies.to]
+    }
+    let connection = mysql.createConnection(configSQLConnection);
+    let sql = "SELECT * from sessions WHERE session = ?";
+    connection.query(sql, data, function(err, results, fields) {
+        if(err) {
+            console.log(err);
+        }
+        if(results.length > 0){
+            // console.log(results); // собственно данные
+            req.userRole = results[0].userid
+            req.sessionId = results[0].id
+            req.sessionValue = req.cookies.to
+            next();
+        }
+        if(results.length === 0){
+            let lol = Date.now()
+            let cookieId = Date.now()+lol
+
+            let session = [cookieId.toString(), req.header('user-agent'), req.ip, 0];
+            let sql = "INSERT INTO sessions(session, userAgent, ip, userid) VALUES(?, ?, ?, ?)";
+            let connection1 = mysql.createConnection(configSQLConnection);
+            connection1.query(sql, session, function(err, results) {
+                if(err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("Сессия "+cookieId.toString()+" добавлена");
+                    req.sessionValue = cookieId.toString()
+                    res.cookie('to', cookieId.toString())
+                    // res.redirect(req.get('referer'));
+                    // res.redirect('current');
+                    next();
+                }
+            });
+            connection1.end();
+        }
+        else {
+            // connection.end();
+            // console.log(results);
+            // next();
+        }
+    });
+    connection.end();
+}
+
 app.use((req, res, next) => {
     if(req.userRole !== 1){
         if(req.url === "/admin/" || req.url === "/admin"){
@@ -140,11 +215,9 @@ app.use((req, res, next) => {
         next();
     }
 })
-app.use("/", express.static(__dirname + "/static"));
-app.use("/login", express.static(__dirname + "/admin/login"));
 app.use("/admin", express.static(__dirname + "/admin/admin"));
-app.use("/3dtest", express.static(__dirname + "/admin/3dtest"));
-app.use("/red", express.static(__dirname + "/admin/image-editor/examples"));
+// app.use("/3dtest", express.static(__dirname + "/admin/3dtest"));
+// app.use("/red", express.static(__dirname + "/admin/image-editor/examples"));
 
 app.post("/uploadFile", function (req, res) {
     let fstream;
@@ -153,7 +226,7 @@ app.post("/uploadFile", function (req, res) {
         let filenameToNorm = utf8.decode(filename.filename)
         console.log("Uploading file: " + filenameToNorm);
 
-        let data = [fieldname, "A4", "Йде обробка: "+filenameToNorm, `/files/data/processing.jpg`, req.cookies.to, true, 1];
+        let data = [fieldname, "A4", "Йде обробка: "+filenameToNorm, `/files/data/processing.jpg`, req.sessionValue, true, 1];
         let sql = "INSERT INTO files(calc, format, name, path, session, img, count) VALUES(?, ?, ?, ?, ?, ?, ?)";
         let connection = mysql.createConnection(configSQLConnection);
         connection.query(sql, data, function(err, results) {
@@ -169,7 +242,7 @@ app.post("/uploadFile", function (req, res) {
     });
 });
 function afterFileLoad(req, res, results, filenameToNorm, fstream, fieldname, file) {
-    let folder = __dirname + `/files/${req.cookies.to}`
+    let folder = __dirname + `/files/${req.sessionValue}`
     try {
         if (!fs.existsSync(folder)){
             fs.mkdirSync(folder)
@@ -177,7 +250,7 @@ function afterFileLoad(req, res, results, filenameToNorm, fstream, fieldname, fi
     } catch (err) {
         console.error(err)
     }
-    let folder1 = __dirname + `/files/${req.cookies.to}/${results.insertId}`
+    let folder1 = __dirname + `/files/${req.sessionValue}/${results.insertId}`
     try {
         if (!fs.existsSync(folder1)){
             fs.mkdirSync(folder1)
@@ -185,12 +258,12 @@ function afterFileLoad(req, res, results, filenameToNorm, fstream, fieldname, fi
     } catch (err) {
         console.error(err)
     }
-    let filePath = path.join(__dirname + `/files/${req.cookies.to}/${results.insertId}/${filenameToNorm}`);
+    let filePath = path.join(__dirname + `/files/${req.sessionValue}/${results.insertId}/${filenameToNorm}`);
     fstream = fs.createWriteStream(filePath);
     file.pipe(fstream);
     fstream.on('close', function () {
         try {
-            processing(filePath, req.cookies.to, filenameToNorm, res, results.insertId, fieldname)
+            processing(filePath, req.sessionValue, filenameToNorm, res, results.insertId, fieldname)
         } catch (e) {
             console.log(e.message);
             res.send(e)
@@ -238,7 +311,7 @@ app.get("/parameterCalc", function (req, res) {
     let destiny = req.query.destiny;
     let format = req.query.format;
 
-    let data = [calc, "A4", "БЕЗ ФАЙЛУ "+calc, `/files/data/notfile2.png`, req.cookies.to, true, paper, destiny, format, 1];
+    let data = [calc, "A4", "БЕЗ ФАЙЛУ "+calc, `/files/data/notfile2.png`, req.sessionId, true, paper, destiny, format, 1];
     let sql = "INSERT INTO files(calc, format, name, path, session, img, paper, destiny, format, count) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     let connection = mysql.createConnection(configSQLConnection);
     connection.query(sql, data, function(err, results) {
@@ -272,7 +345,7 @@ app.post("/orders", function (req, res) {
             console.log(`add order without file, calc type: ${body.data.calc}`);
 
             let connection = mysql.createConnection(configSQLConnection);
-            let data = [body.data.calc, "A4", "БЕЗ ФАЙЛУ "+body.data.calc, `/files/data/notfile2.png`, req.cookies.to, true, 1];
+            let data = [body.data.calc, "A4", "БЕЗ ФАЙЛУ "+body.data.calc, `/files/data/notfile2.png`, req.sessionValue, true, 1];
             let sql = "INSERT INTO files(calc, format, name, path, session, img, count) VALUES(?, ?, ?, ?, ?, ?, ?)";
             connection.query(sql, data, function(err, results, fields){
                 if(err) {
@@ -457,18 +530,6 @@ function sendRes(url, contentType, res) {
             console.log("sucess! "+file);
         }
     })
-}
-
-async function sessionHave (req) {
-    let have = false
-    if(req.cookies.to){
-        cookieStore.forEach(e => {
-            if(e.cookie === req.cookies.to){
-                have = true
-            }
-        })
-    }
-    return have;
 }
 
 async function sqlTransaction(sql, data) {
@@ -730,6 +791,7 @@ app.post("/login", function (req, res) {
         console.log(e.message);
     }
 })
+
 function logIn(req, res, results){
     let data = [results[0].id, req.sessionId];
     let connection = mysql.createConnection(configSQLConnection);
@@ -959,7 +1021,7 @@ function createDatabase(){
 }
 
 function createTableFiles(){
-    const sql = "create table if not exists files(id int primary key auto_increment,name varchar(200),path varchar(250),userid int,session varchar(50),orderid int,img boolean,red boolean,format varchar(50),sides varchar(50),color varchar(50),cower varchar(50),paper varchar(50),destiny varchar(200),destinyThis varchar(200),binding varchar(50),bindingSelect varchar(50),lamination varchar(50),roundCorner varchar(50),frontLining varchar(50),backLining varchar(50),big varchar(50),holes varchar(50),allPaperCount varchar(50),orient BOOLEAN,stickerCutting varchar(200),stickerCuttingThis varchar(200),x varchar(50),y varchar(50),list varchar(50),calc varchar(50),touse varchar(200),luvers varchar(200),bannerVarit varchar(200),floorLamination varchar(50),widthLamination varchar(50),price varchar(50), count int,canToOrder boolean)";
+    const sql = "create table if not exists files(id int primary key auto_increment,name varchar(200),path varchar(250),userid int,session varchar(50),orderid int,img boolean,red boolean,format varchar(50),sides varchar(50),color varchar(50),cower varchar(50),paper varchar(50),destiny varchar(200),destinyThis varchar(200),binding varchar(50),bindingSelect varchar(50),lamination varchar(50),roundCorner varchar(50),frontLining varchar(50),backLining varchar(50),big varchar(100),holes varchar(50),allPaperCount varchar(50),orient BOOLEAN,stickerCutting varchar(200),stickerCuttingThis varchar(200),x varchar(50),y varchar(50),list varchar(100),calc varchar(50),touse varchar(200),luvers varchar(200),bannerVarit varchar(200),floorLamination varchar(100),widthLamination varchar(100),price varchar(50), count int,canToOrder boolean, inBasket boolean)";
     const connectionCreateTablFiles = mysql.createConnection(configSQLConnection);
     connectionCreateTablFiles.query(sql,
         function(err, results) {
@@ -974,7 +1036,7 @@ function createTableFiles(){
 }
 
 function createTableSessions(){
-    const sql = "create table if not exists sessions(id int primary key auto_increment,session varchar(45),userid int,userAgent varchar(250),ip varchar(45),ip2 varchar(45))";
+    const sql = "create table if not exists sessions(id int primary key auto_increment,session varchar(45),userid int,userAgent varchar(400),ip varchar(45),ip2 varchar(45))";
     const connectionCreateTablSessions = mysql.createConnection(configSQLConnection);
     connectionCreateTablSessions.query(sql,
         function(err, results) {
