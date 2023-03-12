@@ -31,6 +31,7 @@ const rotateRight = document.querySelector("#rotateRight");
 // const openEditor = document.querySelector("#openEditor");
 const rotateNormal = document.querySelector("#rotateNormal");
 const toastBody = document.querySelector("#toastBody");
+const toastHeader = document.querySelector("#toastHeader");
 rotateLeft.addEventListener("click", function () {
     thisFile.rotateImgFromNav = thisFile.rotateImgFromNav - 90
     renderListAndCard()
@@ -52,7 +53,7 @@ toHomeButton.addEventListener("click", function () {
     digitalPrintingContainer.classList.add("d-none");
     mainDisplay.classList.remove("d-none");
     toHomeButton.classList.add("d-none");
-    if(allFiles.length > 0){
+    if (allFiles.length > 0) {
         toFilesButton.classList.remove("d-none");
     }
 })
@@ -71,6 +72,7 @@ function activateModal() {
     nonUpload.classList.remove("d-none");
     progressbar.value = 0
 }
+
 let calcType = ""
 digitalPrint.addEventListener("click", event => {
     activateModal()
@@ -162,7 +164,7 @@ orient.addEventListener("click", function () {
             // value3: false,
         }
         sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
-            if(o.status === "ok"){
+            if (o.status === "ok") {
                 thisFile.x = sizeY.value
                 thisFile.y = sizeX.value
                 // thisFile.orient = false
@@ -182,7 +184,7 @@ orient.addEventListener("click", function () {
         value: !thisFile.orient,
     }
     sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
-        if(o.status === "ok"){
+        if (o.status === "ok") {
             thisFile.orient = !thisFile.orient
             thisFile.renderSettings()
         } else {
@@ -317,7 +319,7 @@ Array.prototype.slice.call(sidesButtons.children).forEach(e => {
             value: e.getAttribute("toFile")
         }
         sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
-            if(o.status === "ok"){
+            if (o.status === "ok") {
                 thisFile.sides = e.getAttribute("toFile")
                 thisFile.renderSettings()
             } else {
@@ -334,7 +336,7 @@ Array.prototype.slice.call(colorButtons.children).forEach(e => {
             value: e.getAttribute("toFile")
         }
         sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
-            if(o.status === "ok"){
+            if (o.status === "ok") {
                 thisFile.color = e.getAttribute("toFile")
                 thisFile.renderSettings()
             } else {
@@ -355,7 +357,7 @@ let sizeX = document.querySelector("#sizeX")
 let sizeY = document.querySelector("#sizeY")
 let prices;
 // fetch('https://script.googleusercontent.com/macros/echo?user_content_key=wLSQSatR6bZv9i8U5VtiOsa7GMSDGnnZijrnGFZE1_jwd1QJkdBz8Sl8ITa_TvVjVpf_ByOh6IcFuOZ7evsUSo_9NYtdFJYTm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnDbwAl7CMxVAiYx-XcQGm2-pK98VFRlg2L1Bgi9-N5lGP8ipd0KGqDVV0UksueULwVpami56uyJ4IxkRYgJm5B_wls8-MAHEtdz9Jw9Md8uu&lib=MKqsPpMpIdvM_NE9JC918gzq7P1CHZY8E')
-    fetch('/getprices')
+fetch('/getprices')
     .then(response => response.json())
     .then(json => {
         let x = 1
@@ -380,6 +382,7 @@ let prices;
         prices = data
 
         // toastBody.innerText = "Ціни завантажено з exel таблиці на Сервері."
+        // toastHeader.innerText = "Print Peaks"
         // toast.show()
 
         fetch("/orders")
@@ -392,7 +395,7 @@ let prices;
                         // digitalPrintingContainer.classList.remove("d-none")
                     }
                     json.forEach(o => {
-                        if(!o.orderid){
+                        if(o.inBasket === false || o.inBasket === null){
                             let file1 = new file(o.name, o.id, o.count)
                             file1.url = o.url
                             file1.format = o.format
@@ -432,6 +435,8 @@ let prices;
 
                             allFiles.push(file1)
                             file1.createFileContainer()
+                        } else {
+                            basketNotification.innerHTML = parseInt(basketNotification.innerHTML)+1
                         }
                     })
 
@@ -467,7 +472,7 @@ countInt.addEventListener("change", function () {
         value: countInt.value
     }
     sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
-        if(o.status === "ok"){
+        if (o.status === "ok") {
             thisFile._count = countInt.value
             thisFile.renderSettings()
         } else {
@@ -494,7 +499,7 @@ countInt.addEventListener("wheel", function () {
             value: countInt.value
         }
         sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
-            if(o.status === "ok"){
+            if (o.status === "ok") {
                 thisFile._count = countInt.value
                 thisFile.renderSettings()
             } else {
@@ -531,7 +536,7 @@ sizeX.addEventListener("change", function () {
         value3: "custom"
     }
     sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
-        if(o.status === "ok"){
+        if (o.status === "ok") {
             thisFile.x = sizeX.value
             thisFile.y = sizeY.value
             thisFile.format = "custom"
@@ -572,7 +577,7 @@ sizeX.addEventListener("wheel", function () {
         value3: "custom"
     }
     sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
-        if(o.status === "ok"){
+        if (o.status === "ok") {
             thisFile.x = sizeX.value
             thisFile.y = sizeY.value
             thisFile.format = "custom"
@@ -606,7 +611,7 @@ sizeY.addEventListener("change", function () {
         value3: "custom"
     }
     sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
-        if(o.status === "ok"){
+        if (o.status === "ok") {
             thisFile.x = sizeX.value
             thisFile.y = sizeY.value
             thisFile.format = "custom"
@@ -647,7 +652,7 @@ sizeY.addEventListener("wheel", function () {
         value3: "custom"
     }
     sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
-        if(o.status === "ok"){
+        if (o.status === "ok") {
             thisFile.x = sizeX.value
             thisFile.y = sizeY.value
             thisFile.format = "custom"
@@ -701,12 +706,12 @@ async function sendData(url, method, data) {
 //
 // imageEditor.loadImageFromURL('files/totest/file-1.png', 'My sample image');
 
-addEventListener("popstate",function(e){
+addEventListener("popstate", function (e) {
     alert('yeees!');
-},false);
+}, false);
 
 
-function showError(error){
+function showError(error) {
     toastBody.innerText = `error: ${error.error}`
     toast.show()
 }
