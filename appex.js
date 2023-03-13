@@ -81,8 +81,9 @@ app.use(busboy());
 app.use(cookieParser('govnobliat'));
 app.use(express.urlencoded({extended: true}));
 app.use(bodyParser.urlencoded({extended: true}));
-app.use("/", express.static(__dirname + "/static"));
-app.use("/login", express.static(__dirname + "/admin/login"));
+app.use("/", express.static(__dirname + "/front/main"));
+app.use("/createOrder", express.static(__dirname + "/front/createorder"));
+app.use("/login", express.static(__dirname + "/front/login"));
 app.use((req, res, next) => {
     if (req.url === "/orders") {
         if (req.method === "GET") {
@@ -218,7 +219,7 @@ function testAdnAddSession(req, res, next) {
     connection.end();
 }
 
-app.use("/admin", express.static(__dirname + "/admin/admin"));
+app.use("/admin", express.static(__dirname + "/front/admin"));
 // app.use("/3dtest", express.static(__dirname + "/admin/3dtest"));
 // app.use("/red", express.static(__dirname + "/admin/image-editor/examples"));
 
@@ -606,8 +607,8 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType) 
             .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/pdf/file1.pdf`));
 
         // getInfoInPdf(filePath, cookies, filenameToNorm, res, id, __dirname + `/files/${cookies}/${id}/pdf/file1.pdf`)
-        let data = [filenameToNorm, `/files/${cookies}/${id}/pdf/file1.pdf`, true, id]
-        let sql = "UPDATE files SET name=?, path=?, canToOrder=? WHERE id = ?";
+        let data = [filenameToNorm, `/files/${cookies}/${id}/pdf/file1.pdf`, true, false, id]
+        let sql = "UPDATE files SET name=?, path=?, canToOrder=?, img=? WHERE id = ?";
         let connection = mysql.createConnection(configSQLConnection);
         connection.query(sql, data, function (err, results) {
             if (err) {
@@ -716,8 +717,8 @@ function getContentType(url) {
 
 async function getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputPath, calcType) {
     let connection = mysql.createConnection(configSQLConnection);
-    let data = [filenameToNorm, `/files/${cookies}/${id}/pdf/file1.pdf`, true, id]
-    let sql = "UPDATE files SET name=?, path=?, canToOrder=? WHERE id = ?";
+    let data = [filenameToNorm, `/files/${cookies}/${id}/pdf/file1.pdf`, true, false, id]
+    let sql = "UPDATE files SET name=?, path=?, canToOrder=?, img=? WHERE id = ?";
     connection.query(sql, data, function (err, results, fields) {
         if (err) {
             console.log(err);
@@ -996,7 +997,6 @@ app.post("/basket", function (req, res) {
         }).on('end', () => {
             body = Buffer.concat(body).toString();
             body = JSON.parse(body)
-            console.log(body);
 
             let connection = mysql.createConnection(configSQLConnection);
             let data = [true, body.id, true]
@@ -1017,7 +1017,7 @@ app.post("/basket", function (req, res) {
                     } else {
                         res.send({
                             status: "error",
-                            error: "cantToOrder"
+                            error: "Без файлу неможна додати до кошику та зробити замовлення. Замовлення в розробці."
                         })
                     }
                 }
@@ -1041,7 +1041,6 @@ app.delete("/basket", function (req, res) {
         }).on('end', () => {
             body = Buffer.concat(body).toString();
             body = JSON.parse(body)
-            console.log(body);
 
             let connection = mysql.createConnection(configSQLConnection);
             let data = [false, body.id]

@@ -117,6 +117,18 @@
 <!--            <div class="btn">all this is BUTTON!</div>-->
         </div>
     </div>
+    <div class="card-group">
+        <div class="card m-5 shadow-lg cursorPointer" id="cupPrint">
+            <div class="card-body">
+                <h5 class="card-title">Друк на чашках</h5>
+            </div>
+        </div>
+        <div class="card m-5 shadow-lg cursorPointer" id="noPrint">
+            <div class="card-body">
+                <h5 class="card-title">Какая-то фигня еще</h5>
+            </div>
+        </div>
+    </div>
 
     <div class="download progress d-none">
         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
@@ -165,7 +177,7 @@
         </div>
     </div>
 
-    <div class="settingsContainer d-flex d-none">
+    <div class="settingsContainer d-flex d-none" id="settingsContainer">
         <div class="fileSettingsContainer">
             <div class="d-flex justify-content-center settingElem d-none" id="selectButtonCalc">
                 <div id="digitalCalcSelect" class="btn" toFile="digital">digital</div>
@@ -215,16 +227,12 @@
 
 <!--                <div class="d-flex justify-content-center settingElem" id="paperButtons"></div>-->
 
-                <div  class="d-flex justify-content-center">
-                    <span class="input-group-text gray">Промо-код:</span>
-                    <input type="text" class="input-group-text gray promo" id="promo">
-                    <button id="promoAccept" class="btn gray">accept</button>
-                    <div id="acceptedValid"></div>
-
-<!--                    <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">-->
-<!--                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 17.27l4.18 2.14-.8-4.65 3.38-3.3-4.69-.69L12 6.32l-1.87 3.75-4.69.69 3.38 3.3-.8 4.65L12 17.27zm0-12.92l1.62 3.24 3.62.53-2.62 2.56.62 3.61L12 16.03l-3.24 1.69.62-3.61-2.62-2.56 3.62-.53L12 4.35z"/>-->
-<!--                    </svg>-->
-
+                <div class="p-2">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <input type="text" class="input-group-text gray promo" placeholder="Promo code" id="promo">
+                        <button id="promoAccept" class="btn gray">accept</button>
+                        <div id="acceptedValid"></div>
+                    </div>
                 </div>
 
                 <div class="d-flex justify-content-center">
@@ -255,7 +263,7 @@
                 </div>
 
                 <div class="btn" id="toBasket">
-                    Додати до корзини
+                    Додати до кошика
                 </div>
 
                 <div class="d-flex align-items-center justify-content-center mt-1">
@@ -422,7 +430,7 @@
     <div class="d-flex flex-row justify-content-center align-items-center">
         <div class="btn" id="backInPhotoCalcButton">Назад</div>
         <div class="btn" id="notFilePhoto">Порахувати без файлу</div>
-        <label class="btn" for="inMemory">In memory</label>
+        <label class="btn d-none" for="inMemory">In memory</label>
         <input type="file" multiple accept=".jpg, .png" class="btn d-none" name="inMemory" id="inMemory"/>
         <button class="btn" disabled>Google</button>
         <button class="btn" disabled>Facebook/Insta</button>
@@ -480,7 +488,7 @@
 <!--                <div type="button" id="upload" class="btn">ПРОРАХУВАТИ</div>-->
 <!--                <div type="button" id="uploadLoad" class="btn d-none" disabled>-->
                 <div type="button" id="nonUpload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>
-                <div type="button" id="upload" class="btn">ПРОРАХУВАТИ</div>
+                <div type="button" id="upload" class="btn d-none invisible">ПРОРАХУВАТИ</div>
                 <div type="button" id="uploadLoad" class="btn d-none" disabled>
                     <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
                     ОБРОБКА...
@@ -542,8 +550,8 @@
 
 <!--<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button>-->
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-    <div class="offcanvas-header">
+<div class="offcanvas offcanvas-end" style="background: rgba(245, 245, 245, 0.96); width: 650px" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header" style="padding-bottom: 0">
         <h5 class="offcanvas-title" id="offcanvasRightLabel">
             Кошик
         </h5>
@@ -551,6 +559,9 @@
     </div>
     <div class="offcanvas-body" id="basketContainer">
 
+    </div>
+    <div class="btn" style="margin: 15px">
+        Зробити замовлення
     </div>
 </div>
 
@@ -610,6 +621,8 @@
 <script src="js/cardRender.js" charset="utf-8"></script>
 <script src="js/ifsForThisTabl.js" charset="utf-8"></script>
 <script src="js/script.js" charset="utf-8"></script>
+<script src="js/renders/enumForRender.js" charset="utf-8"></script>
+<script src="js/basket/renders.js" charset="utf-8"></script>
 
 <!--<script src="js/photoEditor/tui-code-snippet.js"></script>-->
 <!--<script src="js/photoEditor/fabric.min.js"></script>-->

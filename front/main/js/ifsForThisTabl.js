@@ -141,7 +141,7 @@ function getPaperPricesFromUserPick() {
     return price
 }
 
-function getSizes() {
+function getSizes(thisFile) {
     let size = {
         x: 0,
         y: 0

@@ -1,7 +1,7 @@
 let viewportWidth;
 let viewportHeight;
-
 function render() {
+
     thisFile.url2.pdf.getPage(thisFile.url2.currentPage).then((page) => {
         let canvas = document.getElementById("pdf_renderer");
         let ctx = canvas.getContext("2d");
