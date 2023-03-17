@@ -98,9 +98,9 @@ class file {
         //create list
         let list = document.createElement('div');
         this.list = list;
-        list.classList.add("d-flex");
-        list.classList.add("justify-content-center");
-        list.classList.add("align-items-center");
+        list.classList.add("list");
+        // list.classList.add("justify-content-center");
+        // list.classList.add("align-items-center");
         iconContainer.appendChild(list);
 
         if (this.format !== "custom") {
@@ -193,17 +193,24 @@ class file {
         cancelButton.classList.add('btn-close');
         cancelButton.classList.add('mousePointer');
         controlButtonsContainer.appendChild(cancelButton);
-
-        let basketForRender = `
-            <div style="padding-left: 10px; padding-bottom: 5px;">
+        let basketForRender = ""
+        if(this.calc === "digital" || this.calc === "wide"|| this.calc === "photo"){
+            basketForRender = `<div style="padding-left: 10px; padding-bottom: 5px;">
                 <div class="inBasketValue"><span class="text-secondary lFont">Тип друку: </span>${getUkrType(this.calc)} ${getUkrType(this.sides)} ${getUkrType(this.color)}</div>
                 <div class="inBasketValue"><span class="text-secondary lFont">Тип матеріалу: </span>${this.paper}</div>
                 <div class="inBasketValueWrap"><span class="text-secondary lFont">Матеріал: </span>${this.destiny}</div>
                 <div class="inBasketValue"><span class="text-secondary lFont">Формат: </span>${this.format}: ${this.x} x ${this.y}</div>
-                <div class="inBasketValue"><span class="text-secondary lFont">Кількість примірників: </span>${this._count}</div>
+                <div class="inBasketValue"><span class="text-secondary lFont">Кількість: </span>${this._count}</div>
                 <div class="inBasketValue"><span class="text-secondary lFont">Ціна: </span>${this.price} грн.</div>
-            </div>
-        `
+            </div>`
+        } else if (this.calc === "cup"){
+            basketForRender = `<div style="padding-left: 10px; padding-bottom: 5px;">
+                <div class="inBasketValue"><span class="text-secondary lFont">Тип друку: </span>${getUkrType(this.calc)} ${getUkrType(this.sides)} ${getUkrType(this.color)}</div>
+                <div class="inBasketValueWrap"><span class="text-secondary lFont">Чашка: </span>${this.destiny}</div>
+                <div class="inBasketValue"><span class="text-secondary lFont">Кількість: </span>${this._count}</div>
+                <div class="inBasketValue"><span class="text-secondary lFont">Ціна: </span>${this.price} грн.</div>
+            </div>`
+        }
         let body = document.createElement('div');
         body.innerHTML = basketForRender;
         infoContainer.appendChild(body);
@@ -245,6 +252,10 @@ class file {
                         toHomeButton.classList.remove("d-none");
                     }
                 }
+            } else {
+                toastBody.innerText = e.error
+                toastHeader.innerText = e.status
+                toast.show()
             }
         })
     }
@@ -271,8 +282,9 @@ class file {
     deleteThis() {
         sendData("/orders", "DELETE", JSON.stringify({id: this._id})).then((e, error) => {
             // console.log(error);
-            // console.log(e);
-            if (e.toString() === this._id.toString()) {
+            console.log(e);
+            console.log(this.inBasket);
+            if (e.status === "ok" && e.id.toString() === this._id.toString()) {
                 if (thisFile === this) {
                     // document.querySelector(".settingsContainer").style.display = "none"
                     document.querySelector(".settingsContainer").classList.add("d-none")
@@ -283,19 +295,25 @@ class file {
                         toHomeButton.classList.add("d-none");
                     }
                 }
-                if(this.inBasket === true || this.inBasket === 1)
-                for (let i = 0; i < allFiles.length; i++) {
-                    if (allFiles[i]._id === this._id) {
-                        allFiles[i].container.remove()
-                        allFiles.splice(i, 1)
+                if(this.inBasket === true || this.inBasket === 1){
+                    for (let i = 0; i < filesInBasket.length; i++) {
+                        if (filesInBasket[i]._id === this._id) {
+                            filesInBasket[i].container.remove()
+                            filesInBasket.splice(i, 1)
+                        }
+                    }
+                } else {
+                    for (let i = 0; i < allFiles.length; i++) {
+                        if (allFiles[i]._id === this._id) {
+                            allFiles[i].container.remove()
+                            allFiles.splice(i, 1)
+                        }
                     }
                 }
-                for (let i = 0; i < filesInBasket.length; i++) {
-                    if (filesInBasket[i]._id === this._id) {
-                        filesInBasket[i].container.remove()
-                        filesInBasket.splice(i, 1)
-                    }
-                }
+            } else {
+                toastBody.innerText = e.error
+                toastHeader.innerText = e.status
+                toast.show()
             }
         })
     }
@@ -334,7 +352,11 @@ class file {
             paperButtons.classList.remove("d-none")
             destinyThisButtons.classList.add("d-none")
             toUseButtons.classList.add("d-none");
+            formatInputs.classList.remove("d-none");
+            fileViewContainer.classList.remove("d-none");
+            ifPrintCountLists.classList.remove("d-none");
             renderDigitalCalc(priceCalc)
+            renderListAndCard()
         } else if (thisFile.calc === "wide") {
             let formats = `
                     <div class="btn" toFile="A2">А2</div>
@@ -361,10 +383,14 @@ class file {
             stickerCutting.classList.add("d-none")
             stickerCuttingThis.classList.add("d-none")
             backLiningText.classList.add("d-none")
+            formatInputs.classList.remove("d-none");
 
             toUseButtons.classList.remove("d-none");
             accordionOptions.classList.remove("d-none");
+            fileViewContainer.classList.remove("d-none");
+            ifPrintCountLists.classList.remove("d-none");
             renderWideCalc(priceCalc)
+            renderListAndCard()
         } else if (thisFile.calc === "photo") {
             let formats = `
                     <div class="btn" toFile="10х15">10х15</div>
@@ -396,6 +422,43 @@ class file {
             stickerCutting.classList.add("d-none")
             stickerCuttingThis.classList.add("d-none")
             backLiningText.classList.add("d-none")
+            formatInputs.classList.remove("d-none");
+            fileViewContainer.classList.remove("d-none");
+            ifPrintCountLists.classList.add("d-none");
+            renderListAndCard()
+        }
+        else if (thisFile.calc === "cup"){
+            colorButtons.classList.add("d-none")
+            sidesButtons.classList.add("d-none")
+            accordionOptions.classList.add("d-none");
+            formatInputs.classList.add("d-none");
+            paperButtons.classList.add("d-none");
+            fileViewContainer.classList.add("d-none");
+            ifPrintCountLists.classList.add("d-none");
+            destinyButtons.innerHTML = ""
+            formatButtons.innerHTML = "";
+            renderOptions("чашки", "destiny", destinyButtons)
+            thisFile.realCount = thisFile._count
+            let cupPrice = getPriceFromCount(thisFile.destiny, "чашки")
+            thisFile.price = cupPrice
+            price.value = thisFile.price
+            // thisFile.renderSettings()
+        }
+        else if (thisFile.calc === "afterPrint"){
+            colorButtons.classList.add("d-none")
+            sidesButtons.classList.add("d-none")
+            accordionOptions.classList.add("d-none");
+            formatInputs.classList.add("d-none");
+            paperButtons.classList.add("d-none");
+            fileViewContainer.classList.add("d-none");
+            ifPrintCountLists.classList.add("d-none");
+            destinyButtons.innerHTML = ""
+            formatButtons.innerHTML = "";
+            renderOptions("Післядрукарська обробка", "destiny", destinyButtons)
+            thisFile.realCount = thisFile._count
+            let cupPrice = getPriceFromCount(thisFile.destiny, "Післядрукарська обробка")
+            thisFile.price = cupPrice
+            price.value = thisFile.price
         }
         Array.prototype.slice.call(formatButtons.children).forEach(e => {
             if (e.getAttribute("toFile") !== "custom") {
@@ -469,27 +532,17 @@ class file {
                 }
             }
         } else {
-            // imgInServer.setAttribute("src", "")
             containerForImgInServer.classList.remove("d-none")
             containerForPdfInServer.classList.add("d-none")
 
             let image = new Image();
             image.onload = function () {
                 imgInServer.setAttribute("src", image.src)
-                renderListAndCard()
             }
-            // image.src = "/files/totest/file-1.png";
             image.src = thisFile.url.url;
             document.querySelector("#page_count").innerText = 1
-
-            // if(!this.url2.pdf || lastFileId !== thisFile._id){
-            //     pdfjsLib.getDocument("/files/totest/file-1.png").then((pdf) => {
-            //         this.url2.pdf = pdf
-            //         render();
-            //     })
-            // }
         }
-        renderListAndCard()
+        // renderListAndCard()
         if (thisFile.url2.pdf) {
             document.querySelector("#page_count").innerText = thisFile.url2.pdf.numPages
             this.countInFile = thisFile.url2.pdf.numPages
@@ -501,23 +554,59 @@ class file {
         countInt.value = this._count
         countInFile.value = this.countInFile
         allPaper.value = this.allPaperCount
-        if (this.realCount < 2) {
-            arkushi.innerText = "аркуш"
-        }
-        if (this.realCount > 1 && this._count < 5) {
-            arkushi.innerText = "аркуша"
-        }
-        if (this.realCount > 4) {
-            arkushi.innerText = "аркушів"
-        }
-        if (this._count < 2) {
-            primirnyk.innerText = "примірник"
-        }
-        if (this._count > 1 && this._count < 5) {
-            primirnyk.innerText = "примірника"
-        }
-        if (this._count > 4) {
-            primirnyk.innerText = "примірників"
+        if(thisFile.calc === "cup"){
+            if (this._count < 2) {
+                primirnyk.innerText = "чашка"
+            }
+            if (this._count > 1 && this._count < 5) {
+                primirnyk.innerText = "чашки"
+            }
+            if (this._count > 4) {
+                primirnyk.innerText = "чашек"
+            }
+            allCountElement.classList.add("d-none")
+        } else if(thisFile.calc === "afterPrint"){
+            if (this._count < 2) {
+                primirnyk.innerText = "штука"
+            }
+            if (this._count > 1 && this._count < 5) {
+                primirnyk.innerText = "штуки"
+            }
+            if (this._count > 4) {
+                primirnyk.innerText = "штук"
+            }
+            allCountElement.classList.add("d-none")
+        } else {
+            if (this.realCount < 2) {
+                arkushi.innerText = "аркуш"
+            }
+            if (this.realCount > 1 && this._count < 5) {
+                arkushi.innerText = "аркуша"
+            }
+            if (this.realCount > 4) {
+                arkushi.innerText = "аркушів"
+            }
+            if (this._count < 2) {
+                primirnyk.innerText = "примірник"
+            }
+            if (this._count > 1 && this._count < 5) {
+                primirnyk.innerText = "примірника"
+            }
+            if (this._count > 4) {
+                primirnyk.innerText = "примірників"
+            }
+
+            if (this.countInFile < 2) {
+                storinki.innerText = "сторінка"
+            }
+            if (this.countInFile > 1 && this._count < 5) {
+                storinki.innerText = "сторінки"
+            }
+            if (this.countInFile > 4) {
+                storinki.innerText = "сторінок"
+            }
+
+            allCountElement.classList.remove("d-none")
         }
 
         text.innerText = this.format
@@ -567,33 +656,6 @@ class file {
         } else {
             this.x = sizes.y
             this.y = sizes.x
-        }
-    }
-
-    renderMiniIcon() {
-        if (this.url) {
-            if (this.url.img) {
-                let image = new Image();
-                image.onload = function () {
-                    console.log(this.imag);
-                    this.imag.setAttribute("src", image.src)
-                    // this.renderListIfImg()
-                }
-                image.src = this.url.url;
-            } else {
-                if (!this.url2.pdf || lastFileId !== thisFile._id) {
-                    pdfjsLib.getDocument(this.url.url).then((pdf) => {
-                        this.url2.pdf = pdf
-
-                        if (this.url2.pdf) {
-                            document.querySelector("#page_count").innerText = thisFile.url2.pdf.numPages
-                            this.countInFile = this.url2.pdf.numPages
-                        }
-
-                        render();
-                    })
-                }
-            }
         }
     }
 }

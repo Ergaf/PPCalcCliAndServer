@@ -20,8 +20,8 @@ function render() {
         });
         document.querySelector("#page_count").innerText = thisFile.url2.pdf.numPages
         thisFile.countInFile = thisFile.url2.pdf.numPages
+        renderListAndCard()
     });
-    renderListAndCard()
 }
 
 document.getElementById("go_previous").addEventListener("click", (e) => {
@@ -94,21 +94,21 @@ currentPage.addEventListener("wheel", function () {
     }
 })
 
-document.getElementById("zoom_in").addEventListener("click", (e) => {
-    if(thisFile.url2.pdf){
-        thisFile.url2.zoom += 0.1;
-        render();
-    }
-});
-document.getElementById("zoom_out").addEventListener("click", (e) => {
-    if(thisFile.url2.pdf){
-        thisFile.url2.zoom -= 0.1;
-        render();
-    }
-});
-document.getElementById("zoom_normal").addEventListener("click", (e) => {
-    if(thisFile.url2.pdf){
-        thisFile.url2.zoom = 1;
-        render();
-    }
-});
+// document.getElementById("zoom_in").addEventListener("click", (e) => {
+//     if(thisFile.url2.pdf){
+//         thisFile.url2.zoom += 0.1;
+//         render();
+//     }
+// });
+// document.getElementById("zoom_out").addEventListener("click", (e) => {
+//     if(thisFile.url2.pdf){
+//         thisFile.url2.zoom -= 0.1;
+//         render();
+//     }
+// });
+// document.getElementById("zoom_normal").addEventListener("click", (e) => {
+//     if(thisFile.url2.pdf){
+//         thisFile.url2.zoom = 1;
+//         render();
+//     }
+// });

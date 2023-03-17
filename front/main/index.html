@@ -123,12 +123,16 @@
                 <h5 class="card-title">Друк на чашках</h5>
             </div>
         </div>
-        <div class="card m-5 shadow-lg cursorPointer" id="noPrint">
+        <div class="card m-5 shadow-lg cursorPointer" id="afterPrint">
             <div class="card-body">
-                <h5 class="card-title">Какая-то фигня еще</h5>
+                <h5 class="card-title">Післядрукарська обробка</h5>
             </div>
         </div>
     </div>
+
+<!--    <canvas id="canvas1" width="800" height="600">-->
+<!---->
+<!--    </canvas>-->
 
     <div class="download progress d-none">
         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
@@ -188,7 +192,7 @@
                 <div class="d-flex justify-content-center settingElem" id="formatButtons">
 
                 </div>
-                <div class="btn-toolbar mb-3 settingElem" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-toolbar mb-3 settingElem" id="formatInputs" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="input-group d-flex align-items-center justify-content-center m-auto">
                         <input type="number" class="input-group-text gray" id="sizeX">
                         <span class="input-group-text gray">мм</span>
@@ -236,20 +240,20 @@
                 </div>
 
                 <div class="d-flex justify-content-center">
-                    <div>
+                    <div id="ifPrintCountLists">
                         <div class="input-group d-flex justify-content-center">
-                            <span class="input-group-text gray">Аркушів файлі:</span>
+                            <span class="input-group-text gray">У файлі:</span>
                             <input type="number" class="input-group-text gray" id="countInFile" disabled>
-                            <span class="input-group-text gray">шт.</span>
+                            <span class="input-group-text gray" id="storinki">сторінок</span>
                         </div>
                         <div class="input-group d-flex justify-content-center">
-                            <span class="input-group-text gray">Кількість затраченного:</span>
+                            <span class="input-group-text gray">Витрати аркушів:</span>
                             <input type="number" class="input-group-text gray" id="realCount" disabled>
                             <span class="input-group-text gray">шт.</span>
                         </div>
                     </div>
                     <div>
-                        <div class="input-group d-flex justify-content-center">
+                        <div class="input-group d-flex justify-content-center" id="allCountElement">
                             <span class="input-group-text gray">Загалом: </span>
                             <input type="number" class="input-group-text gray" id="allPaper" disabled>
                             <span class="input-group-text gray" id="arkushi"></span>
@@ -267,21 +271,10 @@
                 </div>
 
                 <div class="d-flex align-items-center justify-content-center mt-1">
-<!--                    <button id="openEditor" class="input-group-text gray btn-crop">-->
-<!--&lt;!&ndash;                        <img src="img/openEditor.png" alt="<=" class="iconNavPanel notMDr">&ndash;&gt;-->
-<!--                        Кадрувати зображення(прибрати білі поля, повернути)-->
-<!--                    </button>-->
                     <button id="btnCrop" class="input-group-text gray btn-crop">
-                        <!--                        <img src="img/openEditor.png" alt="<=" class="iconNavPanel notMDr">-->
                         Кадрувати зображення (прибрати білі поля)
                     </button>
                 </div>
-<!--                <div class="d-flex align-items-center justify-content-center mt-1">-->
-<!--                    <button id="openEditorEffects" class="input-group-text gray">-->
-<!--                        &lt;!&ndash;                        <img src="img/openEditor.png" alt="<=" class="iconNavPanel notMDr">&ndash;&gt;-->
-<!--                        Редагувати зображення(еффекти та фільтри)-->
-<!--                    </button>-->
-<!--                </div>-->
                 <div class="accordion border" id="accordionOptions">
                     <div class="accordion-item">
                         <div class="d-flex justify-content-center" id="headingThree">
@@ -344,7 +337,7 @@
 <!--                                </div>-->
             </div>
         </div>
-        <div class="fileViewContainer overflow-hidden">
+        <div class="fileViewContainer overflow-hidden" id="fileViewContainer">
             <div class="listAndCard invisible m-auto" id="listAndCard">
                 <div class="list m-auto visible" id="list">
                     <div class="containerForImgInServer" id="containerForImgInServer">
@@ -380,9 +373,9 @@
                     <input id="current_page" class="input-group-text gray" value="1" type="number"/>
                     <button id="go_next" class="input-group-text gray d-none">+</button>
 
-                    <button id="zoom_in" class="input-group-text gray">+</button>
-                    <button id="zoom_out" class="input-group-text gray">-</button>
-                    <button id="zoom_normal" class="input-group-text gray">default zoom</button>
+<!--                    <button id="zoom_in" class="input-group-text gray">+</button>-->
+<!--                    <button id="zoom_out" class="input-group-text gray">-</button>-->
+<!--                    <button id="zoom_normal" class="input-group-text gray">default zoom</button>-->
 
                     <button id="rotateLeft" class="input-group-text gray d-none">
                         <img src="img/rotate_left.png" alt="=>" class="iconNavPanel notMDr">
@@ -430,7 +423,7 @@
     <div class="d-flex flex-row justify-content-center align-items-center">
         <div class="btn" id="backInPhotoCalcButton">Назад</div>
         <div class="btn" id="notFilePhoto">Порахувати без файлу</div>
-        <label class="btn d-none" for="inMemory">In memory</label>
+        <label class="btn" for="inMemory">In memory</label>
         <input type="file" multiple accept=".jpg, .png" class="btn d-none" name="inMemory" id="inMemory"/>
         <button class="btn" disabled>Google</button>
         <button class="btn" disabled>Facebook/Insta</button>
@@ -472,7 +465,7 @@
                 <button type="button" class="btn-close" id="modalCloseButton" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form>
-            <div class="modal-body">
+            <div class="modal-body" id="fileLoadModalBody">
                 <div id="fileClassCalcToModal"></div>
                 <div class="input-group">
                     <input type="file" class="form-control" id="imgInp" aria-describedby="inputGroupFileAddon04"
@@ -488,7 +481,7 @@
 <!--                <div type="button" id="upload" class="btn">ПРОРАХУВАТИ</div>-->
 <!--                <div type="button" id="uploadLoad" class="btn d-none" disabled>-->
                 <div type="button" id="nonUpload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>
-                <div type="button" id="upload" class="btn d-none invisible">ПРОРАХУВАТИ</div>
+                <div type="button" id="upload" class="btn">ПРОРАХУВАТИ</div>
                 <div type="button" id="uploadLoad" class="btn d-none" disabled>
                     <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
                     ОБРОБКА...
@@ -622,6 +615,7 @@
 <script src="js/ifsForThisTabl.js" charset="utf-8"></script>
 <script src="js/script.js" charset="utf-8"></script>
 <script src="js/renders/enumForRender.js" charset="utf-8"></script>
+<script src="js/cupprint/cupPrint.js" charset="utf-8"></script>
 <script src="js/basket/renders.js" charset="utf-8"></script>
 
 <!--<script src="js/photoEditor/tui-code-snippet.js"></script>-->

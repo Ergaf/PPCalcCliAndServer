@@ -6,6 +6,10 @@ function getUkrType(type){
             return "Широкоформатний друк"
         case "photo":
             return "Фото друк"
+        case "cup":
+            return "Друк на чашках"
+        case "afterPrint":
+            return "Післядрукарська обробка"
         case "one":
             return "з 1-ї сторони"
         case "two":
@@ -15,6 +19,6 @@ function getUkrType(type){
         case "color":
             return "Кольоровий"
         default:
-            return "null"
+            return ""
     }
 }

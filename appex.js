@@ -49,12 +49,12 @@ const configSQLConnection = {
 
 
 let tableMain;
-readXlsxFile(fs.createReadStream(__dirname + "/data/tableMain.xlsx")).then((rows) => {
-    tableMain = rows
-    console.log("tableMain reading close with no err");
-    // `rows` is an array of rows
-    // each row being an array of cells.
-})
+// readXlsxFile(fs.createReadStream(__dirname + "/data/newtableMain1.xlsx")).then((rows) => {
+//     tableMain = rows
+//     console.log("tableMain reading close with no err");
+//     // `rows` is an array of rows
+//     // each row being an array of cells.
+// })
 
 //for pdfJs---------------------------------------------------------
 // const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
@@ -480,14 +480,25 @@ app.delete("/orders", function (req, res) {
             connection.query(sql, data, function (err, results, fields) {
                 if (err) {
                     console.log(err);
+                    res.send({
+                        status: "error",
+                        error: err
+                    })
                 } else {
-                    console.log("delete file id " + data[0]);
+                    if(results.affectedRows > 0){
+                        console.log("delete file id " + data[0]);
+                    } else {
+                        console.log("not can find and delete file id " + data[0]);
+                    }
                     try {
                         filesDelete(__dirname + `/files/${req.cookies.to}/${data[0]}/`)
                     } catch (e) {
                         console.log(e.message);
                     }
-                    res.send(JSON.stringify(data[0]))
+                    res.send({
+                        status: "ok",
+                        id: body.id
+                    })
                 }
             })
             connection.end();
@@ -582,6 +593,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType) 
                 }
                 let order = {
                     calc: calcType,
+                    count: 1,
                     id: id,
                     name: filenameToNorm,
                     url: ress,
@@ -620,6 +632,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType) 
                 }
                 let order = {
                     calc: calcType,
+                    count: 1,
                     id: id,
                     name: filenameToNorm,
                     url: ress,
@@ -1083,6 +1096,7 @@ connectionNotBd.query("USE " + databaseName,
         } else {
             console.log(`Подключено к БД "${databaseName}".`);
             startServer()
+            readPrices()
         }
     });
 connectionNotBd.end();
@@ -1173,14 +1187,45 @@ function insertAdmin() {
                 console.log(err);
             } else {
                 console.log(`Стандартный админ добавлен: login: admin, pass: 1234`);
-                readPrices();
+                createTableAllActions()
+            }
+        });
+    connectionCreateTablSessions.end();
+}
+
+function createTableAllActions() {
+    const sql = "create table if not exists actions(id int primary key auto_increment,userid varchar(20),session varchar(20),whatAction varchar(45),time varchar(20), result varchar(45))";
+    const connectionCreateTablSessions = mysql.createConnection(configSQLConnection);
+    connectionCreateTablSessions.query(sql,
+        function (err, results) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(`Таблица "actions" успешно создана.`);
+            }
+        });
+    connectionCreateTablSessions.end();
+}
+
+function addStatistics(userid, session, whatAction, result) {
+    let dataToSql = [
+        userid, session, whatAction, Date.now().toString(), result
+    ]
+    const sql = "INSERT INTO actions(userid, session, whatAction, time, result) VALUES(?, ?, ?, ?, ?)";
+    const connectionCreateTablSessions = mysql.createConnection(configSQLConnection);
+    connectionCreateTablSessions.query(sql, dataToSql,
+        function (err, results) {
+            if (err) {
+                console.log(err);
+            } else {
+                // console.log(`Стандартный админ добавлен: login: admin, pass: 1234`);
             }
         });
     connectionCreateTablSessions.end();
 }
 
 function readPrices() {
-    readXlsxFile(fs.createReadStream(__dirname + "/data/newtableMain.xlsx")).then((rows) => {
+    readXlsxFile(fs.createReadStream(__dirname + "/data/newtableMain1.xlsx")).then((rows) => {
         tableMain = rows
         console.log("tableMain reading close with no err");
         startServer()

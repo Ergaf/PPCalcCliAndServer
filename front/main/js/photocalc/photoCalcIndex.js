@@ -31,6 +31,7 @@ notFilePhoto.on('click', function (){
             mainDisplay.classList.add("d-none")
             toHomeButton.classList.remove("d-none");
             toFilesButton.classList.add("d-none");
+            photoCalc.addClass('d-none');
         })
 })
 

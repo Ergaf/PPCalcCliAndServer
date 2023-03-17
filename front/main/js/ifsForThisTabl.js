@@ -181,6 +181,7 @@ function getHowInASheet() {
 
 function getPriceFromCount(name, nameService, format) {
     let price = getProductInVariantsFromNameNotPaper(name, nameService, format)
+    // console.log(price)
     let priceOfCount = 0;
     if(price !== undefined) {
         if(thisFile.realCount > 0 && thisFile.realCount < 10){
