@@ -148,6 +148,12 @@ body{
         width: 45%;
         height: 94vh;
     }
+    .mouseScroll {
+        height: 20px;
+    }
+    .inputs {
+        width: 200px;
+    }
 }
 @media (max-width: 1000px){
     .settingsContainer {
@@ -161,16 +167,28 @@ body{
         height: 65vh;
     }
     .btn {
-        font-size: 1.7em;
+        font-size: 2.3em;
     }
     .gray {
-        font-size: 1.7em;
+        font-size: 2.3em;
     }
     .slider-item {
-        height: 3.3rem;
+        height: 4.2rem;
     }
     .FilesContainerRelative {
-        height: 3.3rem;
+        height: 4.2rem;
+    }
+    .card-title {
+        font-size: 2.3em;
+    }
+    .mouseScroll {
+        height: 40px;
+    }
+    .inputs {
+        width: 260px;
+    }
+    .inputsTotal {
+        width: 100px;
     }
 }
 
@@ -321,10 +339,6 @@ body{
 }
 .notMDr {
     pointer-events: none;
-}
-
-.promo {
-    width: 200px;
 }
 
 .logoImg {

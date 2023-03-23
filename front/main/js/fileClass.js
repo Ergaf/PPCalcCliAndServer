@@ -397,9 +397,11 @@ class file {
                     <div class="btn" toFile="15х21">15х21</div>
                     <div class="btn" toFile="13х18">13х18</div>
                     <div class="btn" toFile="A4">А4</div>
+                    <div class="btn" toFile="A3">А3</div>
                     <div class="btn" toFile="custom">Свій розмір</div>
                         `;
             formatButtons.innerHTML = formats;
+            // formatButtons.innerHTML = "";
 
 
             toUseButtons.classList.add("d-none");
@@ -425,9 +427,17 @@ class file {
             formatInputs.classList.remove("d-none");
             fileViewContainer.classList.remove("d-none");
             ifPrintCountLists.classList.add("d-none");
+            // renderOptions("ФОТО ДРУК", "format", formatButtons)
+            thisFile.realCount = thisFile._count
+            let cupPrice = getPriceFromCount(thisFile.format, "ФОТО ДРУК")
+            console.log(cupPrice);
+            thisFile.price = cupPrice*thisFile._count
+            price.value = thisFile.price
+
             renderListAndCard()
         }
         else if (thisFile.calc === "cup"){
+            toUseButtons.classList.add("d-none");
             colorButtons.classList.add("d-none")
             sidesButtons.classList.add("d-none")
             accordionOptions.classList.add("d-none");
@@ -440,11 +450,12 @@ class file {
             renderOptions("чашки", "destiny", destinyButtons)
             thisFile.realCount = thisFile._count
             let cupPrice = getPriceFromCount(thisFile.destiny, "чашки")
-            thisFile.price = cupPrice
+            thisFile.price = cupPrice*thisFile._count
             price.value = thisFile.price
             // thisFile.renderSettings()
         }
         else if (thisFile.calc === "afterPrint"){
+            toUseButtons.classList.add("d-none");
             colorButtons.classList.add("d-none")
             sidesButtons.classList.add("d-none")
             accordionOptions.classList.add("d-none");
@@ -457,7 +468,7 @@ class file {
             renderOptions("Післядрукарська обробка", "destiny", destinyButtons)
             thisFile.realCount = thisFile._count
             let cupPrice = getPriceFromCount(thisFile.destiny, "Післядрукарська обробка")
-            thisFile.price = cupPrice
+            thisFile.price = cupPrice*thisFile._count
             price.value = thisFile.price
         }
         Array.prototype.slice.call(formatButtons.children).forEach(e => {

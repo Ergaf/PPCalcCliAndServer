@@ -9,21 +9,25 @@ document.querySelector("html").addEventListener("click", event => {
 // })
 let pathString = ""
 files.addEventListener('click', event => {
-    pricesContainer.innerHTML = ""
-    pricesTableHeaderContainer.innerHTML = ""
     dropdownMenu.classList.add("d-none")
     filesContainer.classList.remove("d-none")
     errorAlert.classList.add("d-none")
+    tabl2.classList.add("d-none")
+    tabl1.classList.add("d-none")
+    statisticsContainer.classList.add("d-none")
+    tbodySessions.classList.add("d-none")
+
+
     tbodyFileContainer.innerHTML = ""
     let data = {
         this: pathString,
         to: `/`
     }
     pathString = ""
-    sendData("/getfiles", "POST", JSON.stringify(data)).then(e => {
-        pathContainer.innerHTML = ""
-        addPathUnit("__dirname ./ files")
-        pushFileUnit(e)
+    sendData("/adminfilesget", "POST", JSON.stringify(data)).then(e => {
+            pathContainer.innerHTML = ""
+            addPathUnit("./ files")
+            pushFileUnit(e)
     })
 })
 
@@ -39,7 +43,7 @@ goHomePathButton.addEventListener("click", event => {
         to: `/`
     }
     pathString = ""
-    sendData("/getfiles", "POST", JSON.stringify(data)).then(e => {
+    sendData("/adminfilesget", "POST", JSON.stringify(data)).then(e => {
         pathContainer.innerHTML = ""
         addPathUnit("__dirname ./ files")
         tbodyFileContainer.innerHTML = ""
@@ -55,7 +59,7 @@ function pickTrUnit(event, dataToServer) {
         this: pathValue,
         to: `${pathValue}/${dataToServer}`
     }
-    sendData("/getfiles", "POST", JSON.stringify(data)).then(e => {
+    sendData("/adminfilesget", "POST", JSON.stringify(data)).then(e => {
         console.log(e);
         if(e.length > 0){
             if(e[0].isFileOpen){

@@ -1,7 +1,7 @@
 let main = document.querySelector("#main");
 let files = document.querySelector("#files");
 let toHome = document.querySelector("#toHome");
-let users = document.querySelector("#users");
+// let users = document.querySelector("#users");
 let prices = document.querySelector("#prices");
 // let functions = document.querySelector("#functions");
 let filesContainer = document.querySelector("#filesContainer");
@@ -16,10 +16,11 @@ let iframe = document.querySelector("#iframe");
 let headerMenuButtons = document.querySelector("#headerMenuButtons");
 let pricesContainer = document.querySelector("#pricesContainer");
 let pricesTableHeaderContainer = document.querySelector("#pricesTableHeaderContainer");
+let statistics = document.querySelector("#statistics");
 
-users.addEventListener('click', e => {
-    filesContainer.classList.add("d-none")
-})
+// users.addEventListener('click', e => {
+//     filesContainer.classList.add("d-none")
+// })
 // functions.addEventListener('click', function() {
 //     filesContainer.classList.add("d-none")
 // })
@@ -30,6 +31,8 @@ toHome.addEventListener("click", function () {
     sessionsContainer.classList.add("d-none")
     tabl2.classList.add("d-none")
     tabl1.classList.add("d-none")
+    statisticsContainer.classList.add("d-none")
+    tbodySessions.classList.add("d-none")
 })
 
 
@@ -52,5 +55,6 @@ async function sendData(url, method, data) {
         body: data // body data type must match "Content-Type" header
     });
     let res = await response.json()
+
     return await res; // parses JSON response into native JavaScript objects
 }

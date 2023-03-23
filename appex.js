@@ -24,37 +24,19 @@ const configSQLConnection = {
     database: databaseName,
     password: "1234"
 }
-// let connection = mysql.createConnection({
-//     host: "localhost",
-//     user: "root",
-//     database: "calc",
-//     password: "1234"
-// });
-
-// const user = ["Tom", 29];
-// const sql = "INSERT INTO users(name, age) VALUES(?, ?)";
-
-// connection.query(sql, user, function(err, results) {
-//     if(err) console.log(err);
-//     else console.log("Данные добавлены");
-// });
-
-// connection.query("SELECT * FROM users",
-//     function(err, results, fields) {
-//         console.log(err);
-//         console.log(results); // собственно данные
-//         // console.log(fields); // мета-данные полей
-//     });
-// connection.end();
-
+let connectNotBdConfig = {
+    host: "localhost",
+    user: "root",
+    password: "1234"
+}
 
 let tableMain;
-// readXlsxFile(fs.createReadStream(__dirname + "/data/newtableMain1.xlsx")).then((rows) => {
-//     tableMain = rows
-//     console.log("tableMain reading close with no err");
-//     // `rows` is an array of rows
-//     // each row being an array of cells.
-// })
+function readPrices() {
+    readXlsxFile(fs.createReadStream(__dirname + "/data/newtableMain1.xlsx")).then((rows) => {
+        tableMain = rows
+        console.log("tableMain reading close with no err");
+    })
+}
 
 //for pdfJs---------------------------------------------------------
 // const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
@@ -107,8 +89,11 @@ app.use((req, res, next) => {
         testHaveSession(req, res, next);
     } else if (req.url === "/basket") {
         testHaveSession(req, res, next);
+    } else if (req.url === "/adminfilesget") {
+        testHaveSession(req, res, next);
+    } else if (req.url === "/getStatistics") {
+        testHaveSession(req, res, next);
     }
-
     else {
         next();
     }
@@ -124,7 +109,7 @@ function testHaveSessionOnGet(req, res, next, getForNeed) {
                 console.log(err);
             }
             if (results.length > 0) {
-                req.userRole = results[0].userid
+                req.userId = results[0].userid
                 req.sessionId = results[0].id
                 req.sessionValue = req.cookies.to
                 next();
@@ -150,7 +135,7 @@ function testHaveSession(req, res, next) {
             }
             if (results.length > 0) {
                 // console.log(results); // собственно данные
-                req.userRole = results[0].userid
+                req.userId = results[0].userid
                 req.sessionId = results[0].id
                 req.sessionValue = req.cookies.to
                 next();
@@ -185,7 +170,7 @@ function testAdnAddSession(req, res, next) {
         }
         if (results.length > 0) {
             // console.log(results); // собственно данные
-            req.userRole = results[0].userid
+            req.userId = results[0].userid
             req.sessionId = results[0].id
             req.sessionValue = req.cookies.to
             next();
@@ -194,18 +179,22 @@ function testAdnAddSession(req, res, next) {
             let lol = Date.now()
             let cookieId = Date.now() + lol
 
-            let session = [cookieId.toString(), req.header('user-agent'), req.ip, 0];
-            let sql = "INSERT INTO sessions(session, userAgent, ip, userid) VALUES(?, ?, ?, ?)";
+            let session = [cookieId.toString(), req.header('user-agent'), req.ip, 0, Date.now().toString()];
+            let sql = "INSERT INTO sessions(session, userAgent, ip, userid, time) VALUES(?, ?, ?, ?, ?)";
             let connection1 = mysql.createConnection(configSQLConnection);
             connection1.query(sql, session, function (err, results) {
                 if (err) {
+                    addStatistics(0, 0, "add session "+cookieId.toString(), "query error", 0)
                     console.log(err);
                 } else {
                     console.log("Сессия " + cookieId.toString() + " добавлена");
+                    req.sessionId = results.insertId
                     req.sessionValue = cookieId.toString()
+                    req.userId = 0
                     res.cookie('to', cookieId.toString())
                     // res.redirect(req.get('referer'));
                     // res.redirect('current');
+                    addStatistics(0, 0, "add session "+cookieId.toString(), "success", results.insertId)
                     next();
                 }
             });
@@ -239,6 +228,7 @@ app.post("/uploadFile", function (req, res) {
             } else {
                 console.log("ФАЙЛ " + results.insertId + " " + filenameToNorm + " добавлен");
                 afterFileLoad(req, res, results, filenameToNorm, fstream, fieldname, file);
+                addStatistics(req.userId, req.sessionId, "upLoad file", "success", results.insertId)
             }
         });
         connection.end();
@@ -301,6 +291,7 @@ app.post("/uploadRedactedFile", function (req, res) {
                 } else {
                     console.log("ФАЙЛ " + idForFile + " отредактированный сохранен");
                     res.send(`/files/${req.cookies.to}/${idForFile}/red/file`);
+                    addStatistics(req.userId, req.sessionId, "upLoad redacted file", "success", idForFile)
                 }
             });
             connection.end();
@@ -324,12 +315,18 @@ app.get("/parameterCalc", function (req, res) {
             console.log("БЕЗ ФАЙЛУ " + results.insertId + " добавлена");
 
             res.redirect("/");
+            addStatistics(req.userId, req.sessionId, "add nonFile 'file' (for link)", "success", results.insertId)
         }
     });
     connection.end();
 });
 
 app.get("/files*", function (req, res) {
+    let urll = req.url;
+    // console.log(`a request came for a file to url ${urll}`);
+    sendRes(urll, getContentType(urll), res)
+});
+app.get("/d3*", function (req, res) {
     let urll = req.url;
     // console.log(`a request came for a file to url ${urll}`);
     sendRes(urll, getContentType(urll), res)
@@ -370,6 +367,7 @@ app.post("/orders", function (req, res) {
                     }
 
                     res.send(order)
+                    addStatistics(req.userId, req.sessionId, "add nonFile 'file'", "success", results.insertId)
                 }
             })
             connection.end();
@@ -450,6 +448,7 @@ app.put("/orders", function (req, res) {
                         // }
                     }
                     res.send(sendData);
+                    addStatistics(req.userId, req.sessionId, `update file, use ${body.parameter}`, "success", body.id)
                 }
             });
             connection.end();
@@ -499,6 +498,7 @@ app.delete("/orders", function (req, res) {
                         status: "ok",
                         id: body.id
                     })
+                    addStatistics(req.userId, req.sessionId, `remove file`, "success", body.id)
                 }
             })
             connection.end();
@@ -537,23 +537,6 @@ function sendRes(url, contentType, res) {
             console.log("sucess! " + file);
         }
     })
-}
-
-async function sqlTransaction(sql, data) {
-    let connection = mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        database: "calc",
-        password: "1234"
-    });
-    connection.query(sql, data,
-        function (err, results, fields) {
-            console.log(err);
-            console.log(results); // собственно данные
-            return results;
-            // console.log(fields); // мета-данные полей
-        });
-    connection.end();
 }
 
 async function processing(filePath, cookies, filenameToNorm, res, id, calcType) {
@@ -602,6 +585,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType) 
                     canToOrder: true
                 }
                 res.send(order)
+                addStatistics(0, 0, `update file, ${mime.getType(filePath)}`, "success", id)
             }
         });
         connection.end();
@@ -641,6 +625,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType) 
                     canToOrder: true
                 }
                 res.send(order)
+                addStatistics(0, 0, `update file, ${mime.getType(filePath)}`, "success", id)
             }
         });
         connection.end();
@@ -679,6 +664,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType) 
                     countInFile: 1
                 }
                 res.send(order)
+                addStatistics(0, 0, `update file, ${mime.getType(filePath)}, not support`, "success", id)
             }
         });
         connection.end();
@@ -749,6 +735,8 @@ async function getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputP
                 countInFile: 1
             }
             res.send(order)
+            let filePath = path.join(__dirname + `/files/${cookies}/${id}/pdf/file1.pdf`)
+            addStatistics(0, 0, `update file, ${mime.getType(filePath)}`, "success", id)
         }
     })
 }
@@ -791,13 +779,13 @@ app.post("/login", function (req, res) {
     }
 })
 
-function logIn(req, res, results) {
+function logIn(req, res, resultss) {
     let lol = Date.now()
     let cookieId = Date.now() + lol
 
     let connection = mysql.createConnection(configSQLConnection);
-    let data = [cookieId.toString(), req.header('user-agent'), req.ip, results[0].id];
-    let sql = "INSERT INTO sessions(session, userAgent, ip, userid) VALUES(?, ?, ?, ?)";
+    let data = [cookieId.toString(), req.header('user-agent'), req.ip, resultss[0].id, Date.now().toString()];
+    let sql = "INSERT INTO sessions(session, userAgent, ip, userid, time) VALUES(?, ?, ?, ?, ?)";
     connection.query(sql, data, function (err, results) {
         if (err) {
             console.log(err);
@@ -805,6 +793,7 @@ function logIn(req, res, results) {
             // console.log("Сессии просмотрели");
             res.cookie('to', cookieId.toString())
             res.send({err: "no"})
+            addStatistics(resultss[0].id, results.insertId, `add new session by login/delete session`, "success", 0)
 
             if (req.cookies.to) {
                 let connectionDel = mysql.createConnection(configSQLConnection);
@@ -824,8 +813,9 @@ function logIn(req, res, results) {
     connection.end();
 }
 
-app.post("/getfiles", function (req, res) {
-    if (req.userRole !== 1) {
+app.post("/adminfilesget", function (req, res) {
+    console.log(req.userId);
+    if (req.userId !== 1) {
         res.sendStatus(401)
     } else {
         let body = [];
@@ -857,6 +847,24 @@ app.get("/getprices", function (req, res) {
     res.send(tableMain)
 })
 
+app.get("/getStatistics", function (req, res) {
+    if (req.userId !== 1) {
+        res.sendStatus(401)
+    } else {
+        let connection = mysql.createConnection(configSQLConnection);
+        let sql = "SELECT * FROM actions"
+        connection.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("actions(статистику) просмотрели");
+                res.send(results)
+            }
+        });
+        connection.end();
+    }
+})
+
 function getStatsInFile(path) {
     try {
         const stats = fs.statSync(path)
@@ -876,34 +884,6 @@ function getStatsInFile(path) {
         return statsToReturn
     }
 }
-
-app.post("/database", function (req, res) {
-    if (req.userRole !== 1) {
-        res.sendStatus(401)
-    } else {
-        let body = [];
-        try {
-            req.on('error', (err) => {
-                console.error(err);
-            }).on('data', (chunk) => {
-                body.push(chunk);
-            }).on('end', () => {
-                body = Buffer.concat(body).toString();
-                body = JSON.parse(body)
-                console.log(body);
-
-                if (body.do === "showAll") {
-                    getFilesForAdminView(req, res, `/data/database`)
-                } else {
-                    res.send("1")
-                }
-
-            })
-        } catch (err) {
-            console.log(err.message);
-        }
-    }
-})
 
 function getFilesForAdminView(req, res, url) {
     try {
@@ -949,7 +929,7 @@ function getFilesForAdminView(req, res, url) {
 }
 
 app.get("/getSessies", function (req, res) {
-    if (req.userRole !== 1) {
+    if (req.userId !== 1) {
         res.sendStatus(401)
     } else {
         let connection = mysql.createConnection(configSQLConnection);
@@ -967,7 +947,7 @@ app.get("/getSessies", function (req, res) {
 })
 
 app.delete("/getSessies", function (req, res) {
-    if (req.userRole !== 1) {
+    if (req.userId !== 1) {
         res.sendStatus(401)
     } else {
         let body = [];
@@ -1027,6 +1007,7 @@ app.post("/basket", function (req, res) {
                             status: "ok",
                             id: body.id
                         })
+                        addStatistics(req.userId, req.sessionId, `add file to basket`, "success", body.id)
                     } else {
                         res.send({
                             status: "error",
@@ -1070,6 +1051,7 @@ app.delete("/basket", function (req, res) {
                         status: "ok",
                         id: body.id
                     })
+                    addStatistics(req.userId, req.sessionId, `remove file to basket`, "success", body.id)
                 }
             })
         })
@@ -1081,22 +1063,18 @@ app.delete("/basket", function (req, res) {
     }
 })
 
-let connectNotBdConfig = {
-    host: "localhost",
-    user: "root",
-    // database: "calc",
-    password: "1234"
-}
 const connectionNotBd = mysql.createConnection(connectNotBdConfig);
 connectionNotBd.query("USE " + databaseName,
     function (err, results) {
         if (err) {
             console.log(`БД "${databaseName}" не найдено, пытаемся создать...`);
+            readPrices()
             createDatabase()
+            startServer()
         } else {
             console.log(`Подключено к БД "${databaseName}".`);
-            startServer()
             readPrices()
+            startServer()
         }
     });
 connectionNotBd.end();
@@ -1131,7 +1109,7 @@ function createTableFiles() {
 }
 
 function createTableSessions() {
-    const sql = "create table if not exists sessions(id int primary key auto_increment,session varchar(45),userid int,userAgent varchar(400),ip varchar(45),ip2 varchar(45))";
+    const sql = "create table if not exists sessions(id int primary key auto_increment,session varchar(45),userid int,userAgent varchar(400),ip varchar(45),time varchar(20))";
     const connectionCreateTablSessions = mysql.createConnection(configSQLConnection);
     connectionCreateTablSessions.query(sql,
         function (err, results) {
@@ -1161,7 +1139,7 @@ function createTableUsers() {
 }
 
 function createTableOrders() {
-    const sql = "create table if not exists orders(id int primary key auto_increment,userid varchar(20),session varchar(45),status varchar(45),executorid varchar(20))";
+    const sql = "create table if not exists orders(id int primary key auto_increment,userid integer,session varchar(45),status varchar(45),executorid integer)";
     const connectionCreateTablSessions = mysql.createConnection(configSQLConnection);
     connectionCreateTablSessions.query(sql,
         function (err, results) {
@@ -1194,7 +1172,7 @@ function insertAdmin() {
 }
 
 function createTableAllActions() {
-    const sql = "create table if not exists actions(id int primary key auto_increment,userid varchar(20),session varchar(20),whatAction varchar(45),time varchar(20), result varchar(45))";
+    const sql = "create table if not exists actions(id int primary key auto_increment,userid integer,session varchar(20),whatAction varchar(45),time varchar(20), result varchar(100), targetId integer)";
     const connectionCreateTablSessions = mysql.createConnection(configSQLConnection);
     connectionCreateTablSessions.query(sql,
         function (err, results) {
@@ -1207,29 +1185,21 @@ function createTableAllActions() {
     connectionCreateTablSessions.end();
 }
 
-function addStatistics(userid, session, whatAction, result) {
+function addStatistics(userid, session, whatAction, result, targetId) {
     let dataToSql = [
-        userid, session, whatAction, Date.now().toString(), result
+        userid, session, whatAction, Date.now().toString(), result, targetId
     ]
-    const sql = "INSERT INTO actions(userid, session, whatAction, time, result) VALUES(?, ?, ?, ?, ?)";
-    const connectionCreateTablSessions = mysql.createConnection(configSQLConnection);
-    connectionCreateTablSessions.query(sql, dataToSql,
+    const sql = "INSERT INTO actions(userid, session, whatAction, time, result, targetId) VALUES(?, ?, ?, ?, ?, ?)";
+    const connectionCreateTablActions = mysql.createConnection(configSQLConnection);
+    connectionCreateTablActions.query(sql, dataToSql,
         function (err, results) {
             if (err) {
                 console.log(err);
             } else {
-                // console.log(`Стандартный админ добавлен: login: admin, pass: 1234`);
+
             }
         });
-    connectionCreateTablSessions.end();
-}
-
-function readPrices() {
-    readXlsxFile(fs.createReadStream(__dirname + "/data/newtableMain1.xlsx")).then((rows) => {
-        tableMain = rows
-        console.log("tableMain reading close with no err");
-        startServer()
-    })
+    connectionCreateTablActions.end();
 }
 
 function startServer() {

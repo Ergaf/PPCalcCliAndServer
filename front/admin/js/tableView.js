@@ -1,5 +1,9 @@
 prices.addEventListener('click', e => {
     filesContainer.classList.add("d-none")
+    tbodySessions.classList.add("d-none")
+    tabl2.classList.remove("d-none")
+    tabl1.classList.remove("d-none")
+    statisticsContainer.classList.remove("d-none")
     sendData("/getprices", "GET").then(e => {
         console.log(e);
         renderTable(e)
@@ -10,7 +14,9 @@ prices.addEventListener('click', e => {
 
 function renderTable(e) {
     pricesContainer.innerHTML = ""
+    pricesContainer.classList.remove("d-none")
     pricesTableHeaderContainer.innerHTML = ""
+    pricesTableHeaderContainer.classList.remove("d-none")
     let th1 = document.createElement("th")
     th1.innerText = "#"
     th1.classList.add("headerTableUnit")

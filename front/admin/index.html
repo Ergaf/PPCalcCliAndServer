@@ -69,11 +69,12 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0" id="headerMenuButtons">
                 <li id="toHome"><a href="#" class="nav-link px-2 text-dark">Додому</a></li>
                 <li id="toCalc"><a href="/" class="nav-link px-2 text-dark">to calc</a></li>
-                <li id="files"><a href="#" class="nav-link px-2 text-dark">Файлs</a></li>
-                <li id="users"><a href="#" class="nav-link px-2 text-dark">Користувачі</a></li>
+                <li id="files"><a href="#" class="nav-link px-2 text-dark">Файлы</a></li>
+<!--                <li id="users"><a href="#" class="nav-link px-2 text-dark">Користувачі</a></li>-->
                 <li id="prices"><a href="#" class="nav-link px-2 text-dark">Послуги(поки що таблиця)</a></li>
-                <li id="bd"><a href="#" class="nav-link px-2 text-dark">DataBase View Test</a></li>
+<!--                <li id="bd"><a href="#" class="nav-link px-2 text-dark">DataBase View Test</a></li>-->
                 <li id="sessions"><a href="#" class="nav-link px-2 text-dark">Active Sessions</a></li>
+                <li id="statistics"><a href="#" class="nav-link px-2 text-dark">statistics</a></li>
                 <li><a href="#" class="nav-link px-2 text-dark">Що за фігня?..</a></li>
             </ul>
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
@@ -107,18 +108,14 @@
 <!--        <div class="btn btn-secondary" id="functions">Магия</div>-->
 <!--    </main>-->
 
-
 <div class="filesContainer d-none" id="filesContainer">
     <div class="d-flex justify-content-center align-items-center">
         <nav aria-label="breadcrumb " class="d-flex btn">
-            <ol class="breadcrumb" id="pathContainer">
-
-            </ol>
+            <ol class="breadcrumb" id="pathContainer"></ol>
         </nav>
     </div>
     <div class="btn btn-secondary btn-sm" id="goBackButton"><</div>
     <div class="btn btn-secondary btn-sm" id="goHomePathButton">"/"</div>
-
     <table class="table table-sm backgroundSecondary">
         <thead>
         <tr class="">
@@ -128,9 +125,7 @@
             <th scope="col">Час створення</th>
         </tr>
         </thead>
-        <tbody id="tbodyFileContainer" class="filesContainerInFileView">
-
-        </tbody>
+        <tbody id="tbodyFileContainer" class="filesContainerInFileView"></tbody>
     </table>
     <div class="alert alert-danger d-none" role="alert" id="errorAlert"></div>
 </div>
@@ -138,26 +133,18 @@
 <div id="tabl1" class="d-none">
     <table class="table table-sm">
         <thead>
-        <tr id="pricesTableHeaderContainer">
-
-        </tr>
+            <tr id="pricesTableHeaderContainer"></tr>
         </thead>
-        <tbody id="pricesContainer">
-
-        </tbody>
+        <tbody id="pricesContainer"></tbody>
     </table>
 </div>
 
 <div id="tabl2" class="d-none">
     <table class="table table-sm">
         <thead>
-        <tr id="dataBaseTableHeaderContainer">
-
-        </tr>
+            <tr id="dataBaseTableHeaderContainer"></tr>
         </thead>
-        <tbody id="dataBaseContainer">
-
-        </tbody>
+        <tbody id="dataBaseContainer"></tbody>
     </table>
 </div>
 
@@ -171,16 +158,18 @@
                 <th scope="col">sesson ID</th>
                 <th scope="col">userAgent</th>
                 <th scope="col">ip</th>
-                <th scope="col">ip2</th>
+                <th scope="col">time</th>
                 <th scope="col">user ID</th>
                 <th scope="col">del</th>
             </tr>
             </thead>
-            <tbody id="tbodySessions">
-
-            </tbody>
+            <tbody id="tbodySessions"></tbody>
         </table>
     </div>
+</div>
+
+<div class="statisticsContainer" id="statisticsContainer">
+
 </div>
 
 
@@ -209,42 +198,11 @@
     </ul>
 </div>
 
-<!--<iframe frameborder="0" src="" id="iframe" class="d-none"></iframe>-->
-<!--<div id="iframe" class="myPdfViewer">-->
-<!--    &lt;!&ndash;                                <div id="canvas_container">&ndash;&gt;-->
-<!--    <div id="the-canvas" class="theCanvas">-->
-<!--        <canvas id="pdf_renderer" class="pdfRenderer"></canvas>-->
-<!--    </div>-->
-<!--</div>-->
-
-<!--<div id="navPanel" class="navPanel d-flex flex-column position-absolute">-->
-<!--    <div id="navigation_controls" class="input-group d-flex justify-content-center align-items-center">-->
-<!--        <button id="page_count" class="input-group-text gray"></button>-->
-<!--        <button id="go_previous" class="input-group-text gray">-</button>-->
-<!--        <input id="current_page" class="input-group-text gray" value="1" type="number"/>-->
-<!--        <button id="go_next" class="input-group-text gray">+</button>-->
-<!--    </div>-->
-<!--    <div id="zoom_controls" class="input-group d-flex justify-content-center align-items-center">-->
-<!--        <button id="zoom_in" class="input-group-text gray">+</button>-->
-<!--        <button id="zoom_out" class="input-group-text gray">-</button>-->
-<!--        <button id="zoom_normal" class="input-group-text gray">normalize</button>-->
-<!--    </div>-->
-<!--</div>-->
-
-<!--<div class="position-absolute d-none">-->
-<!--    <div class="d-flex justify-content-center">-->
-<!--        <div class="btn gray" id="prev"><</div>-->
-<!--        <div class="gray" id="pagenation">1/1</div>-->
-<!--        <div class="btn gray" id="next">></div>-->
-<!--    </div>-->
-<!--</div>-->
-
-
 <div class="container">
     <footer class="py-5">
         <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
             <!--            <p>&copy; 2022 Company, Inc. All rights reserved.</p>-->
-            <p>&copy; 2022 Компанія ебейшая, Слава Україні!</p>
+            <p>&copy; 2023 Компанія ебейшая, Слава Україні!</p>
             <ul class="list-unstyled d-flex">
                 <li class="ms-3"><a class="link-dark" href="#">
                     <svg class="bi" width="24" height="24">
@@ -266,16 +224,19 @@
     </footer>
 </div>
 
-
 <script src="js/sessions.js"></script>
 
-<script src="js/highcharts.js"></script>
 <script src="js/script.js"></script>
 <script src="js/d3@7.js"></script>
 <script src="js/fileViewer.js"></script>
 <script src="js/tableView.js"></script>
 <script src="js/dataBaseView.js"></script>
 <script src="js/bootstrap.bundle.js"></script>
+<script src="js/statistic/statistics.js"></script>
+
+<!--<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>-->
+
+<!--<script src="js/assets/bootstrap.bundle.min.js"></script>-->
 
 <!--<script src="js/pdf.js" charset="utf-8"></script>-->
 <!--<script src="js/pdfRender.js" charset="utf-8"></script>-->

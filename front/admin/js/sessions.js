@@ -9,6 +9,8 @@ sessions.addEventListener("click", function (){
     sessionsContainer.classList.remove("d-none")
     tabl2.classList.add("d-none")
     tabl1.classList.add("d-none")
+    statisticsContainer.classList.add("d-none")
+    tbodySessions.classList.remove("d-none")
 
 
     sendData("/getSessies", "GET").then(e => {
@@ -16,22 +18,39 @@ sessions.addEventListener("click", function (){
         tbodySessions.innerHTML = ""
         e.forEach(o => {
             let tr = document.createElement("tr");
-            tr.classList.add("trSession")
-            let innerHTML = `<td>${o.id}</td>
-                            <td>${o.session}</td>
-                            <td>${o.userAgent}</td>
-                            <td>${o.ip}</td>
-                            <td>${o.ip2}</td>
-                            <td>${o.userid}</td>
+            tr.classList.add("trSession");
+            let innerHTML = `<td><div class="btn">${o.id}</div></td>
+                            <td><div class="btn">${o.session}</div></td>
+                            <td><div class="btn">${o.userAgent}</div></td>
+                            <td><div class="btn">${o.ip}</div></td>
+                            <td><div class="btn">${createTime(o.time)}</div></td>
+                            <td><div class="btn">${o.userid}</div></td>
                             <td>
                                 <button class="btn btn-danger" sesId="${o.id}" onclick=del(event.target)>close</button>
                             </td>         
-`;
+                            `;
             tr.innerHTML = innerHTML;
             tbodySessions.append(tr);
         })
     })
 })
+function createTime(timeStr){
+    let thisTime = new Date(parseInt(timeStr));
+    let timeHours = add0ToTime(thisTime.getHours().toString())
+    let timeMinutes = add0ToTime(thisTime.getMinutes().toString())
+    let timeSeconds = add0ToTime(thisTime.getSeconds().toString())
+    let realMoth = thisTime.getMonth()+1
+    let timeMonth = add0ToTime(realMoth.toString())
+    let timeString = `${thisTime.getDate()}.${timeMonth}.${thisTime.getFullYear()}, ${timeHours}:${timeMinutes}:${timeSeconds}`
+    return timeString
+}
+function add0ToTime(str){
+    if(str.length < 2){
+        return `0${str}`
+    } else {
+        return str
+    }
+}
 
 function del(target) {
     // console.log(target.getAttribute("sesId"));

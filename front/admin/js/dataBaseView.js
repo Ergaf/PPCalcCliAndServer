@@ -1,23 +1,23 @@
 let dataBaseTableHeaderContainer = document.querySelector("#dataBaseTableHeaderContainer")
 let dataBaseContainer = document.querySelector("#dataBaseContainer")
-let bd = document.querySelector("#bd")
-bd.addEventListener("click", e => {
-    filesContainer.classList.add("d-none")
-    tabl2.classList.remove("d-none")
-    tabl1.classList.remove("d-none")
-    dataBaseTableHeaderContainer.classList.remove("d-none")
-    dataBaseContainer.classList.remove("d-none")
-    dataBaseContainer.innerHtml = ""
-    let data = {
-        do: "showAll"
-    }
-    console.log(e);
-    sendData("/database", "POST", JSON.stringify(data)).then(e => {
-        console.log(dataRework(e));
-        Tree(dataRework(e))
-        // pushBdUnit(e);
-    })
-})
+// let bd = document.querySelector("#bd")
+// bd.addEventListener("click", e => {
+//     filesContainer.classList.add("d-none")
+//     tabl2.classList.remove("d-none")
+//     tabl1.classList.remove("d-none")
+//     dataBaseTableHeaderContainer.classList.remove("d-none")
+//     dataBaseContainer.classList.remove("d-none")
+//     dataBaseContainer.innerHtml = ""
+//     let data = {
+//         do: "showAll"
+//     }
+//     console.log(e);
+//     sendData("/database", "POST", JSON.stringify(data)).then(e => {
+//         console.log(dataRework(e));
+//         Tree(dataRework(e))
+//         // pushBdUnit(e);
+//     })
+// })
 
 // function pushBdUnit(e) {
 //     for (let i = 0; i < e.length; i++) {
