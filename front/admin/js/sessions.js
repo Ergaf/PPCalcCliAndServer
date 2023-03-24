@@ -11,12 +11,15 @@ sessions.addEventListener("click", function (){
     tabl1.classList.add("d-none")
     statisticsContainer.classList.add("d-none")
     tbodySessions.classList.remove("d-none")
+    let data = {
+        page: 0,
+        inPageCount: 10
+    }
 
-
-    sendData("/getSessies", "GET").then(e => {
+    sendData("/getSessies", "POST", JSON.stringify(data)).then(e => {
         console.log(e);
         tbodySessions.innerHTML = ""
-        e.forEach(o => {
+        e.data.forEach(o => {
             let tr = document.createElement("tr");
             tr.classList.add("trSession");
             let innerHTML = `<td><div class="btn">${o.id}</div></td>

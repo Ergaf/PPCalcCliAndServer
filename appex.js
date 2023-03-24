@@ -928,23 +928,59 @@ function getFilesForAdminView(req, res, url) {
     }
 }
 
-app.get("/getSessies", function (req, res) {
+app.post("/getSessies", function (req, res) {
     if (req.userId !== 1) {
         res.sendStatus(401)
     } else {
-        let connection = mysql.createConnection(configSQLConnection);
-        let sql = "SELECT * FROM sessions"
-        connection.query(sql, function (err, results) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("Сессии просмотрели");
-                res.send(results)
-            }
-        });
-        connection.end();
+        let body = [];
+        try {
+            req.on('error', (err) => {
+                console.error(err);
+            }).on('data', (chunk) => {
+                body.push(chunk);
+            }).on('end', () => {
+                body = Buffer.concat(body).toString();
+                body = JSON.parse(body)
+                getSessionsCountOfPage(req, res, body)
+            })
+        } catch (e) {
+            console.log(e.message);
+        }
     }
 })
+function getSessionsCountOfPage(req, res, body){
+    let connection = mysql.createConnection(configSQLConnection);
+    let dataToSql = [body.inPageCount];
+    let sql = "SELECT CEIL(COUNT(*)/?) as totalP FROM sessions;"
+    // CEIL(COUNT(*)/?) as total_pages
+    connection.query(sql, dataToSql,function (err, results) {
+        if (err) {
+            console.log(err);
+        } else {
+            getSessionsPageAndSend(req, res, body, results)
+        }
+    });
+    connection.end();
+}
+function getSessionsPageAndSend(req, res, body, resultsPageCount){
+    let connection = mysql.createConnection(configSQLConnection);
+    let dataToSql = [body.inPageCount, body.page];
+    let sql = "SELECT * FROM sessions ORDER BY id DESC LIMIT ? OFFSET ?;"
+    // CEIL(COUNT(*)/?) as total_pages
+    connection.query(sql, dataToSql,function (err, results) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Сессии просмотрели");
+            let toSend = {
+                pageCount: resultsPageCount[0].totalP,
+                data: results
+            }
+            res.send(toSend)
+        }
+    });
+    connection.end();
+}
 
 app.delete("/getSessies", function (req, res) {
     if (req.userId !== 1) {
