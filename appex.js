@@ -8,14 +8,18 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const busboy = require('connect-busboy');
-const mime = require('mime');
-const {Poppler} = require("node-poppler");
+//price---------------------------------------------------------
+const priceCounter = require('./back/price/ifsForThisTabl');
+const processingPrice = require('./back/price/processingPrices');
+//log---------------------------------------------------------
+const log = require('./back/log/log');
+//files---------------------------------------------------------
+const getContentType = require('./back/files/getContentType');
+const allAfterUpload = require('./allAfterUpload');
+const files = require('./files');
+//exel---------------------------------------------------------
 const readXlsxFile = require('read-excel-file/node');
-const fsEx = require('fs-extra');
-
-const {decode} = require("decode-tiff");
-const {PNG} = require("pngjs");
-
+//mysql---------------------------------------------------------
 const mysql = require("mysql2");
 let databaseName = "newcalc";
 const configSQLConnection = {
@@ -29,12 +33,14 @@ let connectNotBdConfig = {
     user: "root",
     password: "1234"
 }
-
 let tableMain;
+let prices;
 function readPrices() {
     readXlsxFile(fs.createReadStream(__dirname + "/data/newtableMain1.xlsx")).then((rows) => {
         tableMain = rows
         console.log("tableMain reading close with no err");
+        prices = processingPrice.processingPricesInTableToPrices(tableMain)
+        console.log("цены преобразованы");
     })
 }
 
@@ -46,18 +52,9 @@ function readPrices() {
 // const CMAP_PACKED = true;
 //------------------------------------------------------------------
 
-const fsp = require('fs').promises;
-const libre = require('libreoffice-convert');
-libre.convertAsync = require('util').promisify(libre.convert);
-
 // const oneHour = 1000 * 60 * 60;
 const port = 5555;
 const cookieStore = []
-
-// app.use((req, res, next) => {
-//     console.log(req.ip);
-//     next();
-// })
 
 app.use(busboy());
 app.use(cookieParser('govnobliat'));
@@ -71,16 +68,16 @@ app.use((req, res, next) => {
         if (req.method === "GET") {
             testHaveSessionOnGet(req, res, next, []);
         } else if (req.method === "POST") {
-            testAdnAddSession(req, res, next);
+            testAndAddSession(req, res, next);
         } else {
             testHaveSession(req, res, next);
         }
     } else if (req.url === "/uploadFile") {
-        testAdnAddSession(req, res, next);
+        testAndAddSession(req, res, next);
     } else if (req.url === "/uploadRedactedFile") {
         testHaveSession(req, res, next);
     } else if (req.url === "/parameterCalc" && req.method === "GET") {
-        testAdnAddSession(req, res, next);
+        testAndAddSession(req, res, next);
     } else if (req.url === "/getSessies") {
         testHaveSession(req, res, next);
     } else if (req.url === "/getfiles") {
@@ -98,7 +95,6 @@ app.use((req, res, next) => {
         next();
     }
 })
-
 function testHaveSessionOnGet(req, res, next, getForNeed) {
     if (req.cookies.to) {
         let data = [req.cookies.to]
@@ -157,7 +153,7 @@ function testHaveSession(req, res, next) {
     }
 }
 
-function testAdnAddSession(req, res, next) {
+function testAndAddSession(req, res, next) {
     let data = "0"
     if (req.cookies.to) {
         data = [req.cookies.to]
@@ -184,7 +180,7 @@ function testAdnAddSession(req, res, next) {
             let connection1 = mysql.createConnection(configSQLConnection);
             connection1.query(sql, session, function (err, results) {
                 if (err) {
-                    addStatistics(0, 0, "add session "+cookieId.toString(), "query error", 0)
+                    log.addStatistics(0, 0, "add session "+cookieId.toString(), "query error", 0, configSQLConnection)
                     console.log(err);
                 } else {
                     console.log("Сессия " + cookieId.toString() + " добавлена");
@@ -194,7 +190,7 @@ function testAdnAddSession(req, res, next) {
                     res.cookie('to', cookieId.toString())
                     // res.redirect(req.get('referer'));
                     // res.redirect('current');
-                    addStatistics(0, 0, "add session "+cookieId.toString(), "success", results.insertId)
+                    log.addStatistics(0, 0, "add session "+cookieId.toString(), "success", results.insertId, configSQLConnection)
                     next();
                 }
             });
@@ -227,43 +223,13 @@ app.post("/uploadFile", function (req, res) {
                 console.log(err);
             } else {
                 console.log("ФАЙЛ " + results.insertId + " " + filenameToNorm + " добавлен");
-                afterFileLoad(req, res, results, filenameToNorm, fstream, fieldname, file);
-                addStatistics(req.userId, req.sessionId, "upLoad file", "success", results.insertId)
+                allAfterUpload.afterFileLoad(req, res, results, filenameToNorm, fstream, fieldname, file, configSQLConnection);
+                log.addStatistics(req.userId, req.sessionId, "upLoad file", "success", results.insertId, configSQLConnection)
             }
         });
         connection.end();
     });
 });
-
-function afterFileLoad(req, res, results, filenameToNorm, fstream, fieldname, file) {
-    let folder = __dirname + `/files/${req.sessionValue}`
-    try {
-        if (!fs.existsSync(folder)) {
-            fs.mkdirSync(folder)
-        }
-    } catch (err) {
-        console.error(err)
-    }
-    let folder1 = __dirname + `/files/${req.sessionValue}/${results.insertId}`
-    try {
-        if (!fs.existsSync(folder1)) {
-            fs.mkdirSync(folder1)
-        }
-    } catch (err) {
-        console.error(err)
-    }
-    let filePath = path.join(__dirname + `/files/${req.sessionValue}/${results.insertId}/${filenameToNorm}`);
-    fstream = fs.createWriteStream(filePath);
-    file.pipe(fstream);
-    fstream.on('close', function () {
-        try {
-            processing(filePath, req.sessionValue, filenameToNorm, res, results.insertId, fieldname)
-        } catch (e) {
-            console.log(e.message);
-            res.send(e)
-        }
-    });
-}
 
 app.post("/uploadRedactedFile", function (req, res) {
     let fstream;
@@ -291,7 +257,7 @@ app.post("/uploadRedactedFile", function (req, res) {
                 } else {
                     console.log("ФАЙЛ " + idForFile + " отредактированный сохранен");
                     res.send(`/files/${req.cookies.to}/${idForFile}/red/file`);
-                    addStatistics(req.userId, req.sessionId, "upLoad redacted file", "success", idForFile)
+                    log.addStatistics(req.userId, req.sessionId, "upLoad redacted file", "success", idForFile, configSQLConnection)
                 }
             });
             connection.end();
@@ -315,7 +281,7 @@ app.get("/parameterCalc", function (req, res) {
             console.log("БЕЗ ФАЙЛУ " + results.insertId + " добавлена");
 
             res.redirect("/");
-            addStatistics(req.userId, req.sessionId, "add nonFile 'file' (for link)", "success", results.insertId)
+            log.addStatistics(req.userId, req.sessionId, "add nonFile 'file' (for link)", "success", results.insertId, configSQLConnection)
         }
     });
     connection.end();
@@ -323,13 +289,7 @@ app.get("/parameterCalc", function (req, res) {
 
 app.get("/files*", function (req, res) {
     let urll = req.url;
-    // console.log(`a request came for a file to url ${urll}`);
-    sendRes(urll, getContentType(urll), res)
-});
-app.get("/d3*", function (req, res) {
-    let urll = req.url;
-    // console.log(`a request came for a file to url ${urll}`);
-    sendRes(urll, getContentType(urll), res)
+    files.sendRes(urll, getContentType.getContentType(urll), res)
 });
 app.post("/orders", function (req, res) {
     let body = [];
@@ -367,7 +327,7 @@ app.post("/orders", function (req, res) {
                     }
 
                     res.send(order)
-                    addStatistics(req.userId, req.sessionId, "add nonFile 'file'", "success", results.insertId)
+                    log.addStatistics(req.userId, req.sessionId, "add nonFile 'file'", "success", results.insertId, configSQLConnection)
                 }
             })
             connection.end();
@@ -448,7 +408,7 @@ app.put("/orders", function (req, res) {
                         // }
                     }
                     res.send(sendData);
-                    addStatistics(req.userId, req.sessionId, `update file, use ${body.parameter}`, "success", body.id)
+                    log.addStatistics(req.userId, req.sessionId, `update file, use ${body.parameter}`, "success", body.id, configSQLConnection)
                 }
             });
             connection.end();
@@ -498,7 +458,7 @@ app.delete("/orders", function (req, res) {
                         status: "ok",
                         id: body.id
                     })
-                    addStatistics(req.userId, req.sessionId, `remove file`, "success", body.id)
+                    log.addStatistics(req.userId, req.sessionId, `remove file`, "success", body.id, configSQLConnection)
                 }
             })
             connection.end();
@@ -508,238 +468,6 @@ app.delete("/orders", function (req, res) {
         res.send(e)
     }
 });
-
-function filesDelete(y) {
-    let y1 = fs.readdirSync(y);
-    for (let x of y1) {
-        let stat = fs.statSync(y + x); // тут забыли путь
-        if (!stat.isFile()) {
-            let path = y + x + '/';
-            filesDelete(path);
-        } else {
-            fs.unlinkSync(y + x)
-        }
-    }
-}
-
-function sendRes(url, contentType, res) {
-    let file = path.join(__dirname + url)
-    fs.readFile(file, (err, content) => {
-        if (err) {
-            res.writeHead(404)
-            res.write("file not found")
-            res.end();
-            console.log("file not found " + file);
-        } else {
-            res.writeHead(200, {"Content-Type": contentType})
-            res.write(content)
-            res.end();
-            console.log("sucess! " + file);
-        }
-    })
-}
-
-async function processing(filePath, cookies, filenameToNorm, res, id, calcType) {
-    console.log(`uploading file mime type: ${mime.getType(filePath)}, calcType: ${calcType}`);
-    if (
-        mime.getType(filePath) === "image/x-jpeg" ||
-        mime.getType(filePath) === "image/jpeg" ||
-        mime.getType(filePath) === "image/x-png" ||
-        mime.getType(filePath) === "image/png" ||
-        mime.getType(filePath) === "image/x-jpg" ||
-        mime.getType(filePath) === "image/jpg"
-    ) {
-        let folder = __dirname + `/files/${cookies}/${id}/notPdf`
-        try {
-            if (!fs.existsSync(folder)) {
-                await fs.mkdirSync(folder)
-            }
-        } catch (err) {
-            console.error(err.message)
-        }
-        fs.createReadStream(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`)
-            .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/notpdf/file`));
-
-        let data = [filenameToNorm, `/files/${cookies}/${id}/notpdf/file`, true, true, true, id]
-        let sql = "UPDATE files SET name=?, path=?, img=?, red=?, canToOrder=? WHERE id = ?";
-        let connection = mysql.createConnection(configSQLConnection);
-        connection.query(sql, data, function (err, results) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("ФАЙЛ " + id + " " + filenameToNorm + " обновлен");
-                let ress = {
-                    urlOriginal: `/files/${cookies}/${id}/notpdf/file`,
-                    url: `/files/${cookies}/${id}/notpdf/file`,
-                    img: true,
-                    red: true
-                }
-                let order = {
-                    calc: calcType,
-                    count: 1,
-                    id: id,
-                    name: filenameToNorm,
-                    url: ress,
-                    format: "A4",
-                    countInFile: 1,
-                    canToOrder: true
-                }
-                res.send(order)
-                addStatistics(0, 0, `update file, ${mime.getType(filePath)}`, "success", id)
-            }
-        });
-        connection.end();
-    } else if (mime.getType(filePath) === "application/pdf") {
-        // toPng(filePath, cookies, filenameToNorm, res, id)
-        let folder = __dirname + `/files/${cookies}/${id}/pdf`
-        try {
-            if (!fs.existsSync(folder)) {
-                await fs.mkdirSync(folder)
-            }
-        } catch (err) {
-            console.error(err.message)
-        }
-        fs.createReadStream(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`)
-            .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/pdf/file1.pdf`));
-
-        // getInfoInPdf(filePath, cookies, filenameToNorm, res, id, __dirname + `/files/${cookies}/${id}/pdf/file1.pdf`)
-        let data = [filenameToNorm, `/files/${cookies}/${id}/pdf/file1.pdf`, true, false, id]
-        let sql = "UPDATE files SET name=?, path=?, canToOrder=?, img=? WHERE id = ?";
-        let connection = mysql.createConnection(configSQLConnection);
-        connection.query(sql, data, function (err, results) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("ФАЙЛ " + id + " " + filenameToNorm + " обновлен");
-                let ress = {
-                    url: `/files/${cookies}/${id}/pdf/file1.pdf`,
-                }
-                let order = {
-                    calc: calcType,
-                    count: 1,
-                    id: id,
-                    name: filenameToNorm,
-                    url: ress,
-                    format: "A4",
-                    countInFile: 1,
-                    canToOrder: true
-                }
-                res.send(order)
-                addStatistics(0, 0, `update file, ${mime.getType(filePath)}`, "success", id)
-            }
-        });
-        connection.end();
-    } else if (mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-        docToPdf(filePath, cookies, filenameToNorm, res, id, calcType)
-    } else if (mime.getType(filePath) === "application/msword") {
-        docToPdf(filePath, cookies, filenameToNorm, res, id, calcType)
-    } else if (mime.getType(filePath) === "application/powerpoint") {
-        docToPdf(filePath, cookies, filenameToNorm, res, id, calcType)
-    } else if (mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.presentationml.presentation") {
-        docToPdf(filePath, cookies, filenameToNorm, res, id, calcType)
-    }
-        // else if(mime.getType(filePath) === "image/tiff"){
-        //     tiffToPng(filePath, cookies, filenameToNorm, res, id, calcType)
-    // }
-    else {
-        let data = [filenameToNorm, `/files/data/errorNoFormat.png`, true, id]
-        let sql = "UPDATE files SET name=?, path=?, img=? WHERE id = ?";
-        let connection = mysql.createConnection(configSQLConnection);
-        connection.query(sql, data, function (err, results) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("ФАЙЛ " + id + " " + filenameToNorm + " обновлен");
-                let ress = {
-                    url: `/files/data/errorNoFormat.png`,
-                    img: true,
-                    red: false
-                }
-                let order = {
-                    calc: calcType,
-                    id: id,
-                    name: filenameToNorm,
-                    url: ress,
-                    format: "A4",
-                    countInFile: 1
-                }
-                res.send(order)
-                addStatistics(0, 0, `update file, ${mime.getType(filePath)}, not support`, "success", id)
-            }
-        });
-        connection.end();
-    }
-}
-
-async function docToPdf(inputPath, cookies, filenameToNorm, res, id, calcType) {
-    let folder = __dirname + `/files/${cookies}/${id}/pdf`
-    try {
-        if (!fs.existsSync(folder)) {
-            await fs.mkdirSync(folder)
-        }
-    } catch (err) {
-        console.error(err.message)
-    }
-    const ext = '.pdf'
-    const outputPath = __dirname + `/files/${cookies}/${id}/pdf/file1.pdf`;
-    // Read file
-    const docxBuf = await fsp.readFile(inputPath);
-    // Convert it to pdf format with undefined filter (see Libreoffice docs about filter)
-    let pdfBuf = await libre.convertAsync(docxBuf, ext, undefined);
-    // Here in done you have pdf file which you can save or transfer in another stream
-    await fsp.writeFile(outputPath, pdfBuf);
-    console.log("sucess in pdf!!!" + filenameToNorm);
-
-    getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputPath, calcType)
-
-    // await toPng(outputPath, cookies, filenameToNorm, res, id)
-}
-
-function getContentType(url) {
-    switch (path.extname(url)) {
-        case ".html":
-            return "text/html"
-        case ".css":
-            return "text/css"
-        case ".js":
-            return "text/javascript"
-        case ".json":
-            return "application/json"
-        case ".jpeg":
-            return "image/jpeg"
-        case ".png":
-            return "image/png"
-        default:
-            return "application/octate-stream"
-    }
-}
-
-async function getInfoInPdf(inputPath, cookies, filenameToNorm, res, id, outputPath, calcType) {
-    let connection = mysql.createConnection(configSQLConnection);
-    let data = [filenameToNorm, `/files/${cookies}/${id}/pdf/file1.pdf`, true, false, id]
-    let sql = "UPDATE files SET name=?, path=?, canToOrder=?, img=? WHERE id = ?";
-    connection.query(sql, data, function (err, results, fields) {
-        if (err) {
-            console.log(err);
-        } else {
-            // console.log(results);
-            let ress = {
-                url: `/files/${cookies}/${id}/pdf/file1.pdf`,
-            }
-            let order = {
-                calc: calcType,
-                id: id,
-                name: filenameToNorm,
-                url: ress,
-                format: "A4",
-                countInFile: 1
-            }
-            res.send(order)
-            let filePath = path.join(__dirname + `/files/${cookies}/${id}/pdf/file1.pdf`)
-            addStatistics(0, 0, `update file, ${mime.getType(filePath)}`, "success", id)
-        }
-    })
-}
 
 app.post("/login", function (req, res) {
     let body = [];
@@ -829,7 +557,7 @@ app.post("/adminfilesget", function (req, res) {
                 body = JSON.parse(body)
                 body.to = `files${body.to}`;
                 console.log(`${body.to}`);
-                getFilesForAdminView(req, res, body.to)
+                files.getFilesForAdminView(req, res, body.to)
             })
         } catch (e) {
             console.log(e.message);
@@ -844,7 +572,7 @@ app.post("/adminfilesget", function (req, res) {
 })
 
 app.get("/getprices", function (req, res) {
-    res.send(tableMain)
+    res.send(prices)
 })
 
 app.get("/getStatistics", function (req, res) {
@@ -864,69 +592,6 @@ app.get("/getStatistics", function (req, res) {
         connection.end();
     }
 })
-
-function getStatsInFile(path) {
-    try {
-        const stats = fs.statSync(path)
-        let statsToReturn = {
-            birthtime: stats.birthtime,
-            size: stats.size,
-            error: false,
-            isFile: stats.isFile()
-        }
-        return statsToReturn
-    } catch (e) {
-        let statsToReturn = {
-            birthtime: "no",
-            size: "no",
-            error: e.toString(),
-        }
-        return statsToReturn
-    }
-}
-
-function getFilesForAdminView(req, res, url) {
-    try {
-        let stats = fs.statSync(__dirname + `/${url}`)
-        if (stats.isDirectory()) {
-            let readdir = fs.readdirSync(__dirname + `/${url}`)
-            let readdirInfo = []
-            for (let i = 0; i < readdir.length; i++) {
-                let path = __dirname + `/${url}/${readdir[i]}`
-                let stats = getStatsInFile(path);
-                let reddirUnit = {
-                    name: readdir[i],
-                    size: stats.size,
-                    birthtime: stats.birthtime,
-                    error: stats.error,
-                    isFile: stats.isFile
-                }
-                readdirInfo.push(reddirUnit)
-            }
-            res.send(readdirInfo)
-        } else if (stats.isFile()) {
-            let readdirInfo = []
-            let reddirUnit = {
-                isFileOpen: true,
-                name: "file",
-                size: stats.size,
-                birthtime: stats.birthtime,
-                error: false,
-                url: `/${url}`
-            }
-            readdirInfo.push(reddirUnit)
-            res.send(readdirInfo)
-        }
-    } catch (e) {
-        console.log(e.message);
-        let readdirInfo = []
-        let reddirUnit = {
-            error: e.toString()
-        }
-        readdirInfo.push(reddirUnit)
-        res.send(readdirInfo)
-    }
-}
 
 app.post("/getSessies", function (req, res) {
     if (req.userId !== 1) {
@@ -1043,7 +708,7 @@ app.post("/basket", function (req, res) {
                             status: "ok",
                             id: body.id
                         })
-                        addStatistics(req.userId, req.sessionId, `add file to basket`, "success", body.id)
+                        log.addStatistics(req.userId, req.sessionId, `add file to basket`, "success", body.id, configSQLConnection)
                     } else {
                         res.send({
                             status: "error",
@@ -1087,7 +752,7 @@ app.delete("/basket", function (req, res) {
                         status: "ok",
                         id: body.id
                     })
-                    addStatistics(req.userId, req.sessionId, `remove file to basket`, "success", body.id)
+                    log.addStatistics(req.userId, req.sessionId, `remove file to basket`, "success", body.id, configSQLConnection)
                 }
             })
         })
@@ -1219,23 +884,6 @@ function createTableAllActions() {
             }
         });
     connectionCreateTablSessions.end();
-}
-
-function addStatistics(userid, session, whatAction, result, targetId) {
-    let dataToSql = [
-        userid, session, whatAction, Date.now().toString(), result, targetId
-    ]
-    const sql = "INSERT INTO actions(userid, session, whatAction, time, result, targetId) VALUES(?, ?, ?, ?, ?, ?)";
-    const connectionCreateTablActions = mysql.createConnection(configSQLConnection);
-    connectionCreateTablActions.query(sql, dataToSql,
-        function (err, results) {
-            if (err) {
-                console.log(err);
-            } else {
-
-            }
-        });
-    connectionCreateTablActions.end();
 }
 
 function startServer() {

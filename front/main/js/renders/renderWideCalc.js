@@ -35,7 +35,7 @@ function renderWideCalc(priceCalc){
         }
     }
 
-    price.value = priceCalc
+    // price.value = priceCalc
 
     toUseButtons.innerHTML = ""
     renderOptions("Використання", "touse", toUseButtons)
@@ -149,5 +149,6 @@ function renderWideCalc(priceCalc){
             }
         })
     }
+    this.price = priceCalc
     price.value = priceCalc
 }

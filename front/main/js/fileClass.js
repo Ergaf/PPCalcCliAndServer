@@ -220,11 +220,12 @@ class file {
         for (let i = 0; i < allFiles.length; i++) {
             if (allFiles[i]._id === this._id) {
                 allFiles[i].container.remove()
+                this.inBasket = true;
                 filesInBasket.push(this)
                 this.createFileInBasketContainer()
-                allFiles.splice(i, 1)
                 basketNotification.innerHTML = parseInt(basketNotification.innerHTML) + 1
                 settingsContainer.classList.add("d-none")
+                allFiles.splice(i, 1)
                 if (allFiles.length === 0) {
                     digitalPrintingContainer.classList.add("d-none");
                     mainDisplay.classList.remove("d-none");
@@ -298,8 +299,9 @@ class file {
                 if(this.inBasket === true || this.inBasket === 1){
                     for (let i = 0; i < filesInBasket.length; i++) {
                         if (filesInBasket[i]._id === this._id) {
-                            filesInBasket[i].container.remove()
+                            this.container.remove()
                             filesInBasket.splice(i, 1)
+                            basketNotification.innerHTML = parseInt(basketNotification.innerHTML) - 1
                         }
                     }
                 } else {

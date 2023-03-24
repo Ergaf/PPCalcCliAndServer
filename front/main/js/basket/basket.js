@@ -20,11 +20,3 @@ toBasket.addEventListener("click", function (){
         }
     })
 })
-
-let basketForRender = `
-<div>
-    <div></div>
-    <div></div>
-    <div></div>
-</div>
-`

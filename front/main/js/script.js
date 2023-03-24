@@ -326,24 +326,24 @@ fetch('/getprices')
     .then(json => {
         let x = 1
         let data = [];
-        json.forEach(e => {
-            if (e[0] === '' || e[0] === null) {
-                x = 1
-            } else {
-                if (x === 1) {
-                    data.push({
-                        name: e[0],
-                        variants: []
-                    })
-                    x = 0
-                } else {
-                    data[data.length - 1].variants.push(e)
-                }
-            }
-        })
+        // json.forEach(e => {
+        //     if (e[0] === '' || e[0] === null) {
+        //         x = 1
+        //     } else {
+        //         if (x === 1) {
+        //             data.push({
+        //                 name: e[0],
+        //                 variants: []
+        //             })
+        //             x = 0
+        //         } else {
+        //             data[data.length - 1].variants.push(e)
+        //         }
+        //     }
+        // })
         // console.log(json);
-        console.log(data)
-        prices = data
+        console.log(json)
+        prices = json
 
         // toastBody.innerText = "Ціни завантажено з exel таблиці на Сервері."
         // toastHeader.innerText = "Print Peaks"
