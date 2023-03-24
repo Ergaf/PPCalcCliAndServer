@@ -13,6 +13,7 @@
     "mysql2": "^3.0.1",
     "node-poppler": "^6.1.1",
     "pdf": "^0.1.0",
+    "pdf-parse": "^1.1.1",
     "pdfjs": "^2.4.7",
     "pdfjs-dist": "^3.4.120",
     "pngjs": "^6.0.0",

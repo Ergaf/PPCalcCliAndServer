@@ -8,6 +8,8 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const busboy = require('connect-busboy');
+const logIn = require('./back/login/logIn');
+const getSessionAndPagesCount = require('./back/getSessionAndPagesCount');
 //price---------------------------------------------------------
 const priceCounter = require('./back/price/ifsForThisTabl');
 const processingPrice = require('./back/price/processingPrices');
@@ -450,7 +452,7 @@ app.delete("/orders", function (req, res) {
                         console.log("not can find and delete file id " + data[0]);
                     }
                     try {
-                        filesDelete(__dirname + `/files/${req.cookies.to}/${data[0]}/`)
+                        files.filesDelete(__dirname + `/files/${req.cookies.to}/${data[0]}/`)
                     } catch (e) {
                         console.log(e.message);
                     }
@@ -488,10 +490,9 @@ app.post("/login", function (req, res) {
                 if (err) {
                     console.log(err);
                 } else {
-                    // console.log("Сессии просмотрели");
                     if (results.length > 0) {
                         if (results[0].pass === body.pass) {
-                            logIn(req, res, results);
+                            logIn.logIn(req, res, results, configSQLConnection);
                         } else {
                             res.send({err: "pass"})
                         }
@@ -506,40 +507,6 @@ app.post("/login", function (req, res) {
         console.log(e.message);
     }
 })
-
-function logIn(req, res, resultss) {
-    let lol = Date.now()
-    let cookieId = Date.now() + lol
-
-    let connection = mysql.createConnection(configSQLConnection);
-    let data = [cookieId.toString(), req.header('user-agent'), req.ip, resultss[0].id, Date.now().toString()];
-    let sql = "INSERT INTO sessions(session, userAgent, ip, userid, time) VALUES(?, ?, ?, ?, ?)";
-    connection.query(sql, data, function (err, results) {
-        if (err) {
-            console.log(err);
-        } else {
-            // console.log("Сессии просмотрели");
-            res.cookie('to', cookieId.toString())
-            res.send({err: "no"})
-            addStatistics(resultss[0].id, results.insertId, `add new session by login/delete session`, "success", 0)
-
-            if (req.cookies.to) {
-                let connectionDel = mysql.createConnection(configSQLConnection);
-                let data = [req.cookies.to];
-                let sql = "DELETE from sessions WHERE session = ?";
-                connectionDel.query(sql, data, function (err, results, fields) {
-                    if (err) {
-                        console.log("session " + req.cookies.to + " not exist in bd");
-                    } else {
-                        console.log("session " + req.cookies.to + " deleted by login after add new logInSession");
-                    }
-                })
-                connectionDel.end();
-            }
-        }
-    });
-    connection.end();
-}
 
 app.post("/adminfilesget", function (req, res) {
     console.log(req.userId);
@@ -606,46 +573,13 @@ app.post("/getSessies", function (req, res) {
             }).on('end', () => {
                 body = Buffer.concat(body).toString();
                 body = JSON.parse(body)
-                getSessionsCountOfPage(req, res, body)
+                getSessionAndPagesCount.getSessionsCountOfPage(req, res, body, configSQLConnection)
             })
         } catch (e) {
             console.log(e.message);
         }
     }
 })
-function getSessionsCountOfPage(req, res, body){
-    let connection = mysql.createConnection(configSQLConnection);
-    let dataToSql = [body.inPageCount];
-    let sql = "SELECT CEIL(COUNT(*)/?) as totalP FROM sessions;"
-    // CEIL(COUNT(*)/?) as total_pages
-    connection.query(sql, dataToSql,function (err, results) {
-        if (err) {
-            console.log(err);
-        } else {
-            getSessionsPageAndSend(req, res, body, results)
-        }
-    });
-    connection.end();
-}
-function getSessionsPageAndSend(req, res, body, resultsPageCount){
-    let connection = mysql.createConnection(configSQLConnection);
-    let dataToSql = [body.inPageCount, body.page];
-    let sql = "SELECT * FROM sessions ORDER BY id DESC LIMIT ? OFFSET ?;"
-    // CEIL(COUNT(*)/?) as total_pages
-    connection.query(sql, dataToSql,function (err, results) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("Сессии просмотрели");
-            let toSend = {
-                pageCount: resultsPageCount[0].totalP,
-                data: results
-            }
-            res.send(toSend)
-        }
-    });
-    connection.end();
-}
 
 app.delete("/getSessies", function (req, res) {
     if (req.userId !== 1) {
@@ -795,7 +729,7 @@ function createDatabase() {
 }
 
 function createTableFiles() {
-    const sql = "create table if not exists files(id int primary key auto_increment,name varchar(200),path varchar(250),userid int,session varchar(50),orderid int,img boolean,red boolean,format varchar(50),sides varchar(50),color varchar(50),cower varchar(50),paper varchar(50),destiny varchar(200),destinyThis varchar(200),binding varchar(50),bindingSelect varchar(50),lamination varchar(50),roundCorner varchar(50),frontLining varchar(50),backLining varchar(50),big varchar(100),holes varchar(50),allPaperCount varchar(50),orient BOOLEAN,stickerCutting varchar(200),stickerCuttingThis varchar(200),x varchar(50),y varchar(50),list varchar(100),calc varchar(50),touse varchar(200),luvers varchar(200),bannerVarit varchar(200),floorLamination varchar(100),widthLamination varchar(100),price varchar(50), count int,canToOrder boolean, inBasket boolean)";
+    const sql = "create table if not exists files(id int primary key auto_increment,name varchar(200),path varchar(250),userid int,session varchar(50),orderid int,img boolean,red boolean,format varchar(50),sides varchar(50),color varchar(50),cower varchar(50),paper varchar(50),destiny varchar(200),destinyThis varchar(200),binding varchar(50),bindingSelect varchar(50),lamination varchar(50),roundCorner varchar(50),frontLining varchar(50),backLining varchar(50),big varchar(100),holes varchar(50),countInFile integer, allPaperCount integer ,orient BOOLEAN,stickerCutting varchar(200),stickerCuttingThis varchar(200),x varchar(50),y varchar(50),list varchar(100),calc varchar(50),touse varchar(200),luvers varchar(200),bannerVarit varchar(200),floorLamination varchar(100),widthLamination varchar(100),price varchar(50), count int,canToOrder boolean, inBasket boolean)";
     const connectionCreateTablFiles = mysql.createConnection(configSQLConnection);
     connectionCreateTablFiles.query(sql,
         function (err, results) {

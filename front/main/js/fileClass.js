@@ -357,6 +357,8 @@ class file {
             formatInputs.classList.remove("d-none");
             fileViewContainer.classList.remove("d-none");
             ifPrintCountLists.classList.remove("d-none");
+            countInFile.innerText = this.countInFile
+            console.log(this.countInFile);
             renderDigitalCalc(priceCalc)
             renderListAndCard()
         } else if (thisFile.calc === "wide") {
@@ -391,6 +393,7 @@ class file {
             accordionOptions.classList.remove("d-none");
             fileViewContainer.classList.remove("d-none");
             ifPrintCountLists.classList.remove("d-none");
+            countInFile.innerText = this.countInFile
             renderWideCalc(priceCalc)
             renderListAndCard()
         } else if (thisFile.calc === "photo") {
@@ -435,7 +438,6 @@ class file {
             console.log(cupPrice);
             thisFile.price = cupPrice*thisFile._count
             price.value = thisFile.price
-
             renderListAndCard()
         }
         else if (thisFile.calc === "cup"){

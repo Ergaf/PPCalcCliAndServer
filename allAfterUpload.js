@@ -3,7 +3,9 @@ const fs = require("fs");
 const mysql = require("mysql2");
 const log = require('./back/log/log');
 const doc = require('./doc');
+const pdf = require('./pdf');
 const path = require("path");
+const pdff = require('pdf-parse');
 module.exports = {
     afterFileLoad: function afterFileLoad(req, res, results, filenameToNorm, fstream, fieldname, file, configSQLConnection) {
     let folder = __dirname + `/files/${req.sessionValue}`
@@ -25,7 +27,7 @@ module.exports = {
     let filePath = path.join(__dirname + `/files/${req.sessionValue}/${results.insertId}/${filenameToNorm}`);
     fstream = fs.createWriteStream(filePath);
     file.pipe(fstream);
-    fstream.on('close', function () {
+    fstream.on('close', async function () {
         try {
             processing(filePath, req.sessionValue, filenameToNorm, res, results.insertId, fieldname, configSQLConnection)
         } catch (e) {
@@ -99,33 +101,37 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType, 
         fs.createReadStream(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`)
             .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/pdf/file1.pdf`));
 
-        // getInfoInPdf(filePath, cookies, filenameToNorm, res, id, __dirname + `/files/${cookies}/${id}/pdf/file1.pdf`)
-        let data = [filenameToNorm, `/files/${cookies}/${id}/pdf/file1.pdf`, true, false, id]
-        let sql = "UPDATE files SET name=?, path=?, canToOrder=?, img=? WHERE id = ?";
-        let connection = mysql.createConnection(configSQLConnection);
-        connection.query(sql, data, function (err, results) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("ФАЙЛ " + id + " " + filenameToNorm + " обновлен");
-                let ress = {
-                    url: `/files/${cookies}/${id}/pdf/file1.pdf`,
+
+        const dataBuffer = fs.readFileSync(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`);
+        pdff(dataBuffer).then(function(dataInPdf){
+            let data = [filenameToNorm, `/files/${cookies}/${id}/pdf/file1.pdf`, true, false, dataInPdf.numpages, id]
+            let sql = "UPDATE files SET name=?, path=?, canToOrder=?, img=?, countInFile=? WHERE id = ?";
+            let connection = mysql.createConnection(configSQLConnection);
+            connection.query(sql, data, function (err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    // pdf.getInfoInPdf(filePath, cookies, filenameToNorm, res, id, __dirname + `/files/${cookies}/${id}/pdf/file1.pdf`, configSQLConnection)
+                    console.log("ФАЙЛ " + id + " " + filenameToNorm + " обновлен");
+                    let ress = {
+                        url: `/files/${cookies}/${id}/pdf/file1.pdf`,
+                    }
+                    let order = {
+                        calc: calcType,
+                        count: 1,
+                        id: id,
+                        name: filenameToNorm,
+                        url: ress,
+                        format: "A4",
+                        countInFile: dataInPdf.numpages,
+                        canToOrder: true
+                    }
+                    res.send(order)
+                    log.addStatistics(0, 0, `update file, ${mime.getType(filePath)}`, "success", id, configSQLConnection)
                 }
-                let order = {
-                    calc: calcType,
-                    count: 1,
-                    id: id,
-                    name: filenameToNorm,
-                    url: ress,
-                    format: "A4",
-                    countInFile: 1,
-                    canToOrder: true
-                }
-                res.send(order)
-                log.addStatistics(0, 0, `update file, ${mime.getType(filePath)}`, "success", id, configSQLConnection)
-            }
-        });
-        connection.end();
+            });
+            connection.end();
+        })
     } else if (mime.getType(filePath) === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
         doc.docToPdf(filePath, cookies, filenameToNorm, res, id, calcType, configSQLConnection)
     } else if (mime.getType(filePath) === "application/msword") {

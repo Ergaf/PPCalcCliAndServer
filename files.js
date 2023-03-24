@@ -1,25 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 module.exports = {
-    getStatsInFile: function getStatsInFile(path) {
-    try {
-        const stats = fs.statSync(path)
-        let statsToReturn = {
-            birthtime: stats.birthtime,
-            size: stats.size,
-            error: false,
-            isFile: stats.isFile()
-        }
-        return statsToReturn
-    } catch (e) {
-        let statsToReturn = {
-            birthtime: "no",
-            size: "no",
-            error: e.toString(),
-        }
-        return statsToReturn
-    }
-    },
     sendRes: function sendRes(url, contentType, res) {
     let file = path.join(__dirname + url)
     fs.readFile(file, (err, content) => {
@@ -89,5 +70,23 @@ module.exports = {
         res.send(readdirInfo)
     }
 }
-
+}
+function getStatsInFile(path) {
+    try {
+        const stats = fs.statSync(path)
+        let statsToReturn = {
+            birthtime: stats.birthtime,
+            size: stats.size,
+            error: false,
+            isFile: stats.isFile()
+        }
+        return statsToReturn
+    } catch (e) {
+        let statsToReturn = {
+            birthtime: "no",
+            size: "no",
+            error: e.toString(),
+        }
+        return statsToReturn
+    }
 }
