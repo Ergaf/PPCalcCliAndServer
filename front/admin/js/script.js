@@ -58,3 +58,12 @@ async function sendData(url, method, data) {
 
     return await res; // parses JSON response into native JavaScript objects
 }
+
+let toast = new bootstrap.Toast($("#liveToast"))
+const toastBody = document.querySelector("#toastBody");
+const toastHeader = document.querySelector("#toastHeader");
+function showError(error) {
+    toastHeader.innerText = error.status
+    toastBody.innerText = error.error
+    toast.show()
+}

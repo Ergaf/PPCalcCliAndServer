@@ -19,10 +19,11 @@ sessions.addEventListener("click", function (){
     sendData("/getSessies", "POST", JSON.stringify(data)).then(e => {
         console.log(e);
         tbodySessions.innerHTML = ""
-        e.data.forEach(o => {
-            let tr = document.createElement("tr");
-            tr.classList.add("trSession");
-            let innerHTML = `<td><div class="btn">${o.id}</div></td>
+        if(e.status === "ok"){
+            e.data.data.forEach(o => {
+                let tr = document.createElement("tr");
+                tr.classList.add("trSession");
+                let innerHTML = `<td><div class="btn">${o.id}</div></td>
                             <td><div class="btn">${o.session}</div></td>
                             <td><div class="btn">${o.userAgent}</div></td>
                             <td><div class="btn">${o.ip}</div></td>
@@ -32,9 +33,12 @@ sessions.addEventListener("click", function (){
                                 <button class="btn btn-danger" sesId="${o.id}" onclick=del(event.target)>close</button>
                             </td>         
                             `;
-            tr.innerHTML = innerHTML;
-            tbodySessions.append(tr);
-        })
+                tr.innerHTML = innerHTML;
+                tbodySessions.append(tr);
+            })
+        } else {
+            showError(e)
+        }
     })
 })
 function createTime(timeStr){

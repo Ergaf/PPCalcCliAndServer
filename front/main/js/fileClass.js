@@ -245,6 +245,7 @@ class file {
                         filesInBasket[i].container.remove()
                         allFiles.push(this)
                         this.createFileContainer()
+                        this.inBasket = false;
                         filesInBasket.splice(i, 1)
                         basketNotification.innerHTML = parseInt(basketNotification.innerHTML) - 1
                         this.pick({target: this.container})

@@ -8,6 +8,11 @@ module.exports = {
         connection.query(sql, dataToSql,function (err, results) {
             if (err) {
                 console.log(err);
+                let toSend = {
+                    status: "error",
+                    error: "mySql error"
+                }
+                res.send(toSend)
             } else {
                 getSessionsPageAndSend(req, res, body, results, configSQLConnection)
             }
@@ -23,11 +28,19 @@ function getSessionsPageAndSend(req, res, body, resultsPageCount, configSQLConne
     connection.query(sql, dataToSql,function (err, results) {
         if (err) {
             console.log(err);
+            let toSend = {
+                status: "error",
+                error: "mySql error"
+            }
+            res.send(toSend)
         } else {
             console.log("Сессии просмотрели");
             let toSend = {
-                pageCount: resultsPageCount[0].totalP,
-                data: results
+                status: "ok",
+                data: {
+                    pageCount: resultsPageCount[0].totalP,
+                    data: results
+                }
             }
             res.send(toSend)
         }
