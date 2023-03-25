@@ -8,12 +8,23 @@
   // Loop over them and prevent submission
   Array.from(forms).forEach(form => {
     form.addEventListener('submit', event => {
+      event.preventDefault()
       if (!form.checkValidity()) {
-        event.preventDefault()
         event.stopPropagation()
+      } else {
+        let data = {
+          name: firstName.value,
+          mail: email.value,
+          phone: phone.value,
+          messenger: messenger.value,
+        }
+        sendData("/createOrder", "POST", JSON.stringify(data)).then(e => {
+          console.log(e);
+        })
       }
 
       form.classList.add('was-validated')
+
     }, false)
   })
 })()

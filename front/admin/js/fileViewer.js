@@ -12,10 +12,10 @@ files.addEventListener('click', event => {
     dropdownMenu.classList.add("d-none")
     filesContainer.classList.remove("d-none")
     errorAlert.classList.add("d-none")
+    listsContainer.classList.add("d-none")
     tabl2.classList.add("d-none")
     tabl1.classList.add("d-none")
     statisticsContainer.classList.add("d-none")
-    tbodySessions.classList.add("d-none")
 
 
     tbodyFileContainer.innerHTML = ""

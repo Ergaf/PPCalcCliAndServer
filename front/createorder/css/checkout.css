@@ -1,3 +1,41 @@
 .container {
-  max-width: 960px;
+  /*max-width: 960px;*/
+}
+.list {
+    display: flex;
+    /*position: fixed;*/
+    background: white;
+    margin: 1vh;
+    transition: 0.5s;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+}
+.inBasketIconContainer {
+    width: 150px;
+    background: #f1f1f1;
+}
+.iconInBasket {
+    width: 100px;
+}
+.inBasketNameContainer {
+    width: 390px;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0;
+    padding-left: 5px;
+}
+.inBasketValue {
+    width: 340px;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0.8rem;
+}
+.inBasketValueWrap {
+    width: 340px;
+    overflow: hidden;
+    font-size: 0.8rem;
+}
+.container {
+    margin-top: 5vh;
 }

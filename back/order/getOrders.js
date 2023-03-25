@@ -1,9 +1,9 @@
 const mysql = require("mysql2");
 module.exports = {
-    getSessionsCountOfPage: function getSessionsCountOfPage(req, res, body, configSQLConnection){
+    getOrders: function (req, res, body, configSQLConnection){
         let connection = mysql.createConnection(configSQLConnection);
         let dataToSql = [body.inPageCount];
-        let sql = "SELECT CEIL(COUNT(*)/?) as totalP FROM sessions;"
+        let sql = "SELECT CEIL(COUNT(*)/?) as totalP FROM orders;"
         connection.query(sql, dataToSql,function (err, results) {
             if (err) {
                 console.log(err);
@@ -13,17 +13,24 @@ module.exports = {
                 }
                 res.send(toSend)
             } else {
-                getSessionsPageAndSend(req, res, body, results, configSQLConnection)
+                getOrdersPageAndSend(req, res, body, results, configSQLConnection)
             }
         });
         connection.end();
     }
 }
 
-function getSessionsPageAndSend(req, res, body, resultsPageCount, configSQLConnection){
+function getOrdersPageAndSend(req, res, body, resultsPageCount, configSQLConnection){
     let connection = mysql.createConnection(configSQLConnection);
-    let dataToSql = [body.inPageCount, body.page];
-    let sql = "SELECT * FROM sessions ORDER BY id DESC LIMIT ? OFFSET ?;"
+
+    let isPageToNumber = 0;
+    if(body.page > 1){
+        isPageToNumber = body.page*body.inPageCount
+        console.log(isPageToNumber);
+    }
+
+    let dataToSql = [body.inPageCount, isPageToNumber];
+    let sql = "SELECT * FROM orders ORDER BY id DESC LIMIT ? OFFSET ?;"
     connection.query(sql, dataToSql,function (err, results) {
         if (err) {
             console.log(err);
@@ -33,7 +40,7 @@ function getSessionsPageAndSend(req, res, body, resultsPageCount, configSQLConne
             }
             res.send(toSend)
         } else {
-            console.log("Сессии просмотрели");
+            console.log("Замовлення просмотрели");
             let toSend = {
                 status: "ok",
                 data: {

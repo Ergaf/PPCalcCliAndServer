@@ -50,7 +50,7 @@ function ifConditions(req, res, body, results1, results2, configSQLConnection, p
     let priceCalc = 0;
     let realCount = results2[0].count
     thisFile.realCount = realCount
-    let allPaperCount = results2[0].count*results2[0].countInFile
+    thisFile.allPaperCount = results2[0].count*results2[0].countInFile
 
     //conditions----------------------------------------------------------------------------------------
     //digital----------------------------------------------------------------------------------------
@@ -85,10 +85,10 @@ function ifConditions(req, res, body, results1, results2, configSQLConnection, p
                 priceCalc = priceCalc + lamPrice;
             }
         }
-        let bigPrice = getPriceFromCount(results2[0].big, "згиби", results2[0].format, prices)*allPaperCount
-        let holesPrice = getPriceFromCount(results2[0].holes, "отвір", results2[0].format, prices)*allPaperCount
-        let roundCornerPrice = getPriceFromCount(results2[0].roundCorner, "кути", results2[0].format, prices)*allPaperCount
-        let cowerPrice = getPriceFromCount(results2[0].cower, "обкладинка", results2[0].format, prices)*allPaperCount
+        let bigPrice = getPriceFromCount(results2[0].big, "згиби", results2[0].format, prices)*thisFile.allPaperCount
+        let holesPrice = getPriceFromCount(results2[0].holes, "отвір", results2[0].format, prices)*thisFile.allPaperCount
+        let roundCornerPrice = getPriceFromCount(results2[0].roundCorner, "кути", results2[0].format, prices)*thisFile.allPaperCount
+        let cowerPrice = getPriceFromCount(results2[0].cower, "обкладинка", results2[0].format, prices)*thisFile.allPaperCount
 
 
 
@@ -102,6 +102,7 @@ function ifConditions(req, res, body, results1, results2, configSQLConnection, p
             priceCalc = priceCalc + bindingPrice[0][1]
         }
         thisFile.price = priceCalc;
+        // console.log(thisFile.price);
         updateFileAndAddPrice(req, res, body, results1, results2, configSQLConnection, prices, thisFile)
         //wide----------------------------------------------------------------------------------------------------------------------
     } else if (results2[0].calc === "wide") {
@@ -356,7 +357,7 @@ function getHowInASheet() {
 
 function getPriceFromCount(name, nameService, format, prices) {
     let price = getProductInVariantsFromNameNotPaper(name, nameService, format, prices)
-    console.log(price)
+    // console.log(price)
     let priceOfCount = 0;
     if(price !== undefined) {
         if(thisFile.realCount > 0 && thisFile.realCount < 10){

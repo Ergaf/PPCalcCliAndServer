@@ -21,6 +21,9 @@ const allAfterUpload = require('./allAfterUpload');
 const files = require('./files');
 const updateFile = require('./back/files/updateFile');
 const deleteFile = require('./deleteFile');
+//orders---------------------------------------------------------
+const createOrder = require('./back/order/createOrder');
+const getOrders = require('./back/order/getOrders');
 //exel---------------------------------------------------------
 const readXlsxFile = require('read-excel-file/node');
 //mysql---------------------------------------------------------
@@ -93,6 +96,10 @@ app.use((req, res, next) => {
     } else if (req.url === "/adminfilesget") {
         testHaveSession(req, res, next);
     } else if (req.url === "/getStatistics") {
+        testHaveSession(req, res, next);
+    } else if (req.url === "/createOrder") {
+        testHaveSession(req, res, next);
+    } else if (req.url === "/getOrders") {
         testHaveSession(req, res, next);
     }
     else {
@@ -589,6 +596,7 @@ app.post("/basket", function (req, res) {
                     }
                 }
             })
+            connection.end()
         })
     } catch (err) {
         res.send({
@@ -627,12 +635,59 @@ app.delete("/basket", function (req, res) {
                     log.addStatistics(req.userId, req.sessionId, `remove file to basket`, "success", body.id, configSQLConnection, 0)
                 }
             })
+            connection.end()
         })
     } catch (err) {
         res.send({
             status: "error",
             error: err
         })
+    }
+})
+
+app.post("/createOrder", function (req, res) {
+    let body = [];
+    try {
+        req.on('error', (err) => {
+            console.error(err);
+        }).on('data', (chunk) => {
+            body.push(chunk);
+        }).on('end', () => {
+            body = Buffer.concat(body).toString();
+            body = JSON.parse(body)
+            console.log(body);
+            createOrder.create(req, res, body, configSQLConnection)
+        })
+    } catch (err) {
+        res.send({
+            status: "error",
+            error: err
+        })
+    }
+})
+
+app.post("/getOrders", function (req, res) {
+    if (req.userId !== 1) {
+        res.sendStatus(401)
+    } else {
+        let body = [];
+        try {
+            req.on('error', (err) => {
+                console.error(err);
+            }).on('data', (chunk) => {
+                body.push(chunk);
+            }).on('end', () => {
+                body = Buffer.concat(body).toString();
+                body = JSON.parse(body)
+                console.log(body);
+                getOrders.getOrders(req, res, body, configSQLConnection)
+            })
+        } catch (err) {
+            res.send({
+                status: "error",
+                error: err
+            })
+        }
     }
 })
 
@@ -697,7 +752,7 @@ function createTableSessions() {
 }
 
 function createTableUsers() {
-    const sql = "create table if not exists users(id int primary key auto_increment,name varchar(100),role varchar(100),mail varchar(100),pass varchar(100))";
+    const sql = "create table if not exists users(id int primary key auto_increment,name varchar(100),role varchar(45),mail varchar(100),pass varchar(100), phone varchar(45), messenger varchar(45))";
     const connectionCreateTablSessions = mysql.createConnection(configSQLConnection);
     connectionCreateTablSessions.query(sql,
         function (err, results) {
@@ -712,7 +767,7 @@ function createTableUsers() {
 }
 
 function createTableOrders() {
-    const sql = "create table if not exists orders(id int primary key auto_increment,userid integer,session varchar(45),status varchar(45),executorid integer)";
+    const sql = "create table if not exists orders(id int primary key auto_increment,userid integer,session varchar(45),status varchar(45),executorid integer, destiny varchar(200), price varchar(200), timeCreate varchar(20))";
     const connectionCreateTablSessions = mysql.createConnection(configSQLConnection);
     connectionCreateTablSessions.query(sql,
         function (err, results) {

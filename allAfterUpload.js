@@ -59,8 +59,8 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType, 
         fs.createReadStream(__dirname + `/files/${cookies}/${id}/${filenameToNorm}`)
             .pipe(fs.createWriteStream(__dirname + `/files/${cookies}/${id}/notpdf/file`));
 
-        let data = [filenameToNorm, `/files/${cookies}/${id}/notpdf/file`, true, true, true, id]
-        let sql = "UPDATE files SET name=?, path=?, img=?, red=?, canToOrder=? WHERE id = ?";
+        let data = [filenameToNorm, `/files/${cookies}/${id}/notpdf/file`, true, true, true, 1, id]
+        let sql = "UPDATE files SET name=?, path=?, img=?, red=?, canToOrder=?, countInFile=? WHERE id = ?";
         let connection = mysql.createConnection(configSQLConnection);
         connection.query(sql, data, function (err, results) {
             if (err) {
@@ -84,7 +84,7 @@ async function processing(filePath, cookies, filenameToNorm, res, id, calcType, 
                     canToOrder: true
                 }
                 res.send(order)
-                log.addStatistics(0, 0, `update file, ${mime.getType(filePath)}`, "success", id, configSQLConnection)
+                log.addStatistics(0, 0, `update file, ${mime.getType(filePath)}`, "success", id, configSQLConnection, 0)
             }
         });
         connection.end();
