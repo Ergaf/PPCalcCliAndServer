@@ -14,7 +14,7 @@ module.exports = {
             } else {
                 res.cookie('to', cookieId.toString())
                 res.send({err: "no"})
-                log.addStatistics(resultss[0].id, results.insertId, `add new session by login/delete session`, "success", 0, configSQLConnection)
+                log.addStatistics(resultss[0].id, results.insertId, `add new session by login/delete session`, "success", 0, configSQLConnection, cookieId.toString())
 
                 if (req.cookies.to) {
                     let connectionDel = mysql.createConnection(configSQLConnection);

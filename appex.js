@@ -19,6 +19,8 @@ const log = require('./back/log/log');
 const getContentType = require('./back/files/getContentType');
 const allAfterUpload = require('./allAfterUpload');
 const files = require('./files');
+const updateFile = require('./back/files/updateFile');
+const deleteFile = require('./deleteFile');
 //exel---------------------------------------------------------
 const readXlsxFile = require('read-excel-file/node');
 //mysql---------------------------------------------------------
@@ -192,7 +194,7 @@ function testAndAddSession(req, res, next) {
                     res.cookie('to', cookieId.toString())
                     // res.redirect(req.get('referer'));
                     // res.redirect('current');
-                    log.addStatistics(0, 0, "add session "+cookieId.toString(), "success", results.insertId, configSQLConnection)
+                    log.addStatistics(0, 0, "add new session", "success", results.insertId, configSQLConnection, cookieId.toString())
                     next();
                 }
             });
@@ -226,7 +228,7 @@ app.post("/uploadFile", function (req, res) {
             } else {
                 console.log("ФАЙЛ " + results.insertId + " " + filenameToNorm + " добавлен");
                 allAfterUpload.afterFileLoad(req, res, results, filenameToNorm, fstream, fieldname, file, configSQLConnection);
-                log.addStatistics(req.userId, req.sessionId, "upLoad file", "success", results.insertId, configSQLConnection)
+                log.addStatistics(req.userId, req.sessionId, "upLoad file", "success", results.insertId, configSQLConnection, filenameToNorm)
             }
         });
         connection.end();
@@ -259,7 +261,7 @@ app.post("/uploadRedactedFile", function (req, res) {
                 } else {
                     console.log("ФАЙЛ " + idForFile + " отредактированный сохранен");
                     res.send(`/files/${req.cookies.to}/${idForFile}/red/file`);
-                    log.addStatistics(req.userId, req.sessionId, "upLoad redacted file", "success", idForFile, configSQLConnection)
+                    log.addStatistics(req.userId, req.sessionId, "upLoad redacted file", "success", idForFile, configSQLConnection, 0)
                 }
             });
             connection.end();
@@ -283,7 +285,7 @@ app.get("/parameterCalc", function (req, res) {
             console.log("БЕЗ ФАЙЛУ " + results.insertId + " добавлена");
 
             res.redirect("/");
-            log.addStatistics(req.userId, req.sessionId, "add nonFile 'file' (for link)", "success", results.insertId, configSQLConnection)
+            log.addStatistics(req.userId, req.sessionId, "add nonFile 'file' (for link)", "success", results.insertId, configSQLConnection, 0)
         }
     });
     connection.end();
@@ -306,8 +308,8 @@ app.post("/orders", function (req, res) {
             console.log(`add order without file, calc type: ${body.data.calc}`);
 
             let connection = mysql.createConnection(configSQLConnection);
-            let data = [body.data.calc, "A4", "БЕЗ ФАЙЛУ " + body.data.calc, `/files/data/notfile2.png`, req.sessionValue, true, 1];
-            let sql = "INSERT INTO files(calc, format, name, path, session, img, count) VALUES(?, ?, ?, ?, ?, ?, ?)";
+            let data = [body.data.calc, "A4", "БЕЗ ФАЙЛУ " + body.data.calc, `/files/data/notfile2.png`, req.sessionValue, true, 1, 1];
+            let sql = "INSERT INTO files(calc, format, name, path, session, img, count, countInFile) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
             connection.query(sql, data, function (err, results, fields) {
                 if (err) {
                     console.log(err);
@@ -329,7 +331,7 @@ app.post("/orders", function (req, res) {
                     }
 
                     res.send(order)
-                    log.addStatistics(req.userId, req.sessionId, "add nonFile 'file'", "success", results.insertId, configSQLConnection)
+                    log.addStatistics(req.userId, req.sessionId, "add nonFile 'file'", "success", results.insertId, configSQLConnection, 0)
                 }
             })
             connection.end();
@@ -378,42 +380,7 @@ app.put("/orders", function (req, res) {
         }).on('end', () => {
             body = Buffer.concat(body).toString();
             body = JSON.parse(body)
-            // console.log(body);
-
-            let connection = mysql.createConnection(configSQLConnection);
-            let data = [body.value, body.id]
-            let sql = "UPDATE files SET " + body.parameter + "=? WHERE id = ?";
-            if (body.parameter2) {
-                data = [body.value, body.value2, body.id]
-                sql = "UPDATE files SET " + body.parameter + "=?, " + body.parameter2 + "=? WHERE id = ?";
-            }
-            if (body.parameter3) {
-                data = [body.value, body.value2, body.value3, body.id]
-                sql = "UPDATE files SET " + body.parameter + "=?, " + body.parameter2 + "=?, " + body.parameter3 + "=? WHERE id = ?";
-            }
-            connection.query(sql, data, function (err, results, fields) {
-                if (err) {
-                    // console.log(err);
-                    let sendData = {
-                        status: "error",
-                        error: `dontUpdateTable files, id=${body.id}`
-                    }
-                    res.send(sendData);
-                } else {
-                    // console.log(results);
-                    let sendData = {
-                        status: "ok",
-                        // values: {
-                        //     value1: body.value,
-                        //     value2: body.value2,
-                        //     value3: body.value3,
-                        // }
-                    }
-                    res.send(sendData);
-                    log.addStatistics(req.userId, req.sessionId, `update file, use ${body.parameter}`, "success", body.id, configSQLConnection)
-                }
-            });
-            connection.end();
+            updateFile.update(req, res, body, configSQLConnection, prices)
         })
     } catch (e) {
         let sendData = {
@@ -434,36 +401,7 @@ app.delete("/orders", function (req, res) {
         }).on('end', () => {
             body = Buffer.concat(body).toString();
             body = JSON.parse(body)
-
-            let connection = mysql.createConnection(configSQLConnection);
-            let data = [body.id];
-            let sql = "DELETE from files WHERE id = ?";
-            connection.query(sql, data, function (err, results, fields) {
-                if (err) {
-                    console.log(err);
-                    res.send({
-                        status: "error",
-                        error: err
-                    })
-                } else {
-                    if(results.affectedRows > 0){
-                        console.log("delete file id " + data[0]);
-                    } else {
-                        console.log("not can find and delete file id " + data[0]);
-                    }
-                    try {
-                        files.filesDelete(__dirname + `/files/${req.cookies.to}/${data[0]}/`)
-                    } catch (e) {
-                        console.log(e.message);
-                    }
-                    res.send({
-                        status: "ok",
-                        id: body.id
-                    })
-                    log.addStatistics(req.userId, req.sessionId, `remove file`, "success", body.id, configSQLConnection)
-                }
-            })
-            connection.end();
+            deleteFile.delete(req, res, body, configSQLConnection)
         })
     } catch (e) {
         console.log(e.message);
@@ -642,7 +580,7 @@ app.post("/basket", function (req, res) {
                             status: "ok",
                             id: body.id
                         })
-                        log.addStatistics(req.userId, req.sessionId, `add file to basket`, "success", body.id, configSQLConnection)
+                        log.addStatistics(req.userId, req.sessionId, `add file to basket`, "success", body.id, configSQLConnection, 0)
                     } else {
                         res.send({
                             status: "error",
@@ -686,7 +624,7 @@ app.delete("/basket", function (req, res) {
                         status: "ok",
                         id: body.id
                     })
-                    log.addStatistics(req.userId, req.sessionId, `remove file to basket`, "success", body.id, configSQLConnection)
+                    log.addStatistics(req.userId, req.sessionId, `remove file to basket`, "success", body.id, configSQLConnection, 0)
                 }
             })
         })
@@ -807,7 +745,7 @@ function insertAdmin() {
 }
 
 function createTableAllActions() {
-    const sql = "create table if not exists actions(id int primary key auto_increment,userid integer,session varchar(20),whatAction varchar(45),time varchar(20), result varchar(100), targetId integer)";
+    const sql = "create table if not exists actions(id int primary key auto_increment,userid integer,session varchar(20),whatAction varchar(100),time varchar(20), result varchar(50), targetId integer, value varchar(200))";
     const connectionCreateTablSessions = mysql.createConnection(configSQLConnection);
     connectionCreateTablSessions.query(sql,
         function (err, results) {

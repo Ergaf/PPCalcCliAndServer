@@ -9,8 +9,8 @@ module.exports = {
         }
         return paper
     },
-    getPriceFromCountPaper: function getPriceFromCountPaper(name) {
-        let price = getProductInVariantsFromName(name)
+    getPriceFromCountPaper: function getPriceFromCountPaper(name, thisFile, prices) {
+        let price = getProductInVariantsFromName(name, thisFile, prices)
         let priceOfCount = 0;
         if(price !== undefined) {
             if(thisFile.realCount > 0 && thisFile.realCount < 10){
@@ -31,7 +31,7 @@ module.exports = {
         }
         return priceOfCount;
     },
-    getProductInVariantsFromName: function getProductInVariantsFromName(name) {
+    getProductInVariantsFromName: function getProductInVariantsFromName(name, thisFile, prices) {
     let price = getPaperPricesFromUserPick()
     let pricePaper = undefined
     if(price !== undefined){
@@ -44,7 +44,7 @@ module.exports = {
     }
     return pricePaper
     },
-    getPaperPricesFromUserPick: function getPaperPricesFromUserPick() {
+    getPaperPricesFromUserPick: function getPaperPricesFromUserPick(thisFile) {
         let price = undefined
         if(thisFile.format === "A4" && thisFile.color === "bw" && thisFile.sides === "one"){
             for (let i = 0; i < prices.length; i++){
@@ -138,7 +138,7 @@ module.exports = {
         }
         return price
     },
-    getSizes: function getSizes(thisFile) {
+    getSizes: function getSizes(thisFile, prices) {
     let size = {
         x: 0,
         y: 0
@@ -157,7 +157,7 @@ module.exports = {
     }
     return size
     },
-    getHowInASheet: function getHowInASheet() {
+    getHowInASheet: function getHowInASheet(thisFile) {
         let xx1 = 310 / thisFile.x
         let yy1 = 440 / thisFile.y
         let gg1 = Math.floor(xx1)*Math.floor(yy1)
@@ -174,8 +174,8 @@ module.exports = {
         }
         return forR
     },
-    getPriceFromCount: function getPriceFromCount(name, nameService, format) {
-        let price = getProductInVariantsFromNameNotPaper(name, nameService, format)
+    getPriceFromCount: function getPriceFromCount(name, nameService, format, thisFile, prices) {
+        let price = getProductInVariantsFromNameNotPaper(name, nameService, format, thisFile, prices)
         // console.log(price[1])
         let priceOfCount = 0;
         if(price !== undefined) {
@@ -197,8 +197,8 @@ module.exports = {
         }
         return priceOfCount;
     },
-    getProductInVariantsFromNameNotPaper: function getProductInVariantsFromNameNotPaper(name, nameService, format) {
-        let price = getVariantsFromName(nameService, format)
+    getProductInVariantsFromNameNotPaper: function getProductInVariantsFromNameNotPaper(name, nameService, format, thisFile, prices) {
+        let price = getVariantsFromName(nameService, format, thisFile, prices)
         let pricePaper = undefined
         if(price !== undefined){
             for (let i = 0; i < price.length; i++){
@@ -210,7 +210,7 @@ module.exports = {
         }
         return pricePaper
     },
-    getVariantsFromName: function getVariantsFromName(nameService, format) {
+    getVariantsFromName: function getVariantsFromName(nameService, format, thisFile, prices) {
         let price = undefined
         if(format === "A4"){
             for (let i = 0; i < prices.length; i++){
@@ -244,7 +244,7 @@ module.exports = {
         }
         return price
     },
-    getBindingFromNameAndFormat: function getBindingFromNameAndFormat(nameService) {
+    getBindingFromNameAndFormat: function getBindingFromNameAndFormat(nameService, thisFile, prices) {
         let price = undefined
         if(thisFile.format === "A4"){
             for (let i = 0; i < prices.length; i++){
@@ -266,8 +266,8 @@ module.exports = {
         }
         return price
     },
-    getBindingFromPaperCount: function getBindingFromPaperCount(nameService) {
-        let price = getBindingFromNameAndFormat(nameService)
+    getBindingFromPaperCount: function getBindingFromPaperCount(nameService, thisFile, prices) {
+        let price = getBindingFromNameAndFormat(nameService, thisFile, prices)
         let pricePaper = []
         if(price !== undefined){
             for (let i = 0; i < price.length; i++){

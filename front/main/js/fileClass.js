@@ -340,6 +340,7 @@ class file {
                 e.classList.remove("btnm-act")
             }
         })
+        price.value = thisFile.price
         if (thisFile.calc === "digital") {
             let formats = `
                     <div class="btn" toFile="A7">A7</div>
@@ -359,7 +360,6 @@ class file {
             fileViewContainer.classList.remove("d-none");
             ifPrintCountLists.classList.remove("d-none");
             countInFile.innerText = this.countInFile
-            console.log(this.countInFile);
             renderDigitalCalc(priceCalc)
             renderListAndCard()
         } else if (thisFile.calc === "wide") {
@@ -435,9 +435,9 @@ class file {
             ifPrintCountLists.classList.add("d-none");
             // renderOptions("ФОТО ДРУК", "format", formatButtons)
             thisFile.realCount = thisFile._count
-            let cupPrice = getPriceFromCount(thisFile.format, "ФОТО ДРУК")
-            console.log(cupPrice);
-            thisFile.price = cupPrice*thisFile._count
+            // let cupPrice = getPriceFromCount(thisFile.format, "ФОТО ДРУК")
+            // console.log(cupPrice);
+            // thisFile.price = cupPrice*thisFile._count
             price.value = thisFile.price
             renderListAndCard()
         }
@@ -454,8 +454,8 @@ class file {
             formatButtons.innerHTML = "";
             renderOptions("чашки", "destiny", destinyButtons)
             thisFile.realCount = thisFile._count
-            let cupPrice = getPriceFromCount(thisFile.destiny, "чашки")
-            thisFile.price = cupPrice*thisFile._count
+            // let cupPrice = getPriceFromCount(thisFile.destiny, "чашки")
+            // thisFile.price = cupPrice*thisFile._count
             price.value = thisFile.price
             // thisFile.renderSettings()
         }
@@ -472,8 +472,8 @@ class file {
             formatButtons.innerHTML = "";
             renderOptions("Післядрукарська обробка", "destiny", destinyButtons)
             thisFile.realCount = thisFile._count
-            let cupPrice = getPriceFromCount(thisFile.destiny, "Післядрукарська обробка")
-            thisFile.price = cupPrice*thisFile._count
+            // let cupPrice = getPriceFromCount(thisFile.destiny, "Післядрукарська обробка")
+            // thisFile.price = cupPrice*thisFile._count
             price.value = thisFile.price
         }
         Array.prototype.slice.call(formatButtons.children).forEach(e => {
@@ -487,6 +487,7 @@ class file {
                     sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
                         if (o.status === "ok") {
                             thisFile.format = e.getAttribute("toFile")
+                            thisFile.price = o.price
                             thisFile.renderSettings()
                         } else {
                             showError(o)

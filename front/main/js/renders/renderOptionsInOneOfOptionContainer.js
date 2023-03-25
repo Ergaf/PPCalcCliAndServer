@@ -19,6 +19,7 @@ function renderOptions(varOfServFromTable, thisFileProp, renderIn){
                                 value: elem.getAttribute("toFile"),
                                 writable: true
                             });
+                            thisFile.price = o.price
                             thisFile.renderSettings()
                         } else {
                             showError(o)

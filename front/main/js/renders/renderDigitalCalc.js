@@ -40,7 +40,12 @@ function renderDigitalCalc(priceCalc){
     if(bindingPrice[0]){
         priceCalc = priceCalc + bindingPrice[0][1]
     }
-    thisFile.price = priceCalc
+    // thisFile.price = priceCalc
+
+
+    // console.log(getHowInASheet());
+    // console.log(thisFile.realCount);
+    // console.log(priceCalc);
 
     if(thisFile.promo){
         if(thisFile.promo.status === "accepted"){

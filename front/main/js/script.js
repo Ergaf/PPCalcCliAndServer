@@ -155,6 +155,7 @@ orient.addEventListener("click", function () {
     sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
         if (o.status === "ok") {
             thisFile.orient = !thisFile.orient
+            thisFile.price = o.price
             thisFile.renderSettings()
         } else {
             showError(o)
@@ -285,6 +286,7 @@ Array.prototype.slice.call(sidesButtons.children).forEach(e => {
         sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
             if (o.status === "ok") {
                 thisFile.sides = e.getAttribute("toFile")
+                thisFile.price = o.price
                 thisFile.renderSettings()
             } else {
                 showError(o)
@@ -302,6 +304,7 @@ Array.prototype.slice.call(colorButtons.children).forEach(e => {
         sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
             if (o.status === "ok") {
                 thisFile.color = e.getAttribute("toFile")
+                thisFile.price = o.price
                 thisFile.renderSettings()
             } else {
                 showError(o)
@@ -442,6 +445,7 @@ countInt.addEventListener("change", function () {
     sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
         if (o.status === "ok") {
             thisFile._count = countInt.value
+            thisFile.price = o.price
             thisFile.renderSettings()
         } else {
             showError(o)
@@ -469,6 +473,7 @@ countInt.addEventListener("wheel", function () {
         sendData("/orders", "PUT", JSON.stringify(data)).then(o => {
             if (o.status === "ok") {
                 thisFile._count = countInt.value
+                thisFile.price = o.price
                 thisFile.renderSettings()
             } else {
                 showError(o)
@@ -508,6 +513,7 @@ sizeX.addEventListener("change", function () {
             thisFile.x = sizeX.value
             thisFile.y = sizeY.value
             thisFile.format = "custom"
+            thisFile.price = o.price
             thisFile.renderSettings()
         } else {
             showError(o)
@@ -549,6 +555,7 @@ sizeX.addEventListener("wheel", function () {
             thisFile.x = sizeX.value
             thisFile.y = sizeY.value
             thisFile.format = "custom"
+            thisFile.price = o.price
             thisFile.renderSettings()
         } else {
             showError(o)
@@ -583,6 +590,7 @@ sizeY.addEventListener("change", function () {
             thisFile.x = sizeX.value
             thisFile.y = sizeY.value
             thisFile.format = "custom"
+            thisFile.price = o.price
             thisFile.renderSettings()
         } else {
             showError(o)
@@ -624,6 +632,7 @@ sizeY.addEventListener("wheel", function () {
             thisFile.x = sizeX.value
             thisFile.y = sizeY.value
             thisFile.format = "custom"
+            thisFile.price = o.price
             thisFile.renderSettings()
         } else {
             showError(o)
@@ -672,8 +681,8 @@ addEventListener("popstate", function (e) {
 
 
 function showError(error) {
-    toastBody.innerText = error.status
-    toastHeader.innerText = error.error
+    toastBody.innerText = error.error
+    toastHeader.innerText = error.status
     toast.show()
 }
 

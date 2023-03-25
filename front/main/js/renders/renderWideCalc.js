@@ -12,30 +12,30 @@ function renderWideCalc(priceCalc){
 
     let paper1 = getVariantsFromNameInData(thisFile.touse);
     let paper2 = getVariantsFromNameInData(thisFile.destiny);
-
+    //
     thisFile.realCount = thisFile._count*thisFile.countInFile
+    //
+    // let mm = thisFile.x * thisFile.y
+    // let m2kv = mm/1000000
+    //
+    // if(paper1 !== undefined){
+    //     if(paper2 !== undefined){
+    //         for (let i = 0; i < paper2.length; i++) {
+    //             if(thisFile.destinyThis === paper2[i][0]){
+    //                 priceCalc = paper2[i][1] * m2kv * thisFile.realCount
+    //             }
+    //         }
+    //     }
+    //     else {
+    //         for (let i = 0; i < paper1.length; i++) {
+    //             if(thisFile.destiny === paper1[i][0]){
+    //                 priceCalc = paper1[i][1] * m2kv * thisFile.realCount
+    //             }
+    //         }
+    //     }
+    // }
 
-    let mm = thisFile.x * thisFile.y
-    let m2kv = mm/1000000
-
-    if(paper1 !== undefined){
-        if(paper2 !== undefined){
-            for (let i = 0; i < paper2.length; i++) {
-                if(thisFile.destinyThis === paper2[i][0]){
-                    priceCalc = paper2[i][1] * m2kv * thisFile.realCount
-                }
-            }
-        }
-        else {
-            for (let i = 0; i < paper1.length; i++) {
-                if(thisFile.destiny === paper1[i][0]){
-                    priceCalc = paper1[i][1] * m2kv * thisFile.realCount
-                }
-            }
-        }
-    }
-
-    // price.value = priceCalc
+    // price.value = thisFile.price
 
     toUseButtons.innerHTML = ""
     renderOptions("Використання", "touse", toUseButtons)
@@ -149,6 +149,6 @@ function renderWideCalc(priceCalc){
             }
         })
     }
-    this.price = priceCalc
-    price.value = priceCalc
+    // this.price = priceCalc
+    // price.value = priceCalc
 }
