@@ -1,0 +1,26 @@
+.gif {
+    display: block;
+    background: url('front/main/img/main/Group 60.svg') no-repeat;
+}
+
+div.gif img.noanim {
+    visibility: visible;
+    display: block;
+}
+div.gif img.anim {
+    visibility: hidden;
+    display: none;
+}
+
+div.gif:hover {
+    background: none;
+}
+
+div.gif:hover img.noanim {
+    visibility: hidden;
+    display: none;
+}
+div.gif:hover img.anim {
+    visibility: visible;
+    display: block;
+}

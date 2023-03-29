@@ -400,14 +400,16 @@ fetch('/getprices')
                         file1.canToOrder = o.canToOrder;
                         file1.inBasket = o.inBasket;
 
-                        if(o.inBasket === false || o.inBasket === null || o.inBasket === 0){
+                        if(!o.orderid){
+                            if(o.inBasket === false || o.inBasket === null || o.inBasket === 0){
 
-                            allFiles.push(file1)
-                            file1.createFileContainer()
-                        } else {
-                            filesInBasket.push(file1)
-                            file1.createFileInBasketContainer()
-                            basketNotification.innerHTML = parseInt(basketNotification.innerHTML)+1
+                                allFiles.push(file1)
+                                file1.createFileContainer()
+                            } else {
+                                filesInBasket.push(file1)
+                                file1.createFileInBasketContainer()
+                                basketNotification.innerHTML = parseInt(basketNotification.innerHTML)+1
+                            }
                         }
                     })
 

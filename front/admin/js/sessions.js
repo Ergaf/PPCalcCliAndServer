@@ -21,21 +21,7 @@ sessions.addEventListener("click", function (){
                             <th scope="col">time</th>
                             <th scope="col">user ID</th>
                             <th scope="col">del</th>`
-    let data = {
-        page: 0,
-        inPageCount: 10
-    }
-
-    sendData("/getSessies", "POST", JSON.stringify(data)).then(e => {
-        console.log(e);
-        tableBody.innerHTML = ""
-        if(e.status === "ok"){
-            renderSessionsItem(e)
-            renderPages(e)
-        } else {
-            showError(e)
-        }
-    })
+    getData()
 })
 function createTime(timeStr){
     let thisTime = new Date(parseInt(timeStr));
@@ -47,22 +33,20 @@ function createTime(timeStr){
     let timeString = `${thisTime.getDate()}.${timeMonth}.${thisTime.getFullYear()}, ${timeHours}:${timeMinutes}:${timeSeconds}`
     return timeString
 }
+function createOnlyTime(timeStr){
+    let thisTime = new Date(parseInt(timeStr));
+    let timeHours = add0ToTime(thisTime.getHours().toString())
+    let timeMinutes = add0ToTime(thisTime.getMinutes().toString())
+    let timeSeconds = add0ToTime(thisTime.getSeconds().toString())
+    let timeString = `${timeHours}:${timeMinutes}:${timeSeconds}`
+    return timeString
+}
 function add0ToTime(str){
     if(str.length < 2){
         return `0${str}`
     } else {
         return str
     }
-}
-
-function del(target) {
-    // console.log(target.getAttribute("sesId"));
-    sendData("/getSessies", "DELETE", JSON.stringify(target.getAttribute("itemId"))).then(e => {
-        console.log(e);
-        if(e.toString() === target.getAttribute("sesId").toString()){
-            target.parentElement.parentElement.remove()
-        }
-    })
 }
 
 function renderSessionsItem(e){
@@ -81,5 +65,15 @@ function renderSessionsItem(e){
                             `;
         tr.innerHTML = innerHTML;
         tableBody.append(tr);
+    })
+}
+
+function del(target) {
+    console.log(target.getAttribute("sesId"));
+    sendData("/getSessies", "DELETE", JSON.stringify(target.getAttribute("itemId"))).then(e => {
+        console.log(e);
+        if(e.toString() === target.getAttribute("itemId").toString()){
+            target.parentElement.parentElement.remove()
+        }
     })
 }

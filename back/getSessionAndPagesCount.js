@@ -22,7 +22,14 @@ module.exports = {
 
 function getSessionsPageAndSend(req, res, body, resultsPageCount, configSQLConnection){
     let connection = mysql.createConnection(configSQLConnection);
-    let dataToSql = [body.inPageCount, body.page];
+
+    let isPageToNumber = 0;
+    if(body.page > 1){
+        isPageToNumber = body.page*body.inPageCount
+        // console.log(isPageToNumber);
+    }
+
+    let dataToSql = [body.inPageCount, isPageToNumber];
     let sql = "SELECT * FROM sessions ORDER BY id DESC LIMIT ? OFFSET ?;"
     connection.query(sql, dataToSql,function (err, results) {
         if (err) {

@@ -1,7 +1,6 @@
 const mysql = require("mysql2");
 module.exports = {
     create: function (req, res, body, configSQLConnection){
-        console.log("userId "+req.userId);
         if(req.userId === 0){
             let connection = mysql.createConnection(configSQLConnection);
             let data = [body.name, "user", body.mail, body.phone, body.messenger];
@@ -30,7 +29,7 @@ function sessionToUser(req, res, body, configSQLConnection, resultsUsers){
             console.log(err);
         } else {
             console.log("session update");
-            filesToOrder(req, res, body, configSQLConnection, resultsUsers)
+            InsertOrder(req, res, body, configSQLConnection, resultsUsers)
         }
     })
     connection.end();
@@ -53,9 +52,9 @@ function InsertOrder(req, res, body, configSQLConnection, resultsUsers){
 
 function filesToOrder(req, res, body, configSQLConnection, resultsUsers, resultsOrders){
     let connection = mysql.createConnection(configSQLConnection);
-    let data = [resultsOrders.insertId, req.sessionId, true];
-    let sql = "UPDATE files SET orderid=? WHERE id = ? AND inBasket = ?";
-    connection.query(sql, data, function (err, resultsSessions, fields) {
+    let data = [resultsOrders.insertId, req.sessionValue, true];
+    let sql = "UPDATE files SET orderid=? WHERE session = ? AND inBasket = ?";
+    connection.query(sql, data, function (err, resultsFiles, fields) {
         if (err) {
             console.log(err);
         } else {

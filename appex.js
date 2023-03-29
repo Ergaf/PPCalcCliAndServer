@@ -226,8 +226,8 @@ app.post("/uploadFile", function (req, res) {
         let filenameToNorm = utf8.decode(filename.filename)
         console.log("Uploading file: " + filenameToNorm);
 
-        let data = [fieldname, "A4", "Йде обробка: " + filenameToNorm, `/files/data/processing.jpg`, req.sessionValue, true, 1];
-        let sql = "INSERT INTO files(calc, format, name, path, session, img, count) VALUES(?, ?, ?, ?, ?, ?, ?)";
+        let data = [fieldname, "A4", "Йде обробка: " + filenameToNorm, `/files/data/processing.jpg`, req.sessionValue, true, 1, 0];
+        let sql = "INSERT INTO files(calc, format, name, path, session, img, count, orderid) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         let connection = mysql.createConnection(configSQLConnection);
         connection.query(sql, data, function (err, results) {
             if (err) {
@@ -315,8 +315,8 @@ app.post("/orders", function (req, res) {
             console.log(`add order without file, calc type: ${body.data.calc}`);
 
             let connection = mysql.createConnection(configSQLConnection);
-            let data = [body.data.calc, "A4", "БЕЗ ФАЙЛУ " + body.data.calc, `/files/data/notfile2.png`, req.sessionValue, true, 1, 1];
-            let sql = "INSERT INTO files(calc, format, name, path, session, img, count, countInFile) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+            let data = [body.data.calc, "A4", "БЕЗ ФАЙЛУ " + body.data.calc, `/files/data/notfile2.png`, req.sessionValue, true, 1, 1, 0];
+            let sql = "INSERT INTO files(calc, format, name, path, session, img, count, countInFile, orderid) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
             connection.query(sql, data, function (err, results, fields) {
                 if (err) {
                     console.log(err);
@@ -349,13 +349,13 @@ app.post("/orders", function (req, res) {
 });
 app.get("/orders", function (req, res) {
     let connection = mysql.createConnection(configSQLConnection);
-    let data = [req.cookies.to];
-    let sql = "SELECT * from files WHERE session = ?";
+    let data = [req.cookies.to, 0];
+    let sql = "SELECT * from files WHERE session = ? AND orderid = ?";
     connection.query(sql, data, function (err, results, fields) {
         if (err) {
             console.log(err);
         } else {
-            // console.log(results);
+            // console.log(results.length);
             let files = [];
             if (results.length > 0) {
                 results.forEach(e => {

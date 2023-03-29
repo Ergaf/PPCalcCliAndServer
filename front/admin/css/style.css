@@ -63,3 +63,7 @@ iframe {
 .trColumn:hover {
     background: #eeeeee;
 }
+.myCanvas {
+    width: 70%;
+    height: 70%;
+}

@@ -1,6 +1,6 @@
 const mysql = require("mysql2");
 module.exports = {
-    getOrders: function (req, res, body, configSQLConnection){
+    getOrders: function getOrders(req, res, body, configSQLConnection){
         let connection = mysql.createConnection(configSQLConnection);
         let dataToSql = [body.inPageCount];
         let sql = "SELECT CEIL(COUNT(*)/?) as totalP FROM orders;"
@@ -26,7 +26,7 @@ function getOrdersPageAndSend(req, res, body, resultsPageCount, configSQLConnect
     let isPageToNumber = 0;
     if(body.page > 1){
         isPageToNumber = body.page*body.inPageCount
-        console.log(isPageToNumber);
+        // console.log(isPageToNumber);
     }
 
     let dataToSql = [body.inPageCount, isPageToNumber];
