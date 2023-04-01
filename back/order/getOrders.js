@@ -26,6 +26,7 @@ function getOrdersPageAndSend(req, res, body, resultsPageCount, configSQLConnect
     let isPageToNumber = 0;
     if(body.page > 1){
         isPageToNumber = body.page*body.inPageCount
+        isPageToNumber = isPageToNumber - body.inPageCount;
         // console.log(isPageToNumber);
     }
 
