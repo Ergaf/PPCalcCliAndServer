@@ -1,8 +1,8 @@
-div.gif img.noanim {
+div.gif .noanim {
     visibility: visible;
     display: block;
 }
-div.gif img.anim {
+div.gif .anim {
     visibility: hidden;
     display: none;
 }
@@ -11,95 +11,67 @@ div.gif:hover {
     background: none;
 }
 
-div.gif:hover img.noanim {
+div.gif:hover .noanim {
     visibility: hidden;
     display: none;
 }
-div.gif:hover img.anim {
+div.gif:hover .anim {
     visibility: visible;
     display: block;
+}
+.mainDisplay {
+
 }
 
 .digitalPrintContainer {
     position: absolute;
-    width: 513.14px;
-    height: 401.01px;
-    left: 23.26px;
-    top: 561px;
+    /*width: 513.14px;*/
+    /*height: 401.01px;*/
+    /*left: 23.26px;*/
+    /*top: 561px;*/
+    width: 33vw;
+    left: 2vw;
+    top: 36vw;
     z-index: 1;
 }
 .widePrintContainer {
     position: absolute;
-    width: 680.26px;
-    height: 531.61px;
-    left: 363px;
-    top: 313px;
+    /*width: 680.26px;*/
+    /*left: 363px;*/
+    /*top: 313px;*/
+    width: 44vw;
+    left: 24vw;
+    top: 20vw;
 }
 .photoPrintContainer {
     position: absolute;
-    width: 316.2px;
-    height: 342.55px;
-    left: 1070px;
-    top: 359.23px;
+    /*width: 316.2px;*/
+    /*left: 1070px;*/
+    /*top: 359.23px;*/
+    width: 20.5vw;
+    left: 70vw;
+    top: 23vw;
 }
 .cupPrintContainer {
     position: absolute;
-    width: 363.28px;
-    height: 310.11px;
-    left: 556.56px;
-    top: 670.91px;
+    /*width: 363.28px;*/
+    /*left: 556.56px;*/
+    /*top: 670.91px;*/
+    width: 24vw;
+    left: 36vw;
+    top: 43vw;
 }
 .postPrintContainer {
     position: absolute;
-    width: 447.23px;
-    height: 235.38px;
-    left: 973.54px;
-    top: 730.78px;
+    /*width: 447.23px;*/
+    /*left: 973.54px;*/
+    /*top: 730.78px;*/
+    width: 29vw;
+    left: 64vw;
+    top: 47vw;
 }
 
-@media (max-width: 1440px) {
-
-}
-
-@media (max-width: 1024px) {
-    .digitalPrintContainer {
-        position: absolute;
-        width: 513.14px;
-        height: 401.01px;
-        left: 28px;
-        top: 578px;
-        z-index: 1;
-    }
-    .widePrintContainer {
-        position: absolute;
-        width: 680.26px;
-        height: 531.61px;
-        left: 190px;
-        top: 332px;
-    }
-    .photoPrintContainer {
-        position: absolute;
-        width: 316.2px;
-        height: 342.55px;
-        left: 913px;
-        top: 357px;
-    }
-    .cupPrintContainer {
-        position: absolute;
-        width: 363.28px;
-        height: 310.11px;
-        left: 493px;
-        top: 683px;
-    }
-    .postPrintContainer {
-        position: absolute;
-        width: 447.23px;
-        height: 235.38px;
-        left: 885px;
-        top: 739px;
-    }
-}
-@media (max-width: 400px) {
+@media (max-width: 1000px) {
     .digitalPrintContainer {
         position: absolute;
         width: 283.11px;

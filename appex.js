@@ -68,6 +68,7 @@ app.use(cookieParser('govnobliat'));
 app.use(express.urlencoded({extended: true}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use("/", express.static(__dirname + "/front/main"));
+app.use("/test", express.static(__dirname + "/front/main2"));
 app.use("/createOrder", express.static(__dirname + "/front/createorder"));
 app.use("/login", express.static(__dirname + "/front/login"));
 app.use((req, res, next) => {

@@ -123,31 +123,6 @@ function renderPages(res){
         }
         resultHtml = resultHtml+nextButtonDisabled
     }
-    // else if (res.data.pageCount > 1 && res.data.pageCount < 7){
-    //     for (let i = 1; i < res.data.pageCount; i++){
-    //         console.log(`i sei4as: ${i}`);
-    //         if(i === 1){
-    //             if(res.data.page === 1){
-    //                 resultHtml = resultHtml+backButtonDisabled
-    //             } else {
-    //                 resultHtml = resultHtml+backButton
-    //             }
-    //         }
-    //         if(i === res.data.page){
-    //             resultHtml = resultHtml+`<li class="page-item active"><button class="page-link" toPage="${i}">${i}</button></li>`
-    //
-    //         } else {
-    //             resultHtml = resultHtml+`<li class="page-item"><button class="page-link" onclick=toPage(event.target) toPage="${i}">${i}</button></li>`
-    //         }
-    //         if(i === res.data.pageCount-1){
-    //             if(res.data.page >= res.data.pageCount-1){
-    //                 resultHtml = resultHtml+nextButtonDisabled
-    //             } else {
-    //                 resultHtml = resultHtml+nextButton
-    //             }
-    //         }
-    //     }
-    // }
     else {
         for (let i = res.data.page-3; i < res.data.page+4; i++){
             console.log(`i sei4as: ${i}`);

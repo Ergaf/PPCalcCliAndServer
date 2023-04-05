@@ -26,10 +26,10 @@
         <div class="logoImg">
             <img src="img/logo.svg" alt="PrintPeaks" class="logoImg">
         </div>
-        <button class="btn btn-sm" id="toHomeButton" style="white-space: nowrap">
+        <button class="btn btn-sm d-none" id="toHomeButton" style="white-space: nowrap">
             Додати ще файл
         </button>
-        <button class="btn btn-sm" id="toFilesButton" style="white-space: nowrap">
+        <button class="btn btn-sm d-none" id="toFilesButton" style="white-space: nowrap">
             Повернутися до своїх файлів
         </button>
         <button class="btn btn-sm d-none" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -54,6 +54,7 @@
         <div class="cursorPointer gif digitalPrintContainer" id="digitalPrint" data-bs-toggle="modal" data-bs-target="#exampleModal">
 <!--            <div class="cursorPointer gif" id="digitalPrint" data-bs-toggle="modal" data-bs-target="#exampleModal">-->
             <img src="img/main/color_print.gif" class="card-img-top anim" alt="...">
+<!--            <div class="card-img-top anim" id="animationDigital"></div>-->
             <img src="img/main/color_print.svg" class="card-img-top noanim" alt="...">
             <div class="card-body">
 <!--                <h5 class="card-title">Цифровий друк</h5>-->
@@ -62,7 +63,8 @@
 <!--            <input type="file" id="digitalCalcInput" class="form-control">-->
         </div>
         <div class="cursorPointer gif widePrintContainer" id="widescreenPrint" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <img src="img/main/Big_print.gif" class="card-img-top anim" alt="...">
+<!--            <img src="img/main/Big_print.gif" class="card-img-top anim" alt="...">-->
+            <div class="card-img-top anim" id="animationWide"></div>
             <img src="img/main/Big_print.svg" class="card-img-top noanim" alt="...">
             <div class="card-body">
 <!--                <h5 class="card-title">Широкоформатний друк</h5>-->
@@ -537,6 +539,9 @@
 
 <script src="js/photocalc/userImageUnitClass.js" charset="utf-8"></script>
 <script src="js/promo.js" charset="utf-8"></script>
+
+<script src="js/animationjson/lottie.min.js" charset="utf-8"></script>
+<script src="js/animationjson/animation.js" charset="utf-8"></script>
 
 
 <script src="js/renders/renderDigitalCalc.js" charset="utf-8"></script>

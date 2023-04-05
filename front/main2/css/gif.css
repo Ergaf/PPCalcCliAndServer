@@ -1,0 +1,111 @@
+div.gif .noanim {
+    visibility: visible;
+    display: block;
+}
+div.gif .anim {
+    visibility: hidden;
+    display: none;
+}
+
+div.gif:hover {
+    background: none;
+}
+
+div.gif:hover .noanim {
+    visibility: hidden;
+    display: none;
+}
+div.gif:hover .anim {
+    visibility: visible;
+    display: block;
+}
+.mainDisplay {
+
+}
+
+.digitalPrintContainer {
+    position: absolute;
+    /*width: 513.14px;*/
+    /*height: 401.01px;*/
+    /*left: 23.26px;*/
+    /*top: 561px;*/
+    width: 33vw;
+    left: 2vw;
+    top: 36vw;
+    z-index: 1;
+}
+.widePrintContainer {
+    position: absolute;
+    /*width: 680.26px;*/
+    /*left: 363px;*/
+    /*top: 313px;*/
+    width: 44vw;
+    left: 24vw;
+    top: 20vw;
+}
+.photoPrintContainer {
+    position: absolute;
+    /*width: 316.2px;*/
+    /*left: 1070px;*/
+    /*top: 359.23px;*/
+    width: 20.5vw;
+    left: 70vw;
+    top: 23vw;
+}
+.cupPrintContainer {
+    position: absolute;
+    /*width: 363.28px;*/
+    /*left: 556.56px;*/
+    /*top: 670.91px;*/
+    width: 24vw;
+    left: 36vw;
+    top: 43vw;
+}
+.postPrintContainer {
+    position: absolute;
+    /*width: 447.23px;*/
+    /*left: 973.54px;*/
+    /*top: 730.78px;*/
+    width: 29vw;
+    left: 64vw;
+    top: 47vw;
+}
+
+@media (max-width: 1000px) {
+    .digitalPrintContainer {
+        position: absolute;
+        width: 283.11px;
+        height: 221.24px;
+        left: 68px;
+        top: 455px;
+        z-index: 1;
+    }
+    .widePrintContainer {
+        position: absolute;
+        width: 375.31px;
+        height: 293.3px;
+        left: 12.69px;
+        top: 308px;
+    }
+    .photoPrintContainer {
+        position: absolute;
+        width: 174.45px;
+        height: 188.99px;
+        left: 198px;
+        top: 710px;
+    }
+    .cupPrintContainer {
+        position: absolute;
+        width: 200.43px;
+        height: 171.09px;
+        left: -5px;
+        top: 693px;
+    }
+    .postPrintContainer {
+        position: absolute;
+        width: 246.74px;
+        height: 129.87px;
+        left: 68px;
+        top: 881px;
+    }
+}

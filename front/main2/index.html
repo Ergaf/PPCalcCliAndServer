@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link href="css/carousel/carousel.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
+<!--    <link href="css/tui/tui-image-editor.css" rel="stylesheet" type="text/css">-->
+<!--    <link href="css/tui/service-basic.css" rel="stylesheet" type="text/css">-->
+    <link type="text/css" href="css/tui/service-basic.css" rel="stylesheet" />
+    <link type="text/css" href="css/tui/modal.css" rel="stylesheet" />
+    <link type="text/css" href="css/gif.css" rel="stylesheet" />
+    <link type="text/css" href="css/fileViewer.css" rel="stylesheet" />
+    <link
+            type="text/css"
+            href="css/tui/tui-color-picker.css"
+            rel="stylesheet"
+    />
+    <!--    <link href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">-->
+    <meta name="http-equiv" content="Content-type: text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <title>Calc</title>
+</head>
+<body>
+<header class="">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="logoImg">
+            <img src="img/logo.svg" alt="PrintPeaks" class="logoImg">
+        </div>
+        <button class="btn btn-sm d-none" id="toHomeButton" style="white-space: nowrap">
+            Додати ще файл
+        </button>
+        <button class="btn btn-sm d-none" id="toFilesButton" style="white-space: nowrap">
+            Повернутися до своїх файлів
+        </button>
+        <button class="btn btn-sm d-none" id="addFileButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            +
+        </button>
+        <a class="btn" href="/login">log in</a>
+        <div data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" class="btn" id="basketShow">
+            Кошик <span class="badge text-bg-secondary" id="basketNotification">0</span>
+        </div>
+    </div>
+</header>
+
+<div class="d-flex justify-content-center align-items-center download" id="download">
+    <div class="spinner-grow" style="width: 7rem; height: 7rem;" role="status">
+        <span class="visually-hidden">ОБРОБКА...</span>
+    </div>
+</div>
+
+<main class="mainDisplay d-none" id="mainDisplay">
+
+    <div class="card-group">
+        <div class="cursorPointer gif digitalPrintContainer" id="digitalPrint" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<!--            <div class="cursorPointer gif" id="digitalPrint" data-bs-toggle="modal" data-bs-target="#exampleModal">-->
+            <img src="img/main/color_print.gif" class="card-img-top anim" alt="...">
+<!--            <div class="card-img-top anim" id="animationDigital"></div>-->
+            <img src="img/main/color_print.svg" class="card-img-top noanim" alt="...">
+            <div class="card-body">
+<!--                <h5 class="card-title">Цифровий друк</h5>-->
+<!--                <p class="card-text">Бумажки бумажки бумажки бумажки бумажки</p>-->
+            </div>
+<!--            <input type="file" id="digitalCalcInput" class="form-control">-->
+        </div>
+        <div class="cursorPointer gif widePrintContainer" id="widescreenPrint" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<!--            <img src="img/main/Big_print.gif" class="card-img-top anim" alt="...">-->
+            <div class="card-img-top anim" id="animationWide"></div>
+            <img src="img/main/Big_print.svg" class="card-img-top noanim" alt="...">
+            <div class="card-body">
+<!--                <h5 class="card-title">Широкоформатний друк</h5>-->
+                <!--                <p class="card-text">Рулооооонииblbl......</p>-->
+            </div>
+            <!--            <input type="file" id="widescreenCalcInput" class="form-control">-->
+        </div>
+        <div class="cursorPointer gif photoPrintContainer" id="photoPrint">
+            <img src="img/main/Photo_print.gif" class="card-img-top anim" alt="...">
+            <img src="img/main/Photo_print.svg" class="card-img-top noanim" alt="...">
+            <div class="card-body">
+<!--                <h5 class="card-title">Фото друк</h5>-->
+<!--                <p class="card-text">красиво..</p>-->
+            </div>
+<!--            <input type="file" id="photoCalcInput" class="form-control">-->
+        </div>
+    </div>
+    <div class="card-group">
+        <div class="cursorPointer gif cupPrintContainer" id="cupPrint">
+            <img src="img/main/Cup_print.gif" class="card-img-top anim" alt="...">
+            <img src="img/main/Cup_print.svg" class="card-img-top noanim" alt="...">
+            <div class="card-body">
+<!--                <h5 class="card-title">Друк на чашках</h5>-->
+            </div>
+        </div>
+        <div class="cursorPointer gif postPrintContainer" id="afterPrint">
+            <img src="img/main/Post_press.gif" class="card-img-top anim" alt="...">
+            <img src="img/main/Post_press.svg" class="card-img-top noanim" alt="...">
+            <div class="card-body">
+<!--                <h5 class="card-title">Післядрукарська обробка</h5>-->
+            </div>
+        </div>
+    </div>
+
+<!--    <canvas id="canvas1" width="800" height="600">-->
+<!---->
+<!--    </canvas>-->
+
+    <div class="download progress d-none">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+             aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
+             style="width: 100%"></div>
+    </div>
+
+
+<!--    <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">-->
+<!--        <label id="digitalCalcButtonNotFile" class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center mainItem">-->
+<!--&lt;!&ndash;            <div class="my-3 p-3">&ndash;&gt;-->
+<!--&lt;!&ndash;                <h1 class="display-5">Цифровий друк NOT FILE</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--                        <div class="bg-light mx-auto" style="width: 80%; border-radius: 21px 21px 0 0;">-->
+<!--                            <img src="img/back-to-work-working.gif" class="img-fluid shadow-lg App-logo" alt="...">-->
+<!--                        </div>-->
+<!--        </label>-->
+<!--        <label id="widescreenCalcButtonNotFile" class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center mainItem">-->
+<!--&lt;!&ndash;            <div class="my-3 p-3">&ndash;&gt;-->
+<!--&lt;!&ndash;                <h1 class="display-5">Широкоформатний друк NOT FILE</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--                        <div class="bg-light mx-auto" style="width: 80%; border-radius: 21px 21px 0 0;">-->
+<!--                            <img src="img/giphy.gif" class="img-fluid shadow-lg App-logo" alt="...">-->
+<!--                        </div>-->
+<!--        </label>-->
+<!--        <div id="photoCalcButtonNotFile" class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center mainItem">-->
+<!--            <div class="my-3 p-3">-->
+<!--                <h1 class="display-5">Фото друк NOT FILE</h1>-->
+<!--            </div>-->
+<!--            &lt;!&ndash;            <div class="bg-light mx-auto" style="width: 80%; border-radius: 21px 21px 0 0;">&ndash;&gt;-->
+<!--            &lt;!&ndash;                <img src="img/load.svg" class="img-fluid shadow-lg App-logo" alt="...">&ndash;&gt;-->
+<!--            &lt;!&ndash;            </div>&ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="btn"></div>-->
+</main>
+
+<!----------------------------Цифровая печать калк------------------------------------------------>
+<div class="digitalPrinting d-none" id="digitalPrintingContainer">
+    <div class="d-flex flex-row containerForFiles">
+        <div class="FilesContainerRelative slider-container position-relative">
+            <div class="FilesContainer slider-track position-absolute d-flex">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="settingsContainer d-flex d-none" id="settingsContainer">
+        <div class="fileSettingsContainer">
+            <div class="d-flex justify-content-center settingElem d-none" id="selectButtonCalc">
+                <div id="digitalCalcSelect" class="btn" toFile="digital">digital</div>
+                <div id="widelCalcSelect" class="btn" toFile="wide">wide</div>
+                <div id="photoCalcSelect" class="btn" toFile="photo">photo</div>
+            </div>
+            <div class="optionsContainer">
+                <div class="d-flex justify-content-center settingElem formatButtons" id="formatButtons">
+
+                </div>
+                <div class="btn-toolbar mb-3 settingElem" id="formatInputs" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="input-group d-flex align-items-center justify-content-center m-auto">
+                        <input type="number" class="input-group-text gray inputs" id="sizeX">
+                        <span class="input-group-text gray">мм</span>
+                        <button class="btn input-group-text gray" id="orient">
+                            <img src="img/orient.png" class="mouseScroll" alt="">
+                        </button>
+                        <input type="number" class="input-group-text gray inputs" id="sizeY">
+                        <span class="input-group-text gray">мм</span>
+                        <span class="input-group-text gray">
+                            <img src="img/mouseScroll.png" class="mouseScroll" alt="">
+                        </span>
+                    </div>
+                </div>
+                <div class="btn-toolbar">
+                    <div class="input-group d-flex align-items-center justify-content-center m-auto">
+                        <input type="number" id="countInt" class="input-group-text gray inputs">
+                        <span class="input-group-text gray" id="primirnyk"></span>
+                        <span class="input-group-text gray">
+                            <img src="img/mouseScroll.png" class="mouseScroll" alt="">
+                        </span>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center settingElem" id="colorButtons">
+                    <div class="btn" toFile="bw">Чорно-білий друк</div>
+                    <div class="btn" toFile="colors">Кольоровий друк</div>
+                </div>
+                <div class="d-flex justify-content-center settingElem" id="sidesButtons">
+                    <div class="btn" toFile="one">з одніеї сторони</div>
+                    <div class="btn" toFile="two">з обох сторін</div>
+                </div>
+                <div class="d-flex justify-content-center settingElem" id="paperButtons"></div>
+                <div class="d-flex justify-content-center settingElem" id="toUseButtons"></div>
+                <div class="row row-cols-3 align-items-center settingElem" id="destinyButtons"></div>
+                <div class="horizontalLine"></div>
+                <div class="row row-cols-3 align-items-center settingElem" id="destinyThisButtons"></div>
+
+<!--                <div class="d-flex justify-content-center settingElem" id="paperButtons"></div>-->
+
+                <div class="p-2">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <input type="text" class="input-group-text gray inputs" placeholder="Promo code" id="promo">
+                        <button id="promoAccept" class="btn gray">accept</button>
+                        <div id="acceptedValid"></div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <div id="ifPrintCountLists">
+                        <div class="input-group d-flex justify-content-center">
+                            <span class="input-group-text gray">У файлі:</span>
+                            <input type="number" class="input-group-text gray inputsTotal" id="countInFile" disabled>
+                            <span class="input-group-text gray" id="storinki">сторінок</span>
+                        </div>
+                        <div class="input-group d-flex justify-content-center">
+                            <span class="input-group-text gray">Витрати аркушів:</span>
+                            <input type="number" class="input-group-text gray inputsTotal" id="realCount" disabled>
+                            <span class="input-group-text gray">шт.</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="input-group d-flex justify-content-center" id="allCountElement">
+                            <span class="input-group-text gray">Загалом: </span>
+                            <input type="number" class="input-group-text gray inputsTotal" id="allPaper" disabled>
+                            <span class="input-group-text gray" id="arkushi"></span>
+                        </div>
+                        <div class="input-group d-flex justify-content-center">
+                            <span class="input-group-text gray">Ціна: </span>
+                            <input type="number" class="input-group-text gray price inputsTotal" id="price" disabled>
+                            <span class="input-group-text gray">грн.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn" id="toBasket">
+                    Додати до кошика
+                </div>
+
+                <div class="d-flex align-items-center justify-content-center mt-1">
+                    <button id="btnCrop" class="input-group-text gray btn-crop">
+                        Кадрувати зображення (прибрати білі поля)
+                    </button>
+                </div>
+                <div class="accordion border" id="accordionOptions">
+                    <div class="accordion-item">
+                        <div class="d-flex justify-content-center" id="headingThree">
+                            <button class="btn collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Додаткові опції
+                            </button>
+                        </div>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                             data-bs-parent="#accordionOptions">
+                            <div class="accordion-body">
+                                <div class="row row-cols-5 align-items-center settingElem" id="laminationButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="bindingButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem"
+                                     id="bindingSelectButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="cowerButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem"
+                                     id="frontLiningButtons"></div>
+                                <div class="d-flex justify-content-center settingElem" style="font-weight: 600"
+                                     id="backLiningText"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="backLiningButtons"></div>
+
+                                <div class="row row-cols-5 align-items-center settingElem" id="bigButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="holesButtons"></div>
+                                <div class="row row-cols-5 align-items-center settingElem"
+                                     id="roundCornerButtons"></div>
+
+                                <div class="row row-cols-5 align-items-center settingElem" id="stickerCutting"></div>
+                                <div class="row row-cols-5 align-items-center settingElem"
+                                     id="stickerCuttingThis"></div>
+
+                                <div class="row row-cols-5 align-items-center settingElem" id="luvers"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="bannerVarit"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="floorLamination"></div>
+                                <div class="row row-cols-5 align-items-center settingElem" id="widthLamination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center settingElem text-light d-none" id="text"></div>
+
+
+
+
+
+<!--                                <div class="input-group d-flex justify-content-center">-->
+<!--                                    <span class="input-group-text gray">Кількість затраченного:</span>-->
+<!--                                    <input type="number" class="input-group-text gray" id="realCount" disabled>-->
+<!--                                    <span class="input-group-text gray">шт.</span>-->
+<!--                                </div>-->
+<!--                                <div class="input-group d-flex justify-content-center">-->
+<!--                                    <span class="input-group-text gray">Підсумоково аркушів:</span>-->
+<!--                                    <input type="number" class="input-group-text gray" id="allPaper" disabled>-->
+<!--                                    <span class="input-group-text gray">грн.</span>-->
+<!--                                </div>-->
+<!--                                <div class="input-group d-flex justify-content-center">-->
+<!--                                    <span class="input-group-text gray">Ціна:</span>-->
+<!--                                    <input type="number" class="input-group-text gray price" id="price" disabled>-->
+<!--                                    <span class="input-group-text gray">грн.</span>-->
+<!--                                </div>-->
+            </div>
+        </div>
+        <div class="fileViewContainer overflow-hidden" id="fileViewContainer">
+            <div class="listAndCard invisible m-auto" id="listAndCard">
+                <div class="list m-auto visible" id="list">
+                    <div class="containerForImgInServer" id="containerForImgInServer">
+                        <img src="" alt="" class="imgInServer" id="imgInServer" draggable="false">
+                    </div>
+
+                    <div class="containerForImgInServer" id="containerForPdfInServer">
+                        <div class="imgInServer notMDr" id="pdfInServer">
+                            <div id="my_pdf_viewer" class="myPdfViewer">
+                                <!--                                <div id="canvas_container">-->
+                                <div id="the-canvas" class="theCanvas">
+                                    <canvas id="pdf_renderer" class="pdfRenderer"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--            <div class="m-auto">-->
+            <img src="img/karta.png" alt="" class="imgKarta" id="imgKarta">
+            <!--            </div>-->
+            <div id="navPanel" class="navPanel d-flex flex-column position-absolute">
+<!--                <div class="input-group d-flex justify-content-center align-items-center">-->
+<!--                    <input type="range" class="form-range" id="customRange1">-->
+<!--                </div>-->
+                <div id="navigation_controls" class="input-group d-flex justify-content-center align-items-center">
+                    <div class="input-group-text gray navDrag" id="navDrag">
+                        <img src="img/dragArea.png" alt="d" class="iconNavPanel notMDr">
+                    </div>
+                    <button id="page_count" class="input-group-text gray"></button>
+                    <button class="input-group-text gray">стр.</button>
+                    <button id="go_previous" class="input-group-text gray d-none">-</button>
+                    <input id="current_page" class="input-group-text gray" value="1" type="number"/>
+                    <button id="go_next" class="input-group-text gray d-none">+</button>
+
+<!--                    <button id="zoom_in" class="input-group-text gray">+</button>-->
+<!--                    <button id="zoom_out" class="input-group-text gray">-</button>-->
+<!--                    <button id="zoom_normal" class="input-group-text gray">default zoom</button>-->
+
+                    <button id="rotateLeft" class="input-group-text gray d-none">
+                        <img src="img/rotate_left.png" alt="=>" class="iconNavPanel notMDr">
+                    </button>
+                    <button id="rotateNormal" class="input-group-text gray d-none">
+                        <img src="img/rotateNormal.png" alt="<=" class="iconNavPanel notMDr">
+                    </button>
+                    <button id="rotateRight" class="input-group-text gray d-none">
+                        <img src="img/rotate_right.png" alt="<=" class="iconNavPanel notMDr">
+                    </button>
+                    <span class="input-group-text gray">
+                        <img src="img/mouseScroll.png" class="mouseScroll" alt="">
+                    </span>
+                </div>
+<!--                <div id="zoom_controls" class="input-group d-flex justify-content-center align-items-center">-->
+<!--                    <button id="zoom_in" class="input-group-text gray">+</button>-->
+<!--                    <button id="zoom_out" class="input-group-text gray">-</button>-->
+<!--                    <button id="zoom_normal" class="input-group-text gray">normalize</button>-->
+<!--                </div>-->
+            </div>
+
+            <div class="position-absolute d-none">
+                <div class="d-flex justify-content-center">
+                    <div class="btn gray" id="prev"><</div>
+                    <div class="gray" id="pagenation">1/1</div>
+                    <div class="btn gray" id="next">></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--        <form action="/upload" enctype="multipart/form-data" method="post" id="formmm">-->
+        <!--            <div class="form-group">-->
+        <!--                <input type="file" class="form-control-file" name="uploaded_file">-->
+        <!--&lt;!&ndash;                <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">&ndash;&gt;-->
+        <!--                <input type="submit" value="upload" class="btn btn-default" id="btnsubmit">-->
+        <!--            </div>-->
+        <!--        </form>-->
+
+        <!--        <iframe src="" frameborder="0" id="iframe"></iframe>-->
+    </div>
+</div>
+
+<div class="photoCalc d-none" id="photoCalc">
+    <div class="d-flex flex-row justify-content-center align-items-center">
+        <div class="btn" id="backInPhotoCalcButton">Назад</div>
+        <div class="btn" id="notFilePhoto">Порахувати без файлу</div>
+        <label class="btn" for="inMemory">In memory</label>
+        <input type="file" multiple accept=".jpg, .png" class="btn d-none" name="inMemory" id="inMemory"/>
+        <button class="btn" disabled>Google</button>
+        <button class="btn" disabled>Facebook/Insta</button>
+        <button class="btn" disabled>others....</button>
+    </div>
+    <div class="d-flex flex-row justify-content-center d-none" id="saveControls">
+        <div class="btn d-none" id="saveAllUserPhoto">Готово(Загрузити)</div>
+        <div class="btn" id="deleteAllUserPhoto">Видалити усе</div>
+    </div>
+    <div class="row row-cols-5 align-items-start justify-content-center settingElem" id="containerForUserImg">
+
+    </div>
+</div>
+
+<div class="photoRedactor d-none" id="photoRedactor">
+<!--    <div class="d-flex flex-row">-->
+<!--        <div class="btn" id="backInTui">Назад</div>-->
+<!--        <div class="btn" id="saveChanges">Готово</div>-->
+<!--    </div>-->
+<!--    <div class="tuiContainer d-flex flex-row">-->
+<!--        <div class="tuiControls" id="tuiControls"></div>-->
+<!--        <div class="tui-image-editor m-auto mt-0" id="tui-image-editor"></div>-->
+<!--    </div>-->
+</div>
+
+<footer>
+    <!--    <iframe src="" frameborder="2" class="frame" id="iframe"></iframe>-->
+</footer>
+
+<!--<div id="my-image-editor" style="height: 800px">-->
+<!--    <canvas></canvas>-->
+<!--</div>-->
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="" id="exampleModalLabel">ДОДАТИ ФАЙЛ</div>
+                <button type="button" class="btn-close" id="modalCloseButton" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form>
+            <div class="modal-body" id="fileLoadModalBody">
+                <div id="fileClassCalcToModal"></div>
+                <div class="input-group">
+                    <input type="file" class="form-control" id="imgInp" aria-describedby="inputGroupFileAddon04"
+                           aria-label="Upload">
+                </div>
+                <div class="">
+                    <progress id="progressbar" value="0" max="100" style="width: 100%"></progress>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!--                <button type="button" class="btnm" data-bs-dismiss="modal">Назад</button>-->
+<!--                <div type="button" id="nonUpload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>-->
+<!--                <div type="button" id="upload" class="btn">ПРОРАХУВАТИ</div>-->
+<!--                <div type="button" id="uploadLoad" class="btn d-none" disabled>-->
+                <div type="button" id="nonUpload" class="btn" data-bs-dismiss="modal">ПРОРАХУВАТИ БЕЗ ФАЙЛУ</div>
+                <div type="button" id="upload" class="btn invisible">ПРОРАХУВАТИ</div>
+                <div type="button" id="uploadLoad" class="btn d-none" disabled>
+                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                    ОБРОБКА...
+                </div>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-xl" id="redactorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="" id="redactorModalLabel">Редагування зображення</div>
+                <button type="button" class="btn-close" id="redactorModalCloseButton" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="tuiContainerInModal">
+                        <div class="tuiContainer d-flex flex-row">
+                            <div class="tuiControls" id="tuiControls"></div>
+                            <div class="tui-image-editor m-auto mt-0" id="tui-image-editor"></div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-row justify-content-center align-items-center">
+                        <div class="d-none">
+                            <div class="btn" id="activateCrop">Вибрати зону</div>
+                            <div class="btn d-none" id="btnApplyCrop">Вирізати</div>
+                            <div class="btn d-none" id="btnCancelCrop">Відмінити зону</div>
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <progress id="progressbarRedact" value="0" max="100" style="width: 100%"></progress>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!--                <button type="button" class="btnm" data-bs-dismiss="modal">Назад</button>-->
+                    <div class="d-flex flex-row">
+                        <div class="btn" id="backInTui" data-bs-dismiss="modal">Назад</div>
+                        <div class="btn" id="saveChanges">Готово</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button>-->
+
+<div class="offcanvas offcanvas-end" style="background: rgba(245, 245, 245, 0.96); width: 650px" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header" style="padding-bottom: 0">
+        <h5 class="offcanvas-title" id="offcanvasRightLabel">
+            Кошик
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body" id="basketContainer">
+
+    </div>
+<!--    <a class="btn" href="https://t.me/printpeaks" style="margin: 15px">-->
+<!--        Зробити замовлення-->
+<!--    </a>-->
+    <a class="btn" href="/createOrder" style="margin: 15px">
+        Зробити замовлення
+    </a>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+<!--            <img src="img/load.svg" style="height: 22px; background: #d5d5d5" class="rounded me-2" alt="...">-->
+            <strong class="me-auto" id="toastHeader">PrintPeaks</strong>
+            <small>just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toastBody">
+
+        </div>
+    </div>
+</div>
+
+
+<script src="js/photocalc/userImageUnitClass.js" charset="utf-8"></script>
+<script src="js/promo.js" charset="utf-8"></script>
+
+<script src="js/animationjson/lottie.min.js" charset="utf-8"></script>
+<script src="js/animationjson/animation.js" charset="utf-8"></script>
+
+
+<script src="js/renders/renderDigitalCalc.js" charset="utf-8"></script>
+<script src="js/renders/renderWideCalc.js" charset="utf-8"></script>
+<script src="js/renders/renderPhotoCalc.js" charset="utf-8"></script>
+<script src="js/renders/renderOptionsInOneOfOptionContainer.js" charset="utf-8"></script>
+<script src="js/jquery-3.6.1.min.js" charset="utf-8"></script>
+<script src="js/pdf.js" charset="utf-8"></script>
+<!--<script src="js/pdf.js.map" charset="utf-8"></script>-->
+<script src="js/pdfRender.js" charset="utf-8"></script>
+<script src="js/basket/basket.js" charset="utf-8"></script>
+
+
+<script src="js/photocalc/photoCalcIndex.js" charset="utf-8"></script>
+<script src="js/carusel/carousel.js" charset="utf-8"></script>
+
+
+<script src="js/tuiimage/fabric-v4.2.0.js" charset="utf-8"></script>
+<script src="js/tuiimage/FileSaver.min.js" charset="utf-8"></script>
+<script src="js/tuiimage/tui-code-snippet.min.js" charset="utf-8"></script>
+<script src="js/tuiimage/tui-color-picker.min.js" charset="utf-8"></script>
+<script src="js/tuiimage/tui-image-editor.js" charset="utf-8"></script>
+<script src="js/tuiimage/exampleHtml.js" charset="utf-8"></script>
+<script src="js/tuiimage/service-basic.js" charset="utf-8"></script>
+<!--<script src="js/theme/white-theme.js" charset="utf-8"></script>-->
+<script src="js/tuiimage/indexTui.js" charset="utf-8"></script>
+
+
+<script src="js/bootstrap.bundle.js" charset="utf-8"></script>
+<script src="js/utf8.js" charset="utf-8"></script>
+
+<!--<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" charset="utf-8"></script>-->
+<script src="js/axios.min.js" charset="utf-8"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js" charset="utf-8"></script>-->
+<script src="js/pdf.min.js" charset="utf-8"></script>
+<script src="js/pdf.worker.min.js" charset="utf-8"></script>
+<script src="js/fileClass.js" charset="utf-8"></script>
+<script src="js/listClass.js" charset="utf-8"></script>
+<script src="js/cardRender.js" charset="utf-8"></script>
+<script src="js/ifsForThisTabl.js" charset="utf-8"></script>
+<script src="js/script.js" charset="utf-8"></script>
+<script src="js/renders/enumForRender.js" charset="utf-8"></script>
+<script src="js/cupprint/cupPrint.js" charset="utf-8"></script>
+<script src="js/basket/renders.js" charset="utf-8"></script>
+
+<!--<script src="js/photoEditor/tui-code-snippet.js"></script>-->
+<!--<script src="js/photoEditor/fabric.min.js"></script>-->
+<!--<script src="js/photoEditor/src/js/imageEditor.js"></script>-->
+
+</body>
+</html>

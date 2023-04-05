@@ -1,0 +1,385 @@
+* {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;           /* Non-prefixed version, currently*/
+    font-family: Montserrat, sans-serif;
+    font-weight: 700;
+    /*background: rgba(245, 245, 245, 0.96);*/
+}
+input {
+    width: 100px;
+    z-index: 5;
+}
+body{
+    /* set margin to 0 and overflow to hidden,
+    to use the complete page */
+    margin: 0;
+    /*overflow: hidden;*/
+    background: rgba(245, 245, 245, 0.96);}
+.gray {
+    background: rgba(250, 250, 250, 0.96);
+    font-weight: 600;
+    z-index: 5;
+}
+.white{
+    background: white;
+    font-weight: 600;
+    z-index: 5;
+}
+.btn {
+    border-top: #ffffff solid;
+    border-bottom: #ffffff solid;
+    color: #323232;
+    font-weight: 600;
+    z-index: 33;
+}
+.btn:hover {
+    background: #fcfcfc;
+    border-bottom: black solid;
+    transition: 0.8s;
+}
+.btnm {
+    padding: 1vh;
+    text-align: center;
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    border-bottom: #ffffff solid;
+    border-top: #ffffff solid;
+    transition: 0.5s;
+}
+.btnm:hover {
+    background: #fcfcfc;
+    color: #343434;
+    border-bottom: black solid;
+}
+.btnm-act {
+    background: #ffffff;
+    color: #000000;
+    border-top: #d9d9d9 solid;
+    border-bottom: black solid;
+}
+.btnm-act:hover {
+    background: #fcfcfc;
+    color: #313131;
+    border-top: #d9d9d9 solid;
+    border-bottom: black solid;
+}
+.presetContainer {
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
+}
+.FilesContainer {
+    display: flex;
+    /*background: #1a1e21;*/
+    /*flex-direction: row-reverse;*/
+    /*position: absolute;*/
+    /*right: 4vw;*/
+    /*top: 5vh;*/
+    /*opacity: 50%;*/
+}
+.FilesContainer:hover {
+    opacity: 1;
+}
+.oneFileInFilesContainer {
+    display: flex;
+    margin: 1vmin;
+    padding: 1vmin;
+}
+.oneFileInFilesContainerPicked {
+    background: red;
+}
+.addFileButton {
+    margin: 1vmin;
+    padding: 1vmin;
+}
+.inlineBlock {
+    display: flex;
+}
+.nonDisplay {
+    display: none;
+}
+.frame{
+    width: 100%;
+    height: 85vmin;
+}
+
+/*@media (max-width: 1000px){*/
+/*    .settingsContainer {*/
+/*        flex-direction: column;*/
+/*    }*/
+/*    .btn {*/
+/*        font-size: 4vw;*/
+/*        padding: 3vw;*/
+/*    }*/
+/*    .btnm-act {*/
+/*        color: black;*/
+/*    }*/
+/*    .gray {*/
+/*        font-size: 1.5rem;*/
+/*        height: 7vw;*/
+/*    }*/
+/*    .orient {*/
+/*        !*height: 40px;*!*/
+/*    }*/
+/*    .white {*/
+/*        font-size: 1.5rem;*/
+/*        height: 7vw;*/
+/*    }*/
+/*    .fileSettingsContainer{*/
+/*        width: 99%;*/
+/*    }*/
+/*    .fileViewContainer {*/
+/*        width: 99%;*/
+/*    }*/
+/*}*/
+@media (min-width: 1000px){
+    .settingsContainer {
+        flex-direction: row;
+    }
+    .fileSettingsContainer{
+        width: 55%;
+    }
+    .fileViewContainer {
+        width: 45%;
+        height: 94vh;
+    }
+    .mouseScroll {
+        height: 20px;
+    }
+    .inputs {
+        width: 200px;
+    }
+}
+@media (max-width: 1000px){
+    .settingsContainer {
+        flex-direction: column;
+    }
+    .fileSettingsContainer{
+        width: 100%;
+    }
+    .fileViewContainer {
+        width: 100%;
+        height: 65vh;
+    }
+    .btn {
+        font-size: 2.3em;
+    }
+    .gray {
+        font-size: 2.3em;
+    }
+    .slider-item {
+        height: 4.2rem;
+    }
+    .FilesContainerRelative {
+        height: 4.2rem;
+    }
+    .card-title {
+        font-size: 2.3em;
+    }
+    .mouseScroll {
+        height: 40px;
+    }
+    .inputs {
+        width: 260px;
+    }
+    .inputsTotal {
+        width: 100px;
+    }
+}
+
+.containerForImgInServer {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    background: white;
+    /*overflow: auto;*/
+    transition: 0.5s;
+    width: 100%;
+    /*pointer-events: none;*/
+}
+.theCanvas {
+    display: flex;
+    justify-content: center;
+    background: white;
+    overflow: auto;
+}
+.pdfRenderer {
+    transition: 0.5s;
+}
+.navPanel {
+    opacity: 45%;
+    z-index: 20;
+    top: 93vh;
+}
+.navPanel:hover {
+    opacity: 100%;
+}
+.fileSettingsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.fileViewContainer {
+    /*background: #ffffff;*/
+    display: flex;
+    overflow: hidden;
+    z-index: 0;
+}
+.list {
+    display: flex;
+    /*position: fixed;*/
+    background: white;
+    margin: 1vh;
+    transition: 0.5s;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+}
+.listAndKard {
+    margin: 1vh;
+    transition: 0.5s;
+}
+.imgKarta {
+    /*display: inline-block;*/
+    position: absolute;
+    transition: 0.5s;
+}
+.imgInServer {
+    transition: 0.5s;
+}
+.settingsContainer {
+    /*display: none;*/
+    z-index: 9;
+    overflow: auto;
+}
+.optionsContainer {
+    display: flex;
+    flex-direction: column;
+    width: 96%;
+}
+.settingElem {
+    margin-top: 0.5vh;
+}
+.settingSelect {
+    width: 75%;
+}
+.thisOptionContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.sizeOptionContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.countContainer {
+    display: flex;
+}
+.priceContainer {
+    display: flex;
+}
+.pagenation {
+    display: flex;
+}
+.listAndCard {
+    z-index: 1;
+}
+.mainItem {
+
+}
+.mainItem:hover {
+    cursor: pointer;
+}
+.mainItem div:hover {
+    background: #d4d4d4;
+}
+.download{
+    margin-top: 40vh;
+}
+
+/*@media (prefers-reduced-motion: no-preference) {*/
+/*    .App-logo {*/
+/*        animation: App-logo-spin infinite 20s linear;*/
+/*    }*/
+/*}*/
+
+/*@keyframes App-logo-spin {*/
+/*    from {*/
+/*        transform: rotate(0deg);*/
+/*    }*/
+/*    to {*/
+/*        transform: rotate(360deg);*/
+/*    }*/
+/*}*/
+
+.cursorPointer:hover {
+    cursor: pointer;
+}
+.horizontalLine {
+    border-bottom: solid #a8a8a8;
+    margin-top: 4px;
+}
+.notValid {
+    background: red;
+}
+.navDrag {
+    cursor: move;
+}
+
+.iconNavPanel {
+    width: 25px;
+    pointer-events: none;
+}
+.notMDr {
+    pointer-events: none;
+}
+
+.logoImg {
+    height: 45px;
+}
+.mousePointer {
+    cursor: pointer;
+}
+.toBlackIfHover {
+    color: #818181;
+    font-weight: bolder;
+}
+.toBlackIfHover:hover {
+    color: #000000;
+}
+.iconInBasket {
+    width: 100px;
+}
+.inBasketValue {
+    width: 340px;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0.8rem;
+}
+.inBasketValueWrap {
+    width: 340px;
+    overflow: hidden;
+    font-size: 0.8rem;
+}
+.inBasketNameContainer {
+    width: 390px;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0;
+    padding-left: 5px;
+}
+.inBasketIconContainer {
+    width: 150px;
+    background: #f1f1f1;
+}
+.lFont {
+    font-weight: lighter;
+
+}
