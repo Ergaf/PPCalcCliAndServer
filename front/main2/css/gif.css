@@ -31,7 +31,7 @@ div.gif:hover .anim {
     /*top: 561px;*/
     width: 33vw;
     left: 2vw;
-    top: 36vw;
+    top: 21vw;
     z-index: 1;
 }
 .widePrintContainer {
@@ -41,7 +41,7 @@ div.gif:hover .anim {
     /*top: 313px;*/
     width: 44vw;
     left: 24vw;
-    top: 20vw;
+    top: 5vw;
 }
 .photoPrintContainer {
     position: absolute;
@@ -50,7 +50,7 @@ div.gif:hover .anim {
     /*top: 359.23px;*/
     width: 20.5vw;
     left: 70vw;
-    top: 23vw;
+    top: 8vw;
 }
 .cupPrintContainer {
     position: absolute;
@@ -59,7 +59,7 @@ div.gif:hover .anim {
     /*top: 670.91px;*/
     width: 24vw;
     left: 36vw;
-    top: 43vw;
+    top: 28vw;
 }
 .postPrintContainer {
     position: absolute;
@@ -68,7 +68,7 @@ div.gif:hover .anim {
     /*top: 730.78px;*/
     width: 29vw;
     left: 64vw;
-    top: 47vw;
+    top: 32vw;
 }
 
 @media (max-width: 1000px) {
