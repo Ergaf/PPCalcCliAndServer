@@ -29,8 +29,10 @@ function renderOptions(varOfServFromTable, thisFileProp, renderIn){
                 if(e[0] === Object.getOwnPropertyDescriptor(thisFile, thisFileProp).value){
                     // elem.classList.add("btnm-act");
                     elem.style.background = "#ffffff";
-                    elem.style.borderTop = "#d9d9d9 solid";
-                    elem.style.borderBottom = "black solid";
+                    // elem.style.borderTop = "#d9d9d9";
+                    elem.style.border = "#000000 solid";
+                    // elem.style.borderTop = "#000000 solid";
+                    // elem.style.borderBottom = "#000000 solid";
                     elem.style.color = "#000000";
                 }
                 renderIn.appendChild(elem)

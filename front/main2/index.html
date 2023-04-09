@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="auto">
 <head>
 
     <link href="css/carousel/carousel.css" rel="stylesheet" type="text/css">
@@ -23,9 +23,51 @@
 </head>
 <body>
 
+<div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle basketButton">
+    <div data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" class="btn"
+         id="basketShow">
+        Кошик <span class="badge text-bg-secondary" id="basketNotification">0</span>
+    </div>
+<!--    <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"-->
+<!--            id="bd-theme"-->
+<!--            type="button"-->
+<!--            aria-expanded="false"-->
+<!--            data-bs-toggle="dropdown"-->
+<!--            aria-label="Toggle theme (auto)">-->
+<!--        <svg class="bi my-1 theme-icon-active" width="1em" height="1em"><use href="#circle-half"></use></svg>-->
+<!--        <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>-->
+<!--    </button>-->
+<!--    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">-->
+<!--        <li>-->
+<!--            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">-->
+<!--                <svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em"><use href="#sun-fill"></use></svg>-->
+<!--                Light-->
+<!--                <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>-->
+<!--            </button>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">-->
+<!--                <svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em"><use href="#moon-stars-fill"></use></svg>-->
+<!--                Dark-->
+<!--                <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>-->
+<!--            </button>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--            <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">-->
+<!--                <svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em"><use href="#circle-half"></use></svg>-->
+<!--                Auto-->
+<!--                <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>-->
+<!--            </button>-->
+<!--        </li>-->
+<!--    </ul>-->
+</div>
+
+
+
 <nav class="navbar navbar-expand-lg" aria-label="Offcanvas navbar large">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+<!--        <a class="navbar-brand" href="#">-->
+        <a class="" href="#">
             <div class="">
                 <img src="img/logo.svg" alt="PrintPeaks" class="logoImg">
             </div>
@@ -79,10 +121,6 @@
                 <!--                </form>-->
             </div>
         </div>
-        <div data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" class="btn"
-             id="basketShow">
-            Кошик <span class="badge text-bg-secondary" id="basketNotification">0</span>
-        </div>
     </div>
 </nav>
 
@@ -117,7 +155,7 @@
 <main class="mainDisplay d-none" id="mainDisplay">
 
     <div class="card-group">
-        <div class="cursorPointer gif digitalPrintContainer" id="digitalPrint" data-bs-toggle="modal"
+        <div class="cursorPointer gif digitalPrintContainer" id="digitalPrint"
              data-bs-target="#exampleModal">
             <!--            <div class="cursorPointer gif" id="digitalPrint" data-bs-toggle="modal" data-bs-target="#exampleModal">-->
             <img src="img/main/color_print.gif" class="card-img-top anim" alt="...">
@@ -129,7 +167,7 @@
             </div>
             <!--            <input type="file" id="digitalCalcInput" class="form-control">-->
         </div>
-        <div class="cursorPointer gif widePrintContainer" id="widescreenPrint" data-bs-toggle="modal"
+        <div class="cursorPointer gif widePrintContainer" id="widescreenPrint"
              data-bs-target="#exampleModal">
             <!--            <img src="img/main/Big_print.gif" class="card-img-top anim" alt="...">-->
             <div class="card-img-top anim" id="animationWide"></div>
@@ -329,30 +367,38 @@
                         <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
                              data-bs-parent="#accordionOptions">
                             <div class="accordion-body">
-                                <div class="row row-cols-5 align-items-center" id="laminationButtons"></div>
-                                <div class="row row-cols-5 align-items-center" id="bindingButtons"></div>
-                                <div class="row row-cols-5 align-items-center"
-                                     id="bindingSelectButtons"></div>
-                                <div class="row row-cols-5 align-items-center" id="cowerButtons"></div>
-                                <div class="row row-cols-5 align-items-center"
-                                     id="frontLiningButtons"></div>
-                                <div class="d-flex justify-content-center" style="font-weight: 600"
-                                     id="backLiningText"></div>
-                                <div class="row row-cols-5 align-items-center" id="backLiningButtons"></div>
-
-                                <div class="row row-cols-5 align-items-center" id="bigButtons"></div>
-                                <div class="row row-cols-5 align-items-center" id="holesButtons"></div>
-                                <div class="row row-cols-5 align-items-center"
-                                     id="roundCornerButtons"></div>
-
-                                <div class="row row-cols-5 align-items-center" id="stickerCutting"></div>
-                                <div class="row row-cols-5 align-items-center"
-                                     id="stickerCuttingThis"></div>
-
-                                <div class="row row-cols-5 align-items-center" id="luvers"></div>
-                                <div class="row row-cols-5 align-items-center" id="bannerVarit"></div>
-                                <div class="row row-cols-5 align-items-center" id="floorLamination"></div>
-                                <div class="row row-cols-5 align-items-center" id="widthLamination"></div>
+                                <div class="row row-cols-2 align-items-center" id="laminationButtons"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="bindingButtons"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="bindingSelectButtons"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="cowerButtons"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="frontLiningButtons"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="d-flex justify-content-center" style="font-weight: 600" id="backLiningText"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="backLiningButtons"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="bigButtons"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="holesButtons"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="roundCornerButtons"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="stickerCutting"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="stickerCuttingThis"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="luvers"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="bannerVarit"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="floorLamination"></div>
+                                <div class="horizontalLine"></div>
+                                <div class="row row-cols-2 align-items-center" id="widthLamination"></div>
+                                <div class="horizontalLine"></div>
                             </div>
                         </div>
                     </div>
@@ -659,7 +705,7 @@
 <script src="js/ifsForThisTabl.js" charset="utf-8"></script>
 <script src="js/script.js" charset="utf-8"></script>
 <script src="js/renders/enumForRender.js" charset="utf-8"></script>
-<script src="js/cupprint/cupPrint.js" charset="utf-8"></script>
+<script src="js/firstwindow/firstWindow.js" charset="utf-8"></script>
 <script src="js/basket/renders.js" charset="utf-8"></script>
 
 <!--<script src="js/photoEditor/tui-code-snippet.js"></script>-->

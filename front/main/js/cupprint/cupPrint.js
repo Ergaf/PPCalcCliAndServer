@@ -1,4 +1,4 @@
-const cupPrint = document.querySelector("#cupPrint")
+const cupPrint = document.querySelector("#firstWindow")
 const afterPrint = document.querySelector("#afterPrint")
 
 cupPrint.addEventListener("click", function (){
