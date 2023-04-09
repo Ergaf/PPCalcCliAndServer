@@ -58,5 +58,6 @@
 }
 .FilesContainerRelative {
     height: 2rem;
-    background: #eeeeee;
+    /*background: #eeeeee;*/
+    background: #ece9e0;
 }

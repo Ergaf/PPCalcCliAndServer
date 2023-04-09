@@ -6,10 +6,15 @@
     -ms-user-select: none;       /* Internet Explorer/Edge */
     user-select: none;           /* Non-prefixed version, currently*/
     font-family: Gotham, sans-serif;
+    /*font-style: normal;*/
     /*font-family: Montserrat, sans-serif;*/
     font-weight: 700;
     font-size: 1.1vw;
-    /*background: rgba(245, 245, 245, 0.96);*/
+    /*!*background: rgba(245, 245, 245, 0.96);*!*/
+
+    /*!* Друк *!*/
+
+
 }
 input {
     width: 10vw;
@@ -20,16 +25,20 @@ body {
     to use the complete page */
     margin: 0;
     /*overflow: hidden;*/
-    background: rgba(245, 245, 245, 0.96);
-    /*background: #f8f4f0;*/
+    /*background: rgba(245, 245, 245, 0.96);*/
+    background: #E9E6DA;
 }
 .gray {
-    background: rgba(250, 250, 250, 0.96);
+    /*background: rgba(250, 250, 250, 0.96);*/
+    background: #E9E6DA;
     /*font-weight: 600;*/
     z-index: 5;
 }
 .displayTitle {
-    display: none;
+    display: flex;
+    padding: 1vw;
+    padding-left: 8vw;
+    font-weight: 600;
 }
 .white{
     background: white;
@@ -37,16 +46,22 @@ body {
     z-index: 5;
 }
 .btn {
-    border-top: #ffffff solid;
-    border-bottom: #ffffff solid;
-    color: #323232;
+    /*border-top: #ffffff solid;*/
+    /*border-bottom: #ffffff solid;*/
+    /*border: #000000 solid 0.1vw;*/
+    border: #E9E6DA solid 0.1vw;
+    /*color: #323232;*/
+    color: #000000;
     font-weight: 600;
     z-index: 33;
+    border-radius: 7vw;
+    transition: 0s;
 }
 .btn:hover {
-    background: #fcfcfc;
-    border-bottom: black solid;
-    transition: 0.8s;
+    /*background: #fcfcfc;*/
+    /*background: #fcfcfc;*/
+    border-bottom: black solid  0.1vw;
+    /*transition: 0.8s;*/
 }
 .btnm {
     padding: 1vh;
@@ -54,27 +69,30 @@ body {
     background: #ffffff;
     color: #000000;
     border: none;
-    border-bottom: #ffffff solid;
-    border-top: #ffffff solid;
-    transition: 0.5s;
+    border-bottom: #ffffff solid 0.1vw;
+    border-top: #ffffff solid 0.1vw;
+    /*transition: 0.5s;*/
 }
 .btnm:hover {
-    background: #fcfcfc;
+    /*background: #fcfcfc;*/
     color: #343434;
-    border-bottom: black solid;
+    border-bottom: black solid 0.1vw;
 }
 .btnm-act {
-    background: #ffffff;
-    color: #000000;
-    border: #000000 solid;
+    /*background: #ffffff;*/
+    background: #2a2a2a;
+    color: #ffffff;
+    border: #2a2a2a solid 0.1vw;
     /*border-top: #000000 solid;*/
     /*border-bottom: black solid;*/
 }
 .btnm-act:hover {
-    background: #fcfcfc;
-    color: #313131;
-    border-top: #d9d9d9 solid;
-    border-bottom: black solid;
+    /*background: #fcfcfc;*/
+    background: #2a2a2a;
+    color: #ffffff;
+    border: #2a2a2a solid 0.1vw;
+    /*border-top: #d9d9d9 solid;*/
+    /*border-bottom: #ffffff solid;*/
 }
 .presetContainer {
     /*display: flex;*/
@@ -159,7 +177,8 @@ body {
         height: 94vh;
     }
     .mouseScroll {
-        height: 1.5vw;
+        width: 1.5vw;
+        -webkit-user-drag: none;
     }
     .inputs {
         width: 10vw;
@@ -360,6 +379,50 @@ body {
 .basketButton{
     z-index: 99;
 }
+.material {
+
+}
+.druk {
+    width: 20vw;
+    margin: 0.1vw;
+    border: #000000 solid 0.1vw;
+}
+.format {
+    width: 2.70vw;
+    margin: 0.1vw;
+    padding-left: 0.6vw;
+    border: #000000 solid 0.1vw;
+}
+.formatC {
+    margin: 0.1vw;
+    padding-left: 0.6vw;
+    padding-right: 0.6vw;
+    border: #000000 solid 0.1vw;
+}
+.moreOptions {
+    background: #eeebe2;
+}
+.inputFormat {
+    border: none;
+    border-bottom: black solid;
+    border-radius: 0;
+}
+.inputCount {
+    border: none;
+    border-bottom: black solid;
+    border-radius: 0;
+    font-size: 2vw;
+    text-align: left;
+    margin-left: 8vw;
+}
+.inputPrice {
+    border: none;
+    border-bottom: black solid;
+    border-radius: 0;
+    font-size: 3vw;
+    margin-left: 8vw;
+    text-align: left;
+}
 @media (max-width: 1000px){
     * {
         font-size: 4vw;
@@ -374,6 +437,7 @@ body {
     .fileViewContainer {
         width: 100%;
         height: 65vh;
+        display: none;
     }
     .slider-item {
         height: 2rem;
@@ -382,7 +446,7 @@ body {
         height: 2rem;
     }
     .mouseScroll {
-        height: 2vw;
+        height: 5vw;
     }
     .inputs {
         width: 30vw;
@@ -397,6 +461,9 @@ body {
     .btn {
         font-weight: 400;
         border-radius: 10vw;
+        /*border: #000000 solid 0.3vw;*/
+        border: #E9E6DA solid 0.2vw;
+        font-size: 3vw;
     }
     .mouseScrollRen {
         display: none;
@@ -405,6 +472,7 @@ body {
         display: flex;
         padding: 1vw;
         padding-left: 8vw;
+        padding-top: 4vw;
         font-weight: 600;
     }
     .navPanel {
@@ -412,6 +480,9 @@ body {
     }
     .druk {
         width: 40vw;
+        margin: 1vw;
+        border: #000000 solid 0.3vw;
+        font-size: 4vw;
     }
     .phoneNDisplay {
         display: none;
@@ -424,5 +495,46 @@ body {
     }
     .modalMobP {
         margin-left: 0.5vw
+    }
+    .format {
+        width: 9.5vw;
+        margin: 1vw;
+        padding-left: 2vw;
+        border: #000000 solid 0.3vw;
+        font-size: 4vw;
+    }
+    .formatC {
+        margin: 1vw;
+        padding-left: 2vw;
+        padding-right: 2vw;
+        border: #000000 solid 0.3vw;
+        font-size: 4vw;
+    }
+    .inputFormat {
+        border: none;
+        border-bottom: black solid;
+        border-radius: 0;
+    }
+    .inputFormatButton {
+        border: none;
+    }
+    .filesContainerButton {
+        font-size: 4vw;
+    }
+    .inputCount {
+        border: none;
+        border-bottom: black solid;
+        border-radius: 0;
+        font-size: 9vw;
+        text-align: left;
+        margin-left: 8vw;
+    }
+    .inputPrice {
+        border: none;
+        border-bottom: black solid;
+        border-radius: 0;
+        font-size: 11vw;
+        margin-left: 8vw;
+        text-align: left;
     }
 }

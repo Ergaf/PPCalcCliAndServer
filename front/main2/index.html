@@ -268,14 +268,14 @@
                 <div class="d-flex justify-content-center formatButtons" id="formatButtons"></div>
 
                 <div class="btn-toolbar pt-1" id="formatInputs" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="input-group d-flex align-items-center justify-content-center m-auto">
-                        <input type="number" class="input-group-text gray inputs" id="sizeX">
-                        <span class="input-group-text gray">мм</span>
-                        <button class="btn input-group-text gray" id="orient">
+                    <div class="input-group d-flex pt-2 align-items-center justify-content-center m-auto">
+                        <input type="number" class="input-group-text gray inputs inputFormat" id="sizeX">
+                        <span class="input-group-text gray inputFormat">мм</span>
+                        <button class="btn input-group-text gray inputFormatButton" id="orient">
                             <img src="img/orient.png" class="mouseScroll" alt="">
                         </button>
-                        <input type="number" class="input-group-text gray inputs" id="sizeY">
-                        <span class="input-group-text gray">мм</span>
+                        <input type="number" class="input-group-text gray inputs inputFormat" id="sizeY">
+                        <span class="input-group-text gray inputFormat">мм</span>
                         <span class="input-group-text gray mouseScrollRen">
                             <img src="img/mouseScroll.png" class="mouseScroll" alt="">
                         </span>
@@ -283,81 +283,28 @@
                 </div>
                 <div class="displayTitle">Друк</div>
                 <div class="d-flex justify-content-center" id="colorButtons">
-                    <div class="btn druk" toFile="bw">Чорно-білий друк</div>
-                    <div class="btn druk" toFile="colors">Кольоровий друк</div>
+                    <div class="btn druk" toFile="bw">Чорно-білий</div>
+                    <div class="btn druk" toFile="colors">Кольоровий</div>
                 </div>
                 <div class="d-flex justify-content-center pt-1" id="sidesButtons">
                     <div class="btn druk" toFile="one">з одніеї сторони</div>
                     <div class="btn druk" toFile="two">з обох сторін</div>
                 </div>
                 <div class="displayTitle">Матеріал</div>
-                <div class="d-flex justify-content-center pt-1" id="paperButtons"></div>
-                <div class="d-flex justify-content-center pt-1 fontSize" id="toUseButtons"></div>
+                <div class="d-flex justify-content-around pt-1" id="paperButtons"></div>
+                <div class="d-flex justify-content-around pt-1 fontSize" id="toUseButtons"></div>
                 <div class="horizontalLine pt-1"></div>
                 <div class="row row-cols-2 align-items-center pt-1 fontSize" id="destinyButtons"></div>
                 <div class="horizontalLine"></div>
                 <div class="row row-cols-2 align-items-center pt-1 fontSize" id="destinyThisButtons"></div>
 
-                <div class="p-2">
-                    <div class="d-flex align-items-center justify-content-center">
-                        <input type="text" class="input-group-text gray inputs" placeholder="Promo code" id="promo">
-                        <button id="promoAccept" class="btn gray">accept</button>
-                        <div id="acceptedValid"></div>
-                    </div>
-                </div>
-
-
-                <!--                <div class="displayTitle pt-1">Кількість</div>-->
-                <div class="d-flex pt-1">
-                    <div class="input-group d-flex align-items-center justify-content-center m-auto">
-                        <span class="input-group-text gray">Кількість</span>
-                        <input type="number" id="countInt" class="input-group-text gray inputs">
-                        <span class="input-group-text gray" id="primirnyk"></span>
-                        <span class="input-group-text gray mouseScrollRen">
-                                <img src="img/mouseScroll.png" class="mouseScroll" alt="">
-                        </span>
-                    </div>
-                </div>
-
-                <div class="d-flex justify-content-center">
-                    <div id="ifPrintCountLists">
-                        <div class="input-group justify-content-center phoneNDisplay">
-                            <span class="input-group-text gray">У ф.:</span>
-                            <input type="number" class="input-group-text gray inputsTotal" id="countInFile" disabled>
-                            <span class="input-group-text gray" id="storinki">сторінок</span>
-                        </div>
-                        <div class="input-group justify-content-center phoneNDisplay">
-                            <span class="input-group-text gray">Вит. арк.:</span>
-                            <input type="number" class="input-group-text gray inputsTotal" id="realCount" disabled>
-                            <span class="input-group-text gray">шт.</span>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="input-group justify-content-center phoneNDisplay" id="allCountElement">
-                            <span class="input-group-text gray">Заг.: </span>
-                            <input type="number" class="input-group-text gray inputsTotal" id="allPaper" disabled>
-                            <span class="input-group-text gray" id="arkushi"></span>
-                        </div>
-                        <div class="input-group d-flex justify-content-center">
-                            <span class="input-group-text gray">Ціна: </span>
-                            <input type="number" class="input-group-text gray price inputsTotal" id="price" disabled>
-                            <span class="input-group-text gray">грн.</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="btn" id="toBasket">
-                    Додати до кошика
-                </div>
-
-                <div class="d-flex align-items-center justify-content-center mt-1">
+                <div class="d-flex align-items-center justify-content-center mt-1 d-none">
                     <button id="btnCrop" class="input-group-text gray btn-crop">
                         Кадрувати зображення (прибрати білі поля)
                     </button>
                 </div>
                 <div class="accordion border" id="accordionOptions">
-                    <div class="accordion-item">
+                    <div class="accordion-item moreOptions">
                         <div class="d-flex justify-content-center" id="headingThree">
                             <button class="btn collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
@@ -404,6 +351,61 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center text-light d-none" id="text"></div>
+
+                <div class="displayTitle">Кількість</div>
+                <div class="d-flex pt-1">
+                    <div class="input-group d-flex align-items-center m-auto">
+<!--                        <span class="input-group-text gray">Кількість</span>-->
+                        <input type="number" id="countInt" class="input-group-text gray inputs inputCount">
+                        <span class="input-group-text gray inputCount d-none" id="primirnyk"></span>
+                        <span class="input-group-text gray mouseScrollRen">
+                                <img src="img/mouseScroll.png" class="mouseScroll" alt="">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="displayTitle">Промокод:</div>
+                <div class="p-2">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <input type="text" class="input-group-text gray inputs" placeholder="Promo code" id="promo">
+                        <button id="promoAccept" class="btn gray">accept</button>
+                        <div id="acceptedValid"></div>
+                    </div>
+                </div>
+
+                <div class="displayTitle">Вартість в грн:</div>
+                <div class="input-group d-flex">
+                    <!--                            <span class="input-group-text gray">Ціна: </span>-->
+                    <input type="number" class="input-group-text gray price inputsTotal inputPrice" id="price" disabled>
+                    <!--                            <span class="input-group-text gray inputPrice">грн.</span>-->
+                </div>
+
+                <div class="d-flex ">
+                    <div id="ifPrintCountLists">
+                        <div class="input-group justify-content-center phoneNDisplay">
+                            <span class="input-group-text gray">У ф.:</span>
+                            <input type="number" class="input-group-text gray inputsTotal" id="countInFile" disabled>
+                            <span class="input-group-text gray" id="storinki">сторінок</span>
+                        </div>
+                        <div class="input-group justify-content-center phoneNDisplay">
+                            <span class="input-group-text gray">Вит. арк.:</span>
+                            <input type="number" class="input-group-text gray inputsTotal" id="realCount" disabled>
+                            <span class="input-group-text gray">шт.</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="input-group justify-content-center phoneNDisplay" id="allCountElement">
+                            <span class="input-group-text gray">Заг.: </span>
+                            <input type="number" class="input-group-text gray inputsTotal" id="allPaper" disabled>
+                            <span class="input-group-text gray" id="arkushi"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn d-none" id="toBasket">
+                    Додати до кошика
+                </div>
 
 
                 <!--                                <div class="input-group d-flex justify-content-center">-->
@@ -638,7 +640,7 @@
     <!--    <a class="btn" href="https://t.me/printpeaks" style="margin: 15px">-->
     <!--        Зробити замовлення-->
     <!--    </a>-->
-    <a class="btn" href="/createOrder" style="margin: 15px">
+    <a class="btn d-none" href="/createOrder" style="margin: 15px">
         Зробити замовлення
     </a>
 </div>
