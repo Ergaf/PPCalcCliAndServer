@@ -6,5 +6,5 @@ var animation = bodymovin.loadAnimation({
     renderer: 'svg',
     loop: true,
     autoplay: true,
-    path: 'files/data/animationWide.json' // путь к вашему JSON-файлу
+    path: '../files/data/animationWide.json' // путь к вашему JSON-файлу
 });

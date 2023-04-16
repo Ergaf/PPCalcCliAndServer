@@ -16,7 +16,8 @@
             href="css/tui/tui-color-picker.css"
             rel="stylesheet"
     />
-    <!--    <link href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">-->
+<!--        <link href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">-->
+<!--        <link href="https://fonts.googleapis.com/css?family=Gotham:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">-->
     <meta name="http-equiv" content="Content-type: text/html; charset=UTF-8">
     <meta charset="UTF-8">
     <title>Calc</title>
@@ -24,7 +25,7 @@
 <body>
 
 <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle basketButton">
-    <div data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" class="btn"
+    <div data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" class="btn d-none"
          id="basketShow">
         Кошик <span class="badge text-bg-secondary" id="basketNotification">0</span>
     </div>
@@ -67,7 +68,7 @@
 <nav class="navbar navbar-expand-lg" aria-label="Offcanvas navbar large">
     <div class="container-fluid">
 <!--        <a class="navbar-brand" href="#">-->
-        <a class="" href="#">
+        <a class="" href="https://printpeaks.com.ua">
             <div class="">
                 <img src="img/logo.svg" alt="PrintPeaks" class="logoImg">
             </div>
@@ -291,7 +292,7 @@
                     <div class="btn druk" toFile="two">з обох сторін</div>
                 </div>
                 <div class="displayTitle">Матеріал</div>
-                <div class="d-flex justify-content-around pt-1" id="paperButtons"></div>
+                <div class="d-flex justify-content-around pt-1 materialsButtons" id="paperButtons"></div>
                 <div class="d-flex justify-content-around pt-1 fontSize" id="toUseButtons"></div>
                 <div class="horizontalLine pt-1"></div>
                 <div class="row row-cols-2 align-items-center pt-1 fontSize" id="destinyButtons"></div>
@@ -315,69 +316,71 @@
                              data-bs-parent="#accordionOptions">
                             <div class="accordion-body">
                                 <div class="row row-cols-2 align-items-center" id="laminationButtons"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="laminationButtonsL"></div>
                                 <div class="row row-cols-2 align-items-center" id="bindingButtons"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="bindingButtonsL"></div>
                                 <div class="row row-cols-2 align-items-center" id="bindingSelectButtons"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="bindingSelectButtonsL"></div>
                                 <div class="row row-cols-2 align-items-center" id="cowerButtons"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="cowerButtonsL"></div>
                                 <div class="row row-cols-2 align-items-center" id="frontLiningButtons"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="frontLiningButtonsL"></div>
                                 <div class="d-flex justify-content-center" style="font-weight: 600" id="backLiningText"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="backLiningTextL"></div>
                                 <div class="row row-cols-2 align-items-center" id="backLiningButtons"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="backLiningButtonsL"></div>
                                 <div class="row row-cols-2 align-items-center" id="bigButtons"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="bigButtonsL"></div>
                                 <div class="row row-cols-2 align-items-center" id="holesButtons"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="holesButtonsL"></div>
                                 <div class="row row-cols-2 align-items-center" id="roundCornerButtons"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="roundCornerButtonsL"></div>
                                 <div class="row row-cols-2 align-items-center" id="stickerCutting"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="stickerCuttingL"></div>
                                 <div class="row row-cols-2 align-items-center" id="stickerCuttingThis"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="stickerCuttingThisL"></div>
                                 <div class="row row-cols-2 align-items-center" id="luvers"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="luversL"></div>
                                 <div class="row row-cols-2 align-items-center" id="bannerVarit"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="bannerVaritL"></div>
                                 <div class="row row-cols-2 align-items-center" id="floorLamination"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="floorLaminationL"></div>
                                 <div class="row row-cols-2 align-items-center" id="widthLamination"></div>
-                                <div class="horizontalLine"></div>
+                                <div class="horizontalLine" id="widthLaminationL"></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-center text-light d-none" id="text"></div>
 
-                <div class="displayTitle">Кількість</div>
-                <div class="d-flex pt-1">
-                    <div class="input-group d-flex align-items-center m-auto">
-<!--                        <span class="input-group-text gray">Кількість</span>-->
-                        <input type="number" id="countInt" class="input-group-text gray inputs inputCount">
-                        <span class="input-group-text gray inputCount d-none" id="primirnyk"></span>
-                        <span class="input-group-text gray mouseScrollRen">
+                <div class="priceCountGroup">
+                    <div class="d-flex flex-column pt-1">
+                        <div class="displayTitle">Кількість</div>
+                        <div class="input-group d-flex flex-row flexWrapNone">
+                            <!--                        <span class="input-group-text gray">Кількість</span>-->
+                            <input type="number" id="countInt" class="input-group-text gray inputs inputCount">
+                            <span class="input-group-text gray inputCount d-none" id="primirnyk"></span>
+                            <span class="input-group-text gray mouseScrollRen">
                                 <img src="img/mouseScroll.png" class="mouseScroll" alt="">
-                        </span>
+                            </span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="displayTitle">Промокод:</div>
-                <div class="p-2">
-                    <div class="d-flex align-items-center justify-content-center">
-                        <input type="text" class="input-group-text gray inputs" placeholder="Promo code" id="promo">
-                        <button id="promoAccept" class="btn gray">accept</button>
-                        <div id="acceptedValid"></div>
+                    <div class="d-flex p-2 flex-column">
+                        <div class="displayTitle">Промокод:</div>
+                        <div class="d-flex">
+                            <input type="text" class="input-group-text gray inputs" placeholder="Promo code" id="promo">
+                            <button id="promoAccept" class="btn gray">accept</button>
+                            <div id="acceptedValid"></div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="displayTitle">Вартість в грн:</div>
-                <div class="input-group d-flex">
-                    <!--                            <span class="input-group-text gray">Ціна: </span>-->
-                    <input type="number" class="input-group-text gray price inputsTotal inputPrice" id="price" disabled>
-                    <!--                            <span class="input-group-text gray inputPrice">грн.</span>-->
+                    <div class="input-group d-flex flex-column">
+                        <div class="displayTitle">Вартість в грн:</div>
+                        <!--                            <span class="input-group-text gray">Ціна: </span>-->
+                        <input type="number" class="input-group-text gray price inputsTotal inputPrice" id="price" disabled>
+                        <!--                            <span class="input-group-text gray inputPrice">грн.</span>-->
+                    </div>
                 </div>
 
                 <div class="d-flex ">

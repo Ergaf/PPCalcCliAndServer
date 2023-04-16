@@ -114,8 +114,8 @@ function renderWideCalc(priceCalc){
                         if(option[0] === thisFile.floorLamination){
                             elem.classList.add("btnm-act")
 
-                            let PriceToSum = option[1] * m2kv * thisFile.realCount
-                            priceCalc = priceCalc + PriceToSum
+                            // let PriceToSum = option[1] * m2kv * thisFile.realCount
+                            // priceCalc = priceCalc + PriceToSum
 
                         }
                         floorLamination.appendChild(elem)
@@ -139,8 +139,8 @@ function renderWideCalc(priceCalc){
                         if(option[0] === thisFile.widthLamination){
                             elem.classList.add("btnm-act")
 
-                            let PriceToSum = option[1] * m2kv * thisFile.realCount
-                            priceCalc = priceCalc + PriceToSum
+                            // let PriceToSum = option[1] * m2kv * thisFile.realCount
+                            // priceCalc = priceCalc + PriceToSum
 
                         }
                         widthLamination.appendChild(elem)

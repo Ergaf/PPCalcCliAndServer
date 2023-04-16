@@ -61,6 +61,7 @@ class file {
 
         Item.classList.add('btn');
         Item.classList.add('btn-sm');
+        Item.classList.add('filesContainerButton');
         Item.classList.add('slider-item');
         Item.style.cssText = "display: flex; transition: 0.5s; white-space: nowrap"
         filesAllContainer.appendChild(Item);
@@ -341,14 +342,33 @@ class file {
             }
         })
         price.value = thisFile.price
+
+        //lines in dop options-------------------------------------------
+        laminationButtonsL.classList.add("d-none")
+        bindingButtonsL.classList.add("d-none")
+        bindingSelectButtonsL.classList.add("d-none")
+        cowerButtonsL.classList.add("d-none")
+        frontLiningButtonsL.classList.add("d-none")
+        backLiningTextL.classList.add("d-none")
+        bigButtonsL.classList.add("d-none")
+        holesButtonsL.classList.add("d-none")
+        roundCornerButtonsL.classList.add("d-none")
+        stickerCuttingThisL.classList.add("d-none")
+        stickerCuttingL.classList.add("d-none")
+        luversL.classList.add("d-none")
+        bannerVaritL.classList.add("d-none")
+        floorLaminationL.classList.add("d-none")
+        widthLaminationL.classList.add("d-none")
+        //lines in dop options-------------------------------------------
+
         if (thisFile.calc === "digital") {
             let formats = `
-                    <div class="btn" toFile="A7">A7</div>
-                    <div class="btn" toFile="A6">A6</div>
-                    <div class="btn" toFile="A5">A5</div>
-                    <div class="btn" toFile="A4">А4</div>
-                    <div class="btn" toFile="A3">А3</div>
-                    <div class="btn" toFile="custom">Свій розмір</div>
+                    <div class="btn format" toFile="A7">A7</div>
+                    <div class="btn format" toFile="A6">A6</div>
+                    <div class="btn format" toFile="A5">A5</div>
+                    <div class="btn format" toFile="A4">А4</div>
+                    <div class="btn format" toFile="A3">А3</div>
+                    <div class="btn formatC" toFile="custom">Свій розмір</div>
                         `;
             formatButtons.innerHTML = formats;
             colorButtons.classList.remove("d-none")
@@ -364,10 +384,10 @@ class file {
             renderListAndCard()
         } else if (thisFile.calc === "wide") {
             let formats = `
-                    <div class="btn" toFile="A2">А2</div>
-                    <div class="btn" toFile="A1">А1</div>
-                    <div class="btn" toFile="A0">А0</div>
-                    <div class="btn" toFile="custom">Свій розмір</div>
+                    <div class="btn format" toFile="A2">А2</div>
+                    <div class="btn format" toFile="A1">А1</div>
+                    <div class="btn format" toFile="A0">А0</div>
+                    <div class="btn formatC" toFile="custom">Свій розмір</div>
                         `;
             formatButtons.innerHTML = formats;
 
@@ -399,12 +419,12 @@ class file {
             renderListAndCard()
         } else if (thisFile.calc === "photo") {
             let formats = `
-                    <div class="btn" toFile="10х15">10х15</div>
-                    <div class="btn" toFile="15х21">15х21</div>
-                    <div class="btn" toFile="13х18">13х18</div>
-                    <div class="btn" toFile="A4">А4</div>
-                    <div class="btn" toFile="A3">А3</div>
-                    <div class="btn" toFile="custom">Свій розмір</div>
+                    <div class="btn formatC" toFile="10х15">10х15</div>
+                    <div class="btn formatC" toFile="15х21">15х21</div>
+                    <div class="btn formatC" toFile="13х18">13х18</div>
+                    <div class="btn format" toFile="A4">А4</div>
+                    <div class="btn format" toFile="A3">А3</div>
+                    <div class="btn formatC" toFile="custom">Свій розмір</div>
                         `;
             formatButtons.innerHTML = formats;
             // formatButtons.innerHTML = "";

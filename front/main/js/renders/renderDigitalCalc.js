@@ -86,32 +86,36 @@ function renderDigitalCalc(priceCalc){
     backLiningText.classList.remove("d-none")
     paperButtons.innerHTML = ""
 
-    renderOptions("на чому друк", "paper", paperButtons)
-    renderOptions(thisFile.paper, "destiny", destinyButtons)
+    renderOptions("на чому друк", "paper", paperButtons, "materialButtons")
+    renderOptions(thisFile.paper, "destiny", destinyButtons, "destinyButtons")
 
-    if(thisFile.paper === "на папері"){
+    if(thisFile.paper === "Папір/Картон"){
         accordionOptions.classList.remove("d-none")
         thisFile.stickerCutting = undefined
         thisFile.stickerCuttingThis = undefined
 
-        if(thisFile.big === undefined){
+        if(thisFile.big === undefined || thisFile.big === null){
             thisFile.big = "без згинання"
         }
         renderOptions("згиби", "big", bigButtons)
-        if(thisFile.holes === undefined){
+        bigButtonsL.classList.remove("d-none")
+        if(thisFile.holes === undefined || thisFile.holes === null){
             thisFile.holes = "без отворів"
         }
         renderOptions("отвір", "holes", holesButtons)
-        if(thisFile.roundCorner === undefined){
+        holesButtonsL.classList.remove("d-none")
+        if(thisFile.roundCorner === undefined || thisFile.roundCorner === null){
             thisFile.roundCorner = "без обрізки кутів"
         }
         renderOptions("кути", "roundCorner", roundCornerButtons)
-        if(thisFile.lamination === undefined){
+        roundCornerButtonsL.classList.remove("d-none")
+        if(thisFile.lamination === undefined || thisFile.lamination === null){
             thisFile.lamination = "без ламінації"
         }
         renderOptions("ламінування", "lamination", laminationButtons)
+        laminationButtonsL.classList.remove("d-none")
 
-        if(thisFile.binding === undefined){
+        if(thisFile.binding === undefined || thisFile.binding === null){
             thisFile.binding = "без брошурування"
         }
         if(getBindingFromPaperCount("брошурування") !== undefined){
@@ -139,10 +143,12 @@ function renderDigitalCalc(priceCalc){
                     elem.classList.add("btnm-act")
                 }
                 bindingButtons.appendChild(elem)
+                bindingButtonsL.classList.remove("d-none")
             })
         }
 
         renderOptions(thisFile.binding, "bindingSelect", bindingSelectButtons)
+        bindingSelectButtonsL.classList.remove("d-none")
 
 
         if(thisFile.binding === "на пластикову" || thisFile.binding === "на металеву"){
@@ -154,22 +160,25 @@ function renderDigitalCalc(priceCalc){
                     thisFile.cower = "без обкладинки"
                 }
                 renderOptions("обкладинка", "cower", cowerButtons)
+                cowerButtonsL.classList.remove("d-none")
 
                 backLiningText.innerText = "з задньою подкладкою"
                 if(thisFile.frontLining === undefined){
                     thisFile.frontLining = "з прозорою лицьовою підкладкою"
                 }
                 renderOptions("лицьова підкладка", "frontLining", frontLiningButtons)
+                frontLiningButtonsL.classList.remove("d-none")
 
                 if(thisFile.backLining === undefined){
                     thisFile.backLining = ""
                 }
 
                 renderOptions("задньою підкладкою", "backLining", backLiningButtons)
+                backLiningButtonsL.classList.remove("d-none")
             }
         }
     }
-    else if(thisFile.paper === "на самоклейці"){
+    else if(thisFile.paper === "Самоклеючі"){
         accordionOptions.classList.remove("d-none")
         thisFile.lamination = undefined
         thisFile.bindingSelect = undefined
@@ -185,7 +194,9 @@ function renderDigitalCalc(priceCalc){
             thisFile.stickerCutting = "без порізки"
         }
         renderOptions("порізка самоклейки", "stickerCutting", stickerCutting)
+        stickerCuttingL.classList.remove("d-none")
         renderOptions(thisFile.stickerCutting, "stickerCuttingThis", stickerCuttingThis)
+        stickerCuttingThisL.classList.remove("d-none")
     }
     else {
         accordionOptions.classList.add("d-none")

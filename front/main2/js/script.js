@@ -37,6 +37,27 @@ const toastHeader = document.querySelector("#toastHeader");
 const formatInputs = document.querySelector("#formatInputs");
 const fileViewContainer = document.querySelector("#fileViewContainer");
 const fileLoadModalBody = document.querySelector("#fileLoadModalBody");
+
+//lines in dop opt
+const laminationButtonsL = document.querySelector("#laminationButtonsL");
+const bindingButtonsL = document.querySelector("#bindingButtonsL");
+const bindingSelectButtonsL = document.querySelector("#bindingSelectButtonsL");
+const cowerButtonsL = document.querySelector("#cowerButtonsL");
+const frontLiningButtonsL = document.querySelector("#frontLiningButtonsL");
+const backLiningTextL = document.querySelector("#backLiningTextL");
+const backLiningButtonsL = document.querySelector("#backLiningButtonsL");
+const bigButtonsL = document.querySelector("#bigButtonsL");
+const holesButtonsL = document.querySelector("#holesButtonsL");
+const roundCornerButtonsL = document.querySelector("#roundCornerButtonsL");
+const stickerCuttingThisL = document.querySelector("#stickerCuttingThisL");
+const stickerCuttingL = document.querySelector("#stickerCuttingL");
+const luversL = document.querySelector("#luversL");
+const bannerVaritL = document.querySelector("#bannerVaritL");
+const floorLaminationL = document.querySelector("#floorLaminationL");
+const widthLaminationL = document.querySelector("#widthLaminationL");
+//lines in dop opt
+
+
 rotateLeft.addEventListener("click", function () {
     thisFile.rotateImgFromNav = thisFile.rotateImgFromNav - 90
     renderListAndCard()

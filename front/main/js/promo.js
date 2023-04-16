@@ -3,11 +3,11 @@ acceptedValid = document.querySelector("#acceptedValid")
 
 promoAccept.addEventListener("click", function () {
     console.log(acceptedValid);
-    if(document.querySelector("#promo").value === "1"){
+    if(document.querySelector("#promo").value === "SKRYPIN"){
         thisFile.promo = {
             status: "accepted",
             type: "percent",
-            percent: 5
+            percent: 15
         }
         acceptedValid.innerText = "accepted!"
         acceptedValid.style.color = "green"

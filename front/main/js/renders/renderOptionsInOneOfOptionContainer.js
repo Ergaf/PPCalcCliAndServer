@@ -1,4 +1,4 @@
-function renderOptions(varOfServFromTable, thisFileProp, renderIn){
+function renderOptions(varOfServFromTable, thisFileProp, renderIn, classCss = "q"){
     let thisOpt = getVariantsFromNameInData(varOfServFromTable);
     if(thisOpt !== undefined){
         thisOpt.forEach(e => {
@@ -7,6 +7,7 @@ function renderOptions(varOfServFromTable, thisFileProp, renderIn){
                 elem.innerText = e[0]
                 elem.setAttribute("toFile", e[0]);
                 elem.classList.add("btn")
+                elem.classList.add(classCss)
                 elem.addEventListener("click", function () {
                     let data = {
                         id: thisFile._id,
@@ -27,11 +28,13 @@ function renderOptions(varOfServFromTable, thisFileProp, renderIn){
                     })
                 })
                 if(e[0] === Object.getOwnPropertyDescriptor(thisFile, thisFileProp).value){
-                    // elem.classList.add("btnm-act");
-                    elem.style.background = "#ffffff";
-                    elem.style.borderTop = "#d9d9d9 solid";
-                    elem.style.borderBottom = "black solid";
-                    elem.style.color = "#000000";
+                    elem.classList.add("btnAct");
+                    // elem.style.background = "#2a2a2a";
+                    // elem.style.borderTop = "#d9d9d9";
+                    // elem.style.border = "#2a2a2a solid 0.1vw";
+                    // elem.style.borderTop = "#000000 solid";
+                    // elem.style.borderBottom = "#000000 solid";
+                    // elem.style.color = "#ffffff";
                 }
                 renderIn.appendChild(elem)
             }

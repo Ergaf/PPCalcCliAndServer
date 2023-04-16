@@ -1,3 +1,16 @@
+@font-face {
+    font-family: 'GothamBold';
+    src: url('../files/data/gotham_bold.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'GothamBook';
+    src: url('../files/data/gotham_book.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
 * {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none;   /* Chrome/Safari/Opera */
@@ -5,41 +18,90 @@
     -moz-user-select: none;      /* Firefox */
     -ms-user-select: none;       /* Internet Explorer/Edge */
     user-select: none;           /* Non-prefixed version, currently*/
-    font-family: Montserrat, sans-serif;
+    font-family: 'GothamBold', sans-serif;
+    /*font-style: normal;*/
+    /*font-family: Montserrat, sans-serif;*/
     font-weight: 700;
-    /*background: rgba(245, 245, 245, 0.96);*/
+    font-size: 1.1vw;
+    /*!*background: rgba(245, 245, 245, 0.96);*!*/
+
+    /*!* Друк *!*/
+
+}
+.dopOptionButton.collapsed {
+    background: #E9E6DA;
+    /*border: black solid 0.1vw;*/
+    border-radius: 7vw;
+}
+.dopOptionButton:focus {
+    border: black solid 0.1vw;
 }
 input {
-    width: 100px;
+    width: 10vw;
     z-index: 5;
 }
-body{
+.materialButtons {
+    width: 14vw;
+    border: #000000 solid 0.2vw;
+    margin: 0.2vw;
+}
+.destinyButtons {
+    /*width: 42vw;*/
+    font-size: 1vw;
+}
+body {
     /* set margin to 0 and overflow to hidden,
     to use the complete page */
     margin: 0;
     /*overflow: hidden;*/
-    background: rgba(245, 245, 245, 0.96);}
+    /*background: rgba(245, 245, 245, 0.96);*/
+    background: #E9E6DA;
+}
 .gray {
-    background: rgba(250, 250, 250, 0.96);
-    font-weight: 600;
+    /*background: rgba(250, 250, 250, 0.96);*/
+    background: #E9E6DA;
+    /*font-weight: 600;*/
     z-index: 5;
+}
+.displayTitle {
+    /*display: flex;*/
+    padding: 1vw;
+    /*padding-left: 8vw;*/
+    font-weight: 600;
 }
 .white{
     background: white;
-    font-weight: 600;
+    /*font-weight: 600;*/
     z-index: 5;
 }
 .btn {
-    border-top: #ffffff solid;
-    border-bottom: #ffffff solid;
-    color: #323232;
+    /*border-top: #ffffff solid;*/
+    /*border-bottom: #ffffff solid;*/
+    /*border: #000000 solid 0.1vw;*/
+    border: #E9E6DA solid 0.1vw;
+    /*color: #323232;*/
+    color: #000000;
     font-weight: 600;
     z-index: 33;
+    border-radius: 7vw;
+    transition: 0s;
+    font-family: 'GothamBook', sans-serif;
 }
 .btn:hover {
-    background: #fcfcfc;
-    border-bottom: black solid;
-    transition: 0.8s;
+    /*background: #fcfcfc;*/
+    background: #efede6;
+    border: black solid  0.1vw;
+    /*transition: 0.8s;*/
+}
+.btnAct {
+    background: #2a2a2a;
+    color: #ffffff;
+    border: #2a2a2a solid 0.1vw;
+}
+.btnAct:hover {
+    background: #2a2a2a;
+    color: #ffffff;
+    border: #2a2a2a solid 0.1vw;
 }
 .btnm {
     padding: 1vh;
@@ -47,31 +109,45 @@ body{
     background: #ffffff;
     color: #000000;
     border: none;
-    border-bottom: #ffffff solid;
-    border-top: #ffffff solid;
-    transition: 0.5s;
+    border-bottom: #ffffff solid 0.1vw;
+    border-top: #ffffff solid 0.1vw;
+    /*transition: 0.5s;*/
 }
 .btnm:hover {
-    background: #fcfcfc;
+    /*background: #fcfcfc;*/
     color: #343434;
-    border-bottom: black solid;
+    border: black solid 0.1vw;
 }
 .btnm-act {
-    background: #ffffff;
-    color: #000000;
-    border-top: #d9d9d9 solid;
-    border-bottom: black solid;
+    /*background: #ffffff;*/
+    background: #2a2a2a;
+    color: #ffffff;
+    border: #2a2a2a solid 0.1vw;
+    /*border-top: #000000 solid;*/
+    /*border-bottom: black solid;*/
 }
 .btnm-act:hover {
-    background: #fcfcfc;
-    color: #313131;
-    border-top: #d9d9d9 solid;
-    border-bottom: black solid;
+    /*background: #fcfcfc;*/
+    background: #2a2a2a;
+    color: #ffffff;
+    border: #2a2a2a solid 0.1vw;
+    /*border-top: #d9d9d9 solid;*/
+    /*border-bottom: #ffffff solid;*/
 }
 .presetContainer {
     /*display: flex;*/
     justify-content: center;
     align-items: center;
+}
+.drukContainer {
+    margin-left: 3vw;
+}
+.containerForFiles {
+    margin-left: 3vw;
+    margin-right: 3vw;
+}
+.mainLogo {
+    margin-left: 2vw;
 }
 .FilesContainer {
     display: flex;
@@ -107,7 +183,9 @@ body{
     width: 100%;
     height: 85vmin;
 }
-
+.logoImg {
+    height: 6vw;
+}
 /*@media (max-width: 1000px){*/
 /*    .settingsContainer {*/
 /*        flex-direction: column;*/
@@ -142,56 +220,22 @@ body{
         flex-direction: row;
     }
     .fileSettingsContainer{
-        width: 55%;
+        width: 100%;
     }
     .fileViewContainer {
-        width: 45%;
-        height: 94vh;
-    }
-    .mouseScroll {
-        height: 20px;
-    }
-    .inputs {
-        width: 200px;
-    }
-}
-@media (max-width: 1000px){
-    .settingsContainer {
+        width: 31vw;
+        display: flex;
         flex-direction: column;
-    }
-    .fileSettingsContainer{
-        width: 100%;
-    }
-    .fileViewContainer {
-        width: 100%;
-        height: 65vh;
-    }
-    .btn {
-        font-size: 2.3em;
-    }
-    .gray {
-        font-size: 2.3em;
-    }
-    .slider-item {
-        height: 4.2rem;
-    }
-    .FilesContainerRelative {
-        height: 4.2rem;
-    }
-    .card-title {
-        font-size: 2.3em;
+        /*height: 94vh;*/
     }
     .mouseScroll {
-        height: 40px;
+        width: 1.5vw;
+        -webkit-user-drag: none;
     }
     .inputs {
-        width: 260px;
-    }
-    .inputsTotal {
-        width: 100px;
+        width: 10vw;
     }
 }
-
 .containerForImgInServer {
     position: absolute;
     display: flex;
@@ -201,6 +245,9 @@ body{
     transition: 0.5s;
     width: 100%;
     /*pointer-events: none;*/
+}
+.flexWrapNone {
+    flex-wrap: nowrap;
 }
 .theCanvas {
     display: flex;
@@ -213,8 +260,7 @@ body{
 }
 .navPanel {
     opacity: 45%;
-    z-index: 20;
-    top: 93vh;
+    z-index: 50;
 }
 .navPanel:hover {
     opacity: 100%;
@@ -262,9 +308,6 @@ body{
     flex-direction: column;
     width: 96%;
 }
-.settingElem {
-    margin-top: 0.5vh;
-}
 .settingSelect {
     width: 75%;
 }
@@ -303,6 +346,18 @@ body{
 .download{
     margin-top: 40vh;
 }
+.redBackground:hover {
+    background: red;
+}
+.blueBackground:hover {
+    background: blue;
+}
+.greenBackground:hover {
+    background: green;
+}
+.jeltBackground:hover {
+    background: #ffe900;
+}
 
 /*@media (prefers-reduced-motion: no-preference) {*/
 /*    .App-logo {*/
@@ -324,7 +379,7 @@ body{
 }
 .horizontalLine {
     border-bottom: solid #a8a8a8;
-    margin-top: 4px;
+    margin: 0.5vw;
 }
 .notValid {
     background: red;
@@ -339,10 +394,6 @@ body{
 }
 .notMDr {
     pointer-events: none;
-}
-
-.logoImg {
-    height: 45px;
 }
 .mousePointer {
     cursor: pointer;
@@ -381,5 +432,242 @@ body{
 }
 .lFont {
     font-weight: lighter;
+}
+.phoneNDisplay {
+    display: flex;
+}
+.modalMob {
+    width: 40vw;
+}
+.modalMobP {
+    margin-left: 30vw
+}
+.basketButton{
+    z-index: 99;
+}
+.material {
 
+}
+.druk {
+    width: 15vw;
+    margin: 0.1vw;
+    border: #000000 solid 0.1vw;
+}
+.format {
+    width: 2.70vw;
+    margin: 0.1vw;
+    padding-left: 0.5vw;
+    border: #000000 solid 0.1vw;
+}
+.formatC {
+    margin: 0.1vw;
+    padding-left: 0.5vw;
+    padding-right: 0.5vw;
+    border: #000000 solid 0.1vw;
+}
+.moreOptions {
+    background: #E9E6DA;
+}
+.inputFormat {
+    border: none;
+    border-bottom: black solid;
+    border-radius: 0;
+}
+.inputCount {
+    border: none;
+    border-bottom: black solid;
+    border-radius: 0;
+    font-size: 3vw;
+    text-align: left;
+    width: 15vw;
+}
+.inputPrice {
+    border: none;
+    /*border-bottom: black solid;*/
+    border-radius: 0;
+    font-size: 4vw;
+    margin-left: 8vw;
+    text-align: left;
+    width: 20vw;
+}
+.materialsButtons {
+    flex-direction: row;
+}
+.priceCountGroup {
+    display: flex;
+    flex-direction: row;
+}
+.materialContainer {
+    width: 45vw;
+}
+.dopOptionsContainer {
+    width: 50vw;
+}
+.dopOptionButton {
+    width: 50vw;
+    text-align: left;
+    border: black solid 0.1vw;
+}
+.promoCodeContainer {
+    margin-left: 8vw;
+}
+.promoCodeInput {
+    border: none;
+    border-bottom: black solid;
+    border-radius: 0;
+    font-size: 3vw;
+    text-align: left;
+    width: 15vw;
+}
+.priceContainer {
+    margin-left: 20vw;
+}
+@media (max-width: 1000px){
+    * {
+        font-size: 4vw;
+        font-weight: 400;
+    }
+    .priceCountGroup {
+        display: flex;
+        flex-direction: column;
+    }
+    .settingsContainer {
+        flex-direction: column;
+    }
+    .fileSettingsContainer{
+        width: 100%;
+    }
+    .fileViewContainer {
+        width: 100%;
+        height: 65vh;
+        display: none;
+    }
+    .slider-item {
+        height: 2rem;
+    }
+    .FilesContainerRelative {
+        height: 2rem;
+    }
+    .mouseScroll {
+        height: 5vw;
+    }
+    .inputs {
+        width: 30vw;
+    }
+    .inputsTotal {
+        width: 40vw;
+    }
+    .logoImg {
+        height: 250px;
+        min-height: 200px;
+    }
+    .btn {
+        font-weight: 400;
+        border-radius: 10vw;
+        /*border: #000000 solid 0.3vw;*/
+        border: #E9E6DA solid 0.3vw;
+        font-size: 3vw;
+    }
+    .mouseScrollRen {
+        display: none;
+    }
+    .displayTitle {
+        /*display: flex;*/
+        padding: 1vw;
+        padding-left: 8vw;
+        padding-top: 4vw;
+        font-weight: 600;
+    }
+    .navPanel {
+        visibility: hidden;
+    }
+    .druk {
+        width: 40vw;
+        margin: 1vw;
+        border: #000000 solid 0.3vw;
+        font-size: 4vw;
+    }
+    .phoneNDisplay {
+        display: none;
+    }
+    .fontSize {
+        font-size: 1vw;
+    }
+    .modalMob {
+        width: 98vw;
+    }
+    .modalMobP {
+        margin-left: 0.5vw
+    }
+    .format {
+        width: 9.5vw;
+        margin: 1vw;
+        padding-left: 1.7vw;
+        border: #000000 solid 0.3vw;
+        font-size: 4vw;
+    }
+    .formatC {
+        margin: 1vw;
+        padding-left: 2vw;
+        padding-right: 2vw;
+        border: #000000 solid 0.3vw;
+        font-size: 4vw;
+    }
+    .inputFormat {
+        border: none;
+        border-bottom: black solid;
+        border-radius: 0;
+    }
+    .inputFormatButton {
+        border: none;
+    }
+    .filesContainerButton {
+        font-size: 4vw;
+    }
+    .inputCount {
+        border: none;
+        border-bottom: black solid;
+        border-radius: 0;
+        font-size: 9vw;
+        text-align: left;
+        margin-left: 8vw;
+    }
+    .inputPrice {
+        border: none;
+        border-bottom: black solid;
+        border-radius: 0;
+        font-size: 11vw;
+        margin-left: 8vw;
+        text-align: left;
+    }
+    .materialsButtons {
+        flex-direction: column;
+    }
+    .btn:hover {
+        /*background: #fcfcfc;*/
+        /*background: #fcfcfc;*/
+        border: black solid  0.3vw;
+        /*transition: 0.8s;*/
+    }
+    .formatAndDruk {
+        flex-direction: column;
+    }
+    .materialAndDopContainer {
+        flex-direction: column;
+    }
+    .materialContainer {
+        width: 100%;
+    }
+    .dopOptionsContainer {
+        width: 100%;
+    }
+    .materialButtons {
+        width: auto;
+        border: #000000 solid 0.3vw;
+        margin: 0.3vw;
+    }
+    .destinyButtons {
+        /*width: 42vw;*/
+        font-size: 2vw;
+    }
 }
